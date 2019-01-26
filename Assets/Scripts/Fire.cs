@@ -126,6 +126,6 @@ public class Fire : MonoBehaviour
     public void SetWorldTile(World.Tile tileToGiveToFireScript)
     {
         GridTile = tileToGiveToFireScript;
-        World.Get().TilemapTree.SetTile(new Vector3Int(GridTile.Coordinates.x, GridTile.Coordinates.y, 0), FirePlaceTile);
+        World.Get().TilemapFires.SetTile(new Vector3Int(GridTile.Coordinates.x, GridTile.Coordinates.y, 0), FirePlaceTile);
     }
 }

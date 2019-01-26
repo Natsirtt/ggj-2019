@@ -202,7 +202,8 @@ public class World : MonoBehaviour
     public GameObject hearthPrefab;
 
     public Tilemap TilemapGround;
-    public Tilemap TilemapTree;
+    public Tilemap TilemapTrees;
+    public Tilemap TilemapFires;
 
     public List<GameObject> Workers { get; private set; }
     public List<GameObject> Fires { get; private set; }
@@ -301,6 +302,7 @@ public class World : MonoBehaviour
         {
             Tiles.Add(pos, new Tile(pos, Tile.Type.Grass));
         }
+
         Tiles[pos].TileType = type;
         TileBase tileToRender = TileTypes[(int)type].GetRandomTile();
         if (tileToRender == null)
@@ -308,10 +310,11 @@ public class World : MonoBehaviour
             Debug.LogError("Could not find a valid tile to render for type " + type);
             return;
         }
+
         Vector2 tileMapPos = pos;// * TileSize;
         if (type == Tile.Type.Tree)
         {
-            TilemapTree.SetTile(new Vector3Int((int)tileMapPos.x, (int)tileMapPos.y, 0), tileToRender);
+            TilemapTrees.SetTile(new Vector3Int((int)tileMapPos.x, (int)tileMapPos.y, 0), tileToRender);
         }
         else
         {
