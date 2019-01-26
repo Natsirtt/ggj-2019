@@ -280,12 +280,19 @@ MonoBehaviour:
   - TileSelection:
     - {fileID: 11400000, guid: 4678d9613d416974bbc308b4a6a33404, type: 2}
   - TileSelection: []
-  - TileSelection: []
+  - TileSelection:
+    - {fileID: 11400000, guid: ed54393cc48e83c4e896ec73ac52101f, type: 2}
   - TileSelection: []
   - TileSelection:
     - {fileID: 11400000, guid: e59039ff816fbab46813904d493b8939, type: 2}
     - {fileID: 11400000, guid: 106d3d1368441fc4b85be69c12918138, type: 2}
   - TileSelection: []
+  Tilemaps:
+  - {fileID: 7851526018243658318}
+  - {fileID: 0}
+  - {fileID: 961042024347016182}
+  - {fileID: 0}
+  - {fileID: 6395997584509847593}
   generationParameters: {fileID: 11400000, guid: 617268a62919790429246e76e827943d,
     type: 2}
   seed: 0
@@ -297,9 +304,6 @@ MonoBehaviour:
     type: 3}
   fireParticleSystemPrefab: {fileID: 4322275919001543451, guid: 0a611ac8fe8bed54f8af6f26397f3ad4,
     type: 3}
-  TilemapGround: {fileID: 7851526018243658318}
-  TilemapTrees: {fileID: 6395997584509847593}
-  TilemapFires: {fileID: 961042024347016182}
 --- !u!156049354 &7851526017737909041
 Grid:
   m_ObjectHideFlags: 0
