@@ -68,8 +68,8 @@ public class AStar
 {
     public static bool BuildPath(Dictionary<Vector2Int, World.Tile> inGrid, Vector2 startPos, Vector2 endPos, ref Path outPath)
     {
-        Vector2Int startPosInt = World.GetGridLocation(startPos);
-        Vector2Int endPosInt = World.GetGridLocation(endPos);
+        Vector2Int startPosInt = World.Get().GetGridLocation(startPos);
+        Vector2Int endPosInt = World.Get().GetGridLocation(endPos);
         if (!inGrid.ContainsKey(startPosInt) || !inGrid.ContainsKey(endPosInt))
             return false;
 
@@ -115,7 +115,7 @@ public class AStar
         World.Tile curr = closed[closed.IndexOf(current)];
         while(curr != null && curr.Parent != start)
         {
-            outPath.PathPoints.Add( World.GetWorldLocation(curr.Coordinates));
+            outPath.PathPoints.Add( World.Get().GetWorldLocation(curr.Coordinates));
             curr = curr.Parent;
         }
 

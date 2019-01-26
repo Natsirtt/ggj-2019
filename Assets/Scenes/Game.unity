@@ -205,7 +205,7 @@ GameObject:
   - component: {fileID: 1545626456}
   - component: {fileID: 1545626455}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: World
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -227,6 +227,12 @@ MonoBehaviour:
   generationParameters: {fileID: 11400000, guid: 617268a62919790429246e76e827943d,
     type: 2}
   seed: 42
+  workerPrefab: {fileID: 1235590261510027719, guid: 1c62993b37a664a47a70fe3a7eab9178,
+    type: 3}
+  firePrefab: {fileID: 7681504405642858328, guid: 25bf8b3278134704085dc188660db9d5,
+    type: 3}
+  hearthPrefab: {fileID: 2068627889015018793, guid: 759c19fee639ec249980e4c93c59ef53,
+    type: 3}
 --- !u!4 &1545626456
 Transform:
   m_ObjectHideFlags: 0

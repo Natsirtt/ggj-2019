@@ -28,7 +28,6 @@ public class World : MonoBehaviour
         public enum Type
         {
             Grass,
-            Snow,
             Mountain,
             Campfire,
             Hearth,
@@ -37,6 +36,7 @@ public class World : MonoBehaviour
 
         public Vector2Int Coordinates { get; private set; }
         public Type TileType { get; set; }
+        public bool IsInSnow { get; set; }
 
         public World.Tile Parent { get; set; }
         public float DistanceToTarget { get; set; }
@@ -46,16 +46,78 @@ public class World : MonoBehaviour
         public bool IsTraversable()
         {
             return 
-                TileType != Type.Mountain && 
-                TileType != Type.Campfire && 
-                TileType != Type.Tree;
+                TileType != Type.Mountain
+                && TileType != Type.Campfire
+                && TileType != Type.Hearth
+                && TileType != Type.Tree;
         }
 
         public Tile(Vector2Int coordinates, Type type)
         {
             Coordinates = coordinates;
             TileType = type;
+            IsInSnow = true;
         }
+    }
+
+    public enum Direction
+    {
+        North,
+        NorthEast,
+        East,
+        SouthEast,
+        South,
+        SouthWest,
+        West,
+        NorthWest
+    }
+
+    public Vector2Int GetDirectionVector(Direction d)
+    {
+        switch (d)
+        {
+            case Direction.North:
+                return new Vector2Int(0, 1);
+            case Direction.NorthEast:
+                return new Vector2Int(1, 1);
+            case Direction.East:
+                return new Vector2Int(1, 0);
+            case Direction.SouthEast:
+                return new Vector2Int(1, -1);
+            case Direction.South:
+                return new Vector2Int(0, -1);
+            case Direction.SouthWest:
+                return new Vector2Int(-1, -1);
+            case Direction.West:
+                return new Vector2Int(-1, 0);
+            case Direction.NorthWest:
+                return new Vector2Int(-1, 1);
+        }
+        throw new Exception("No");
+    }
+
+    public List<Direction> GetDirectionOpposites(Direction d)
+    {
+        switch (d)
+        {
+            case Direction.North:
+                return new List<Direction>{ Direction.South, Direction.SouthEast, Direction.SouthWest };
+            case Direction.NorthEast:
+                return new List<Direction>{ Direction.West, Direction.SouthWest, Direction.South };
+            case Direction.East:
+                return new List<Direction>{ Direction.NorthWest, Direction.West, Direction.SouthWest };
+            case Direction.SouthEast:
+                return new List<Direction>{ Direction.West, Direction.NorthWest, Direction.North };
+            case Direction.South:
+                return new List<Direction>{ Direction.North, Direction.NorthWest, Direction.NorthEast };
+            case Direction.SouthWest:
+                return new List<Direction>{ Direction.North, Direction.NorthEast, Direction.East };
+            case Direction.West:
+                return new List<Direction>{ Direction.NorthEast, Direction.East, Direction.SouthEast };
+            case Direction.NorthWest:
+                return new List<Direction>{ Direction.South, Direction.SouthEast, Direction.East };
+        }
+        throw new Exception("No");
     }
 
     [SerializeField]
@@ -68,8 +130,8 @@ public class World : MonoBehaviour
     [SerializeField]
     private WorldGenerationParameters generationParameters = null;
 
-    // Leave the seed to 0 for using the current time. Provide a hardcoded seed otherwise.
     [SerializeField]
+    [Tooltip("Leave the seed to 0 for using the current time, or provide your seed of choice.")]
     private int seed = 0;
 
     public GameObject workerPrefab;
@@ -97,16 +159,43 @@ public class World : MonoBehaviour
         Fires.Add(fire);
     }
 
-    public static Vector2Int GetGridLocation(Vector2 worldLocation)
+    public Vector2Int GetGridLocation(Vector2 worldLocation)
     {
-        Vector2 transformedLocation = worldLocation / World.Get().TileSize;
+        Vector2 transformedLocation = worldLocation / TileSize;
         return new Vector2Int((int)transformedLocation.x, (int)transformedLocation.y);
     }
 
-    public static Vector2 GetWorldLocation(Vector2Int gridLocation)
+    public Vector2 GetWorldLocation(Vector2Int gridLocation)
     {
-        Vector2Int transformedLocation = gridLocation * new Vector2Int((int)World.Get().TileSize.x, (int)World.Get().TileSize.y);
+        Vector2Int transformedLocation = gridLocation * new Vector2Int((int)TileSize.x, (int)TileSize.y);
         return new Vector2((float)transformedLocation.x, (float)transformedLocation.y);
+    }
+
+    public Vector2Int GetHalfGridSize()
+    {
+        return new Vector2Int(GridSize.x / 2, GridSize.y / 2);
+    }
+
+    public Vector2Int? GetNeighbourAt(Vector2Int v, Direction direction)
+    {
+        Vector2Int result = v + GetDirectionVector(direction);
+        if (!IsInWorld(result))
+        {
+            return null;
+        }
+        return result;
+    }
+
+    public int GetManhattanDistance(Vector2Int a, Vector2Int b)
+    {
+        return Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y);
+    }
+
+    public bool IsInWorld(Vector2Int gridLocation)
+    {
+        Vector2Int halfGridSize = GetHalfGridSize();
+        return -halfGridSize.x <= gridLocation.x && gridLocation.x <= halfGridSize.x
+            && -halfGridSize.y <= gridLocation.y && gridLocation.y <= halfGridSize.y;
     }
 
     void Start()
@@ -129,9 +218,19 @@ public class World : MonoBehaviour
         }
     }
 
+    void Update()
+    {
+        Debug.DrawLine(Vector2.zero, new Vector2(0, -1), Color.green);
+        Debug.DrawLine(Vector2.zero, new Vector2(0, 1), Color.blue);
+        Debug.DrawLine(Vector2.zero, new Vector2(-1, 0), Color.cyan);
+        Debug.DrawLine(Vector2.zero, new Vector2(1, 0), Color.red);
+    }
+
     void Awake()
     {
         GlobalInventory = gameObject.AddComponent<Inventory>();
+        Fires = new List<GameObject>();
+        Workers = new List<GameObject>();
     }
 
     void GenerateWorld(int seed, WorldGenerationParameters parameters)
@@ -139,11 +238,25 @@ public class World : MonoBehaviour
         Tiles = new Dictionary<Vector2Int, Tile>();
         Random.InitState(seed);
         GridSize = parameters.grid.Size;
+        if (GridSize.x % 2 != 0 || GridSize.y % 2 != 0)
+        {
+            Debug.LogWarning("Grid size " + GridSize + " has an odd component. Even components might work better.");
+        }
+
+        for (int x = -GridSize.x / 2; x <= GridSize.x / 2; x++)
+        {
+            for (int y = -GridSize.y / 2; y <= GridSize.y / 2; y++)
+            {
+                var pos = new Vector2Int(x, y);
+                Tiles.Add(pos, new Tile(pos, Tile.Type.Grass));
+            }
+        }
 
         // Creating hearth
         Vector2Int maxHearthGridPosition = GridSize- parameters.infrastructures.hearthMinDistanceFromMapEdge;
         var hearthGridPos = new Vector2Int(Random.Range(-maxHearthGridPosition.x, maxHearthGridPosition.x), Random.Range(-maxHearthGridPosition.y, maxHearthGridPosition.y));
-        Tiles.Add(hearthGridPos, new Tile(hearthGridPos, Tile.Type.Hearth));
+        Tiles[hearthGridPos].TileType = Tile.Type.Hearth;
+        SpawnHearth(GetWorldLocation(hearthGridPos));
         Debug.Log("Created Hearth at grid position " + hearthGridPos);
 
         // Seeding woods paths
@@ -151,28 +264,79 @@ public class World : MonoBehaviour
         Debug.Log("Generating " + numberOfPaths + " forest paths...");
         Vector2Int previousPatchCenter = hearthGridPos;
         int theoreticalAvailableWood = parameters.resources.startingWoodAmount;
-        for (int i = 0; i < numberOfPaths; i++)
+        // Generating all paths
+        for (int pathID = 0; pathID < numberOfPaths; pathID++)
         {
-
-        }
-
-        float snowDensity = 0.2f;
-        for (int i = -200; i < 200; i++)
-        {
-            for (int j = -200; j < 200; j++)
+            // TODO not hardcode this? have heuristics for it?
+            var directions = new List<Direction>();
+            for (int i = 0; i < Random.Range(4, 20); i++)
             {
-                if (new Vector2Int(i, j) == hearthGridPos)
-                {
-                    continue;
-                }
+                directions.Add((Direction) Random.Range(0, 7));
+            }
+            theoreticalAvailableWood = GenerateForestPath(hearthGridPos, theoreticalAvailableWood, directions, parameters);
+        }
+    }
 
-                Tile.Type type = Tile.Type.Grass;
-                if (Random.Range(0.0f, 1.0f) <= snowDensity)
+    int GenerateForestPath(Vector2Int hearthPosition, int theoreticalWoodAmount, List<Direction> directions, WorldGenerationParameters parameters)
+    {
+        theoreticalWoodAmount -= parameters.forests.patchesDifficultyDistanceModifier;
+        if (theoreticalWoodAmount <= parameters.resources.expeditionWoodCostPerTile)
+        {
+            Debug.LogError("Generating new forest path with an amount of wood less than or equal to the amount it costs to do a 1-tile expedition is not possible. Wood amount was " + theoreticalWoodAmount + ", minimum is " + (parameters.resources.expeditionWoodCostPerTile + 1));
+            return 0;
+        }
+        int numberOfPatches = Random.Range(parameters.forests.patchesPerPathRange.x, parameters.forests.patchesPerPathRange.y);
+        Debug.Log("\t- Generating " + numberOfPatches + " patches");
+        Vector2Int seedPosition = hearthPosition;
+        // Generating all patches of the current path
+        for (int patchID = 0; patchID < numberOfPatches; patchID++)
+        {
+            // Snaking away using the resources
+            while (theoreticalWoodAmount > 0 || theoreticalWoodAmount < parameters.resources.expeditionWoodCostPerTile)
+            {
+                Direction direction = directions[Random.Range(0, directions.Count - 1)];
+                // Remove the direction's "opposite" so that a forest path always goes towards a similar direction-ish
+                foreach (Direction dir in GetDirectionOpposites(direction))
                 {
-                    type = Tile.Type.Snow;
+                    directions.Remove(dir);
                 }
-                Tiles.Add(new Vector2Int(i, j), new Tile(new Vector2Int(i, j), type));
+                if (directions.Count == 0)
+                {
+                    Debug.LogError("List of directions was empty!");
+                    direction = (Direction) Random.Range(0, 7);
+                }
+                seedPosition += GetDirectionVector(direction);
+                theoreticalWoodAmount -= parameters.resources.expeditionWoodCostPerTile;
+            }
+
+            // Creating the patch
+            float patchDensity = Random.Range(parameters.forests.patchDensityRange.x, parameters.forests.patchDensityRange.y);
+            int treeWoodAmount = parameters.resources.woodPerTree;
+            int patchWoodMaxAmount = Random.Range(parameters.forests.woodAmountRangePerPatch.x, parameters.forests.woodAmountRangePerPatch.y);
+            Debug.Log("\t\t+ Generating patch " + patchID + ". Core is at " + seedPosition);
+            int patchHalfSize = Random.Range(parameters.forests.minPatchEuclidianRadius, parameters.forests.maxPatchEuclidianRadius);
+            for (int x = -patchHalfSize; x <= patchHalfSize; x++)
+            {
+                for (int y = -patchHalfSize; y <= patchHalfSize; y++)
+                {
+                    var pos = new Vector2Int(x, y);
+                    if (theoreticalWoodAmount >= patchWoodMaxAmount)
+                    {
+                        break;
+                    }
+                    if (!IsInWorld(pos))
+                    {
+                        continue;
+                    }
+                    if (Random.value <= patchDensity)
+                    {
+                        Tiles[pos].TileType = Tile.Type.Tree;
+                        theoreticalWoodAmount += treeWoodAmount;
+                    }
+                }
             }
         }
+
+        return theoreticalWoodAmount;
     }
 }
