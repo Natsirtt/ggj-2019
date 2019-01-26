@@ -31,7 +31,8 @@ public class World : MonoBehaviour
             Grass,
             Snow,
             Mountain,
-            Fire
+            Campfire,
+            Hearth
         }
 
         public Vector2Int Coordinates { get; private set; }
@@ -46,6 +47,10 @@ public class World : MonoBehaviour
 
     public Dictionary<Vector2Int, Tile> Tiles { get; private set; }
     public Inventory GlobalInventory { get; private set; }
+    public Vector2Int GridSize { get; private set; }
+
+    [SerializeField]
+    private WorldGenerationParameters generationParameters;
 
     // Leave the seed to 0 for using the current time. Provide a hardcoded seed otherwise.
     [SerializeField]
@@ -56,11 +61,11 @@ public class World : MonoBehaviour
         if (seed == 0)
         {
             // TODO TickCount is not the best to use
-            GenerateWorld(Environment.TickCount);
+            GenerateWorld(Environment.TickCount, generationParameters);
         }
         else
         {
-            GenerateWorld(seed);
+            GenerateWorld(seed, generationParameters);
         }
     }
 
@@ -69,10 +74,17 @@ public class World : MonoBehaviour
         GlobalInventory = gameObject.AddComponent<Inventory>();
     }
 
-    void GenerateWorld(int seed)
+    void GenerateWorld(int seed, WorldGenerationParameters parameters)
     {
+        Tiles.Clear();
         Random.InitState(seed);
+        GridSize = parameters.worldGridSize;
 
+        // Creating hearth
+        Vector2Int maxHearthGridPosition = parameters.worldGridSize - parameters.hearthMinDistanceFromMapEdge;
+        var hearthGridPos = new Vector2Int(Random.Range(-maxHearthGridPosition.x, maxHearthGridPosition.x), Random.Range(-maxHearthGridPosition.y, maxHearthGridPosition.y));
+        Tiles.Add(hearthGridPos, new Tile(hearthGridPos, Tile.Type.Hearth));
 
+        // Seeding woods
     }
 }
