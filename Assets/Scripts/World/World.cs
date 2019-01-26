@@ -23,7 +23,7 @@ public class World : MonoBehaviour
 
     // Internal types
 
-    public struct Tile
+    public class Tile
     {
         public enum Type
         {
@@ -31,11 +31,25 @@ public class World : MonoBehaviour
             Snow,
             Mountain,
             Campfire,
-            Hearth
+            Hearth,
+            Tree
         }
 
         public Vector2Int Coordinates { get; private set; }
         public Type TileType { get; set; }
+
+        public World.Tile Parent { get; set; }
+        public float DistanceToTarget { get; set; }
+        public float Cost { get; set; }
+        public float F { get { return DistanceToTarget >= 0.0f && Cost >= 0.0f ? DistanceToTarget + Cost : -1.0f; } }
+
+        public bool IsTraversable()
+        {
+            return 
+                TileType != Type.Mountain && 
+                TileType != Type.Campfire && 
+                TileType != Type.Tree;
+        }
 
         public Tile(Vector2Int coordinates, Type type)
         {

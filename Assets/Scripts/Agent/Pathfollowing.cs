@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Path
@@ -67,14 +68,87 @@ public class AStar
 {
     public static bool BuildPath(Dictionary<Vector2Int, World.Tile> inGrid, Vector2 startPos, Vector2 endPos, ref Path outPath)
     {
-        World.Tile start;
-        World.Tile end;
+        Vector2Int startPosInt = World.GetGridLocation(startPos);
+        Vector2Int endPosInt = World.GetGridLocation(endPos);
+        if (!inGrid.ContainsKey(startPosInt) || !inGrid.ContainsKey(endPosInt))
+            return false;
+
+        World.Tile start = inGrid[startPosInt];
+        World.Tile end = inGrid[endPosInt];
 
         List<World.Tile> open = new List<World.Tile>();
         List<World.Tile> closed = new List<World.Tile>();
-        List<World.Tile> adjencencies = new List<World.Tile>();
+        List<World.Tile> adjancencies = new List<World.Tile>();
 
-        return false;
+        World.Tile current = start;
+
+        open.Add(current);
+        
+        while(open.Count != 0 && !closed.Exists( x => x.Coordinates == end.Coordinates))
+        {
+            current = open[0];
+            open.Remove(current);
+            closed.Add(current);
+            adjancencies = AStar.GetAdjacentNodes(inGrid, current);
+
+            foreach(World.Tile tile in adjancencies)
+            {
+                if(!closed.Contains(tile) && tile.IsTraversable())
+                {
+                    if(!open.Contains(tile))
+                    {
+                        tile.Parent = current;
+                        tile.DistanceToTarget = (tile.Coordinates - endPosInt).magnitude;
+                        tile.Cost = 1.0f + tile.Parent.Cost;
+                        open.Add(tile);
+                        open = open.OrderBy(t => t.F).ToList<World.Tile>();
+                    }
+                }
+            }
+        }
+
+        if(!closed.Exists(x => x.Coordinates == endPosInt))
+        {
+            return false;
+        }
+
+        World.Tile curr = closed[closed.IndexOf(current)];
+        while(curr.Parent != start && curr != null)
+        {
+            outPath.PathPoints.Add( World.GetWorldLocation(curr.Coordinates));
+            curr = curr.Parent;
+        }
+
+        return true;
+    }
+
+    private static List<World.Tile> GetAdjacentNodes(Dictionary<Vector2Int, World.Tile> inGrid, World.Tile tile)
+    {
+        List<World.Tile> temp = new List<World.Tile>();
+
+        Vector2Int coordinates = tile.Coordinates;
+
+        if (inGrid.ContainsKey(coordinates + Vector2Int.up))
+        {
+            temp.Add(inGrid[coordinates + Vector2Int.up]);
+        }
+
+        if (inGrid.ContainsKey(coordinates + Vector2Int.down))
+        {
+            temp.Add(inGrid[coordinates + Vector2Int.down]);
+        }
+
+        if (inGrid.ContainsKey(coordinates + Vector2Int.left))
+        {
+            temp.Add(inGrid[coordinates + Vector2Int.left]);
+        }
+
+        if (inGrid.ContainsKey(coordinates + Vector2Int.right))
+        {
+            temp.Add(inGrid[coordinates + Vector2Int.right]);
+        }
+
+        return temp;
     }
 }
 
@@ -84,16 +158,20 @@ public class Pathfollowing : MonoBehaviour
 
     private void Start()
     {
-        CurrentPath.PathPoints.Add(new Vector2(-10, 10));
-        CurrentPath.PathPoints.Add(new Vector2(-10, -10));
-        CurrentPath.PathPoints.Add(new Vector2(10, -10));
-        CurrentPath.PathPoints.Add(new Vector2(10, 10));
-        CurrentPath.PathPoints.Add(new Vector2(-10, 10));
+        InvokeRepeating("MoveToRandomLocationInSquare", 2.0f, 0.3f);
+    }
+
+    void MoveToRandomLocationInSquare()
+    {
+        MoveToLocation(new Vector2(Random.Range(-10.0f, 10.0f), Random.Range(-10.0f, 10.0f)));
     }
 
     public void MoveToLocation(Vector2 location)
     {
-
+        if(!AStar.BuildPath(World.Get().Tiles, transform.position, location, ref CurrentPath))
+        {
+            Debug.LogWarning("No path could be built for agent: " + gameObject.name + " at location " + location.ToString());
+        }
     }
 
     void Update()
