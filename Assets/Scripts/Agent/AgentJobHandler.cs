@@ -22,11 +22,18 @@ public class AgentJobHandler : MonoBehaviour
         // trigger animation
         if (!pathFollowing.MoveToLocation(World.Get().GetWorldLocation(job.Coordinates)))
         {
-            Fire.Jobs.QueueJob(job);
+            if (job.JobType != JobDispatcher.Job.Type.Expedition)
+            {
+                Fire.Jobs.QueueJob(job);
+            }
             return;
         }
-        
         Job = job;
+        job.NumWorkers += 1;
+        if (job.IsReady() && job.JobType == JobDispatcher.Job.Type.Expedition)
+        {
+            Fire.Jobs.dequeueExpedition();
+        }
         IsIdle = false;
     }
 
@@ -74,13 +81,23 @@ public class AgentJobHandler : MonoBehaviour
         {
             if (!pathFollowing.CurrentPath.HasPath())
             {
-                JobProgress += Time.deltaTime;
+                if (Job.IsReady())
+                {
+                    JobProgress += Time.deltaTime;
+                }
                 gameObject.GetComponent<Animator>().SetBool("isChopping", true);
                 if (JobProgress >= Job.Duration())
                 {
                     gameObject.GetComponent<Animator>().SetBool("isChopping", false);
                     Debug.Log("Changing Tile of Type " +  World.Get().Tiles[Job.Coordinates].TileType.ToString());
-                    World.Get().ChoppedTree(Job.Coordinates);
+                    if (Job.JobType == JobDispatcher.Job.Type.Chop)
+                    {
+                        World.Get().ChoppedTree(Job.Coordinates);
+                    }
+                    else
+                    {
+                        World.Get().SpawnCampFire(World.Get().GetWorldLocation(Job.Coordinates));
+                    }
                     JobProgress = 0f;
                     Job = null;
                     IsIdle = true;

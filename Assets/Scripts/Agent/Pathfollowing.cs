@@ -100,7 +100,7 @@ public class AStar
 
         open.Add(current);
         
-        while(open.Count != 0 && !closed.Exists( x => x.Coordinates == end.Coordinates) && closed.Count < 100)
+        while(open.Count != 0 && !closed.Exists( x => x.Coordinates == end.Coordinates) && closed.Count < 1000)
         {
             current = open[0];
             open.Remove(current);
