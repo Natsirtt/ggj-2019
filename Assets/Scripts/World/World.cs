@@ -2,6 +2,49 @@
 using System.Collections.Generic;
 using System;
 using Random = UnityEngine.Random;
+using UnityEngine.Tilemaps;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
+public class NamedArrayAttribute : PropertyAttribute
+{
+    public Type TargetEnum;
+    public NamedArrayAttribute(Type TargetEnum)
+    {
+        this.TargetEnum = TargetEnum;
+    }
+}
+
+#if UNITY_EDITOR
+[CustomPropertyDrawer(typeof(NamedArrayAttribute))]
+public class NamedArrayDrawer : PropertyDrawer
+{
+    public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
+    {
+        return EditorGUI.GetPropertyHeight(property, label, property.isExpanded);
+    }
+    public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+    {
+        try
+        {
+            var config = attribute as NamedArrayAttribute;
+            var enum_names = System.Enum.GetNames(config.TargetEnum);
+            int pos = int.Parse(property.propertyPath.Split('[', ']')[1]);
+            var enum_label = enum_names.GetValue(pos) as string;
+            // Make names nicer to read (but won't exactly match enum definition).
+            enum_label = ObjectNames.NicifyVariableName(enum_label.ToLower());
+            label = new GUIContent(enum_label);
+        }
+        catch
+        {
+            // keep default label
+        }
+        EditorGUI.PropertyField(position, property, label, property.isExpanded);
+    }
+}
+#endif
 
 public class World : MonoBehaviour
 {
@@ -32,7 +75,8 @@ public class World : MonoBehaviour
             Mountain,
             Campfire,
             Hearth,
-            Tree
+            Tree,
+            MAX
         }
 
         public Vector2Int Coordinates { get; private set; }
@@ -64,6 +108,9 @@ public class World : MonoBehaviour
     public Dictionary<Vector2Int, Tile> Tiles { get; private set; }
     public Inventory GlobalInventory { get; private set; }
     public Vector2Int GridSize { get; private set; }
+
+    [NamedArrayAttribute(typeof(Tile.Type))]
+    public TileBase[] TileTypes = new TileBase[(int)Tile.Type.MAX];
 
     [SerializeField]
     private WorldGenerationParameters generationParameters = null;
@@ -120,6 +167,8 @@ public class World : MonoBehaviour
 
     void GenerateWorld(int seed, WorldGenerationParameters parameters)
     {
+        Tilemap tileMap = GetComponentInChildren<Tilemap>();
+
         Tiles = new Dictionary<Vector2Int, Tile>();
         Random.InitState(seed);
         GridSize = parameters.grid.Size;
@@ -153,10 +202,16 @@ public class World : MonoBehaviour
                 Tile.Type type = Tile.Type.Grass;
                 if (Random.Range(0.0f, 1.0f) <= snowDensity)
                 {
-                    type = Tile.Type.Mountain;
+                    type = Tile.Type.Tree;
                 }
 
-                Tiles.Add(new Vector2Int(i, j), new Tile(new Vector2Int(i, j), type));
+                Vector2Int tilePos = new Vector2Int(i, j);
+                Tiles.Add(tilePos, new Tile(tilePos, type));
+
+                TileBase tileToRender;
+                tileToRender = TileTypes[(int)type];
+                Vector2 tileMapPos = tilePos * TileSize;
+                tileMap.SetTile(new Vector3Int((int)tileMapPos.x, (int)tileMapPos.y, 0), tileToRender);
             }
         }
     }
