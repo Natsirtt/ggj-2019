@@ -24,7 +24,7 @@ public class Fire : MonoBehaviour
     private float workerSpawnRateIncrease = 0f;
 
     [SerializeField]
-    private TileBase FirePlaceTile;
+    private TileBase FirePlaceTile = null;
 
     private float currentBurnRatePerSecond;
     private int currentRadiusOfInfluence;
