@@ -2,8 +2,9 @@
 
 public class World : MonoBehaviour
 {
+    private Inventory worldInventory;
     private static World worldInstance = null;
-    static World Get()
+    public static World Get()
     {
         if (worldInstance == null)
         {
@@ -17,8 +18,14 @@ public class World : MonoBehaviour
         return worldInstance;
     }
 
+    public Inventory GlobalInventory
+    {
+        get { return worldInventory; }
+    }
+
     void Start()
-    {   
+    {
+        worldInventory = gameObject.AddComponent<Inventory>();
     }
 
     void Update()
