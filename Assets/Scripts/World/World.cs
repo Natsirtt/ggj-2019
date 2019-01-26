@@ -295,6 +295,30 @@ public class World : MonoBehaviour
             && -halfGridSize.y <= gridLocation.y && gridLocation.y <= halfGridSize.y;
     }
 
+    public void SetTileType(Vector2Int pos, Tile.Type type)
+    {
+        if (!Tiles.ContainsKey(pos))
+        {
+            Tiles.Add(pos, new Tile(pos, Tile.Type.Grass));
+        }
+        Tiles[pos].TileType = type;
+        TileBase tileToRender = TileTypes[(int)type].GetRandomTile();
+        if (tileToRender == null)
+        {
+            Debug.LogError("Could not find a valid tile to render for type " + type);
+            return;
+        }
+        Vector2 tileMapPos = pos;// * TileSize;
+        if (type == Tile.Type.Tree)
+        {
+            TilemapTree.SetTile(new Vector3Int((int)tileMapPos.x, (int)tileMapPos.y, 0), tileToRender);
+        }
+        else
+        {
+            TilemapGround.SetTile(new Vector3Int((int)tileMapPos.x, (int)tileMapPos.y, 0), tileToRender);
+        }
+    }
+
     private List<World.Tile> GetTilesInRadius(Vector2Int gridLocation, int radius)
     {
         List<World.Tile> temp = new List<World.Tile>();
@@ -368,15 +392,7 @@ public class World : MonoBehaviour
         {
             for (int y = -GridSize.y / 2; y <= GridSize.y / 2; y++)
             {
-                var pos = new Vector2Int(x, y);
-                Tiles.Add(pos, new Tile(pos, Tile.Type.Grass));
-
-                TileBase tileToRender = TileTypes[(int)Tile.Type.Grass].GetRandomTile();
-                Vector2 tileMapPos = pos;// * TileSize;
-                if (tileToRender != null)
-                {
-                    TilemapGround.SetTile(new Vector3Int((int)tileMapPos.x, (int)tileMapPos.y, 0), tileToRender);
-                }
+                SetTileType(new Vector2Int(x, y), Tile.Type.Grass);
             }
         }
 
@@ -397,7 +413,7 @@ public class World : MonoBehaviour
         {
             // TODO not hardcode this? have heuristics for it?
             var directions = new List<Direction>();
-            for (int i = 0; i < Random.Range(4, 20); i++)
+            for (int i = 0; i < Random.Range(10, 50); i++)
             {
                 directions.Add((Direction) Random.Range(0, 7));
             }
@@ -458,15 +474,8 @@ public class World : MonoBehaviour
                     }
                     if (Random.value <= patchDensity)
                     {
-                        Tiles[pos].TileType = Tile.Type.Tree;
+                        SetTileType(pos, Tile.Type.Tree);
                         theoreticalWoodAmount += treeWoodAmount;
-
-                        TileBase tileToRender = TileTypes[(int)Tiles[pos].TileType].GetRandomTile();
-                        Vector2 tileMapPos = pos;// * TileSize;
-                        if (tileToRender != null)
-                        {
-                            TilemapTree.SetTile(new Vector3Int((int)tileMapPos.x, (int)tileMapPos.y, 0), tileToRender);
-                        }
                     }
                 }
             }
