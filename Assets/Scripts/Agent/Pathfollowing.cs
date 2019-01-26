@@ -67,7 +67,7 @@ public class AStar
 {
     public static bool BuildPath(Dictionary<Vector2Int, World.Tile> inGrid, Vector2 startPos, Vector2 endPos, ref Path outPath)
     {
-        World.Tile start = ;
+        World.Tile start;
         World.Tile end;
 
         List<World.Tile> open = new List<World.Tile>();
