@@ -103,7 +103,7 @@ public class World : MonoBehaviour
     }
 
     [SerializeField]
-    private Vector2 TileSize = new Vector2(5, 5);
+    private Vector2 TileSize = new Vector2(32, 32);
 
     public Dictionary<Vector2Int, Tile> Tiles { get; private set; }
     public Inventory GlobalInventory { get; private set; }
@@ -146,14 +146,14 @@ public class World : MonoBehaviour
 
     public static Vector2Int GetGridLocation(Vector2 worldLocation)
     {
-        Vector2 transformedLocation = worldLocation / World.Get().TileSize;
+        Vector2 transformedLocation = (worldLocation + World.Get().TileSize * 0.5f) / World.Get().TileSize;
         return new Vector2Int((int)transformedLocation.x, (int)transformedLocation.y);
     }
 
     public static Vector2 GetWorldLocation(Vector2Int gridLocation)
     {
         Vector2Int transformedLocation = gridLocation * new Vector2Int((int)World.Get().TileSize.x, (int)World.Get().TileSize.y);
-        return new Vector2((float)transformedLocation.x, (float)transformedLocation.y);
+        return new Vector2((float)transformedLocation.x, (float)transformedLocation.y) + World.Get().TileSize * 0.5f;
     }
 
     void Start()
@@ -226,7 +226,7 @@ public class World : MonoBehaviour
 
                 TileBase tileToRender;
                 tileToRender = TileTypes[(int)type];
-                Vector2 tileMapPos = tilePos * TileSize;
+                Vector2 tileMapPos = tilePos;// * TileSize;
                 tileMap.SetTile(new Vector3Int((int)tileMapPos.x, (int)tileMapPos.y, 0), tileToRender);
             }
         }
