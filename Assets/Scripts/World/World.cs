@@ -363,11 +363,18 @@ public class World : MonoBehaviour
             {
                 var pos = new Vector2Int(x, y);
                 Tiles.Add(pos, new Tile(pos, Tile.Type.Grass));
+
+                TileBase tileToRender = TileTypes[(int)Tile.Type.Grass].GetRandomTile();
+                Vector2 tileMapPos = pos;// * TileSize;
+                if (tileToRender != null)
+                {
+                    TilemapGround.SetTile(new Vector3Int((int)tileMapPos.x, (int)tileMapPos.y, 0), tileToRender);
+                }
             }
         }
 
         // Creating hearth
-        Vector2Int maxHearthGridPosition = GridSize- parameters.infrastructures.hearthMinDistanceFromMapEdge;
+        Vector2Int maxHearthGridPosition = GetHalfGridSize() - parameters.infrastructures.hearthMinDistanceFromMapEdge;
         var hearthGridPos = new Vector2Int(Random.Range(-maxHearthGridPosition.x, maxHearthGridPosition.x), Random.Range(-maxHearthGridPosition.y, maxHearthGridPosition.y));
         Tiles[hearthGridPos].TileType = Tile.Type.Hearth;
         SpawnHearth(GetWorldLocation(hearthGridPos));
@@ -446,6 +453,13 @@ public class World : MonoBehaviour
                     {
                         Tiles[pos].TileType = Tile.Type.Tree;
                         theoreticalWoodAmount += treeWoodAmount;
+
+                        TileBase tileToRender = TileTypes[(int)Tiles[pos].TileType].GetRandomTile();
+                        Vector2 tileMapPos = pos;// * TileSize;
+                        if (tileToRender != null)
+                        {
+                            TilemapTree.SetTile(new Vector3Int((int)tileMapPos.x, (int)tileMapPos.y, 0), tileToRender);
+                        }
                     }
                 }
             }
