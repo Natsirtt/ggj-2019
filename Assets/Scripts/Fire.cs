@@ -36,6 +36,9 @@ public class Fire : MonoBehaviour
     public JobDispatcher Jobs {get; private set;}
 
     private List<World.Tile> influence;
+
+    public List<World.Tile> GetInfluence() { return influence; }
+
     void Awake()
     {
         Jobs = gameObject.AddComponent<JobDispatcher>();
@@ -86,7 +89,7 @@ public class Fire : MonoBehaviour
             while (spawning > 0)
             {
                 // TODO randomize this position
-                world.SpawnWorker(WorldPosition(), this);
+                world.SpawnWorker(this);
                 spawning -= 1;
 
             }
@@ -110,6 +113,10 @@ public class Fire : MonoBehaviour
         burnProgress = 0f;
         radiusOfInfluence = 0;
         burnRatePerSecond = 0;
+        if (GridTile.TileType == World.Tile.Type.Hearth)
+        {
+            world.GameOver(GridTile);
+        }
     }
 
     public void Activate()

@@ -433,6 +433,23 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3852857942349364722, guid: 4d790d3c70b94f747a83e6e95f5c8cd2,
+        type: 3}
+      propertyPath: TileTypes.Array.data[3].Variations.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3852857942349364722, guid: 4d790d3c70b94f747a83e6e95f5c8cd2,
+        type: 3}
+      propertyPath: TileTypes.Array.data[3].Variations.Array.data[0].Normal
+      value: 
+      objectReference: {fileID: 11400000, guid: 3d9c20220c6960844a234dcd3364046e,
+        type: 2}
+    - target: {fileID: 3852857942349364722, guid: 4d790d3c70b94f747a83e6e95f5c8cd2,
+        type: 3}
+      propertyPath: TileTypes.Array.data[3].Variations.Array.data[1].Normal
+      value: 
+      objectReference: {fileID: 11400000, guid: fec6e889daabd1e429efd7a70bc58309,
+        type: 2}
     - target: {fileID: 5320450720939533540, guid: 4d790d3c70b94f747a83e6e95f5c8cd2,
         type: 3}
       propertyPath: m_Name
