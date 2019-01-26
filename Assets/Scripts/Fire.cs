@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class Fire : MonoBehaviour
 {
@@ -22,6 +23,9 @@ public class Fire : MonoBehaviour
     [SerializeField]
     private float workerSpawnRateIncrease = 0f;
 
+    [SerializeField]
+    private TileBase FirePlaceTile;
+
     private float currentBurnRatePerSecond;
     private int currentRadiusOfInfluence;
     private float currentWorkerSpawnRate;
@@ -30,6 +34,7 @@ public class Fire : MonoBehaviour
     private float spawnProgress;
     private Inventory globalInventory;
     private World world;
+
     public JobDispatcher Jobs {get; private set;}
 
     private List<World.Tile> influence;
@@ -37,6 +42,10 @@ public class Fire : MonoBehaviour
     {
         Jobs = gameObject.AddComponent<JobDispatcher>();
     }
+
+
+
+    public World.Tile GridTile { get; private set; }
 
     // Start is called before the first frame update
     void Start()
@@ -138,4 +147,9 @@ public class Fire : MonoBehaviour
         }
     }
 
+    public void SetWorldTile(World.Tile tileToGiveToFireScript)
+    {
+        GridTile = tileToGiveToFireScript;
+        World.Get().TilemapFires.SetTile(new Vector3Int(GridTile.Coordinates.x, GridTile.Coordinates.y, 0), FirePlaceTile);
+    }
 }
