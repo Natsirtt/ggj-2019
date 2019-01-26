@@ -12,6 +12,20 @@ public class Path
         return PathPoints.Count > 0;
     }
 
+    public float PathLength()
+    {
+        if (!HasPath()) return -1f;
+
+        Vector2 previous = PathPoints[0];
+        float distance = 0f;
+        foreach(Vector2 point in PathPoints)
+        {
+            distance += (point - previous).magnitude;
+            previous = point;
+        }
+        return distance;
+    }
+
     public static Vector2 GetClosestPointOnSegment(Vector2 A, Vector2 B, Vector2 P)
     {
         float l2 = (A - B).magnitude;
@@ -167,6 +181,12 @@ public class Pathfollowing : MonoBehaviour
             MoveToLocation(new Vector2(Random.Range(-100.0f, 100.0f), Random.Range(-100.0f, 100.0f)));
     }
 
+
+    public void ReplacePath(Path path)
+    {
+        CurrentPath = path;
+    }
+    
     public void MoveToLocation(Vector2 location)
     {
         if(!AStar.BuildPath(World.Get().Tiles, transform.position, location, ref CurrentPath))
