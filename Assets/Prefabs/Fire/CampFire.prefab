@@ -45,7 +45,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   burnRatePerSecond: 0.1
   burnRatePerSecondIncrease: 0.1
-  radiusOfInfluence: 5
+  radiusOfInfluence: 1
   radiusOfInfluenceIncrease: 5
   workerSpawnRatePerSecond: 0
   workerSpawnRateIncrease: 0

@@ -45,6 +45,7 @@ public class NamedArrayDrawer : PropertyDrawer
         EditorGUI.PropertyField(position, property, label, property.isExpanded);
     }
 }
+
 #endif
 
 [Serializable]
@@ -102,6 +103,15 @@ public class World : MonoBehaviour
             MAX
         }
 
+        public enum NeighborsThatAreDifferent
+        {
+            None    = 0x00,
+            North   = 0x01,
+            East    = 0x02,
+            South   = 0x04,
+            West    = 0x08
+        }
+
         public Vector2Int Coordinates { get; private set; }
         public Type TileType { get; set; }
         public bool IsInSnow { get; private set; }
@@ -110,7 +120,7 @@ public class World : MonoBehaviour
         {
             IsInSnow = flag;
 
-            List<World.Tile> adjacentTiles = GetAdjacentTiles(World.Get().Tiles, this);
+            List<World.Tile> adjacentTiles = World.Get().GetTilesInSquare(Coordinates, 1);
             foreach(var tile in adjacentTiles)
             {
                 tile.NeighborChangedIsInSnow(this);
@@ -129,6 +139,9 @@ public class World : MonoBehaviour
                 World.Get().TilemapGround.SetTile(new Vector3Int(Coordinates.x, Coordinates.y, 0), newVisual);
                 return;
             }
+
+            List<World.Tile> adjacentTiles = World.Get().GetTilesInSquare(Coordinates, 1);
+
 
             Vector2Int offset = neighbor.Coordinates - Coordinates;
             World.Direction worldDirection = World.Direction.South;
@@ -464,13 +477,37 @@ public class World : MonoBehaviour
         int yMin = gridLocation.y - radius;
         int yMax = gridLocation.y + radius;
         Vector2Int coordinates = new Vector2Int(xMin, yMin);
-        for (int x = xMin; x < xMax; x++)
+        for (int x = xMin; x <= xMax; x++)
         {
-            for (int y = yMin; y < yMax; y++)
+            for (int y = yMin; y <= yMax; y++)
             {
                 coordinates.x = x;
                 coordinates.y = y;
                 if (GetManhattanDistance(gridLocation, coordinates) < radius && Tiles.ContainsKey(coordinates))
+                {
+                    temp.Add(Tiles[coordinates]);
+                }
+            }
+        }
+        return temp;
+    }
+
+    public List<Tile> GetTilesInSquare(Vector2Int gridLocation, int radius)
+    {
+        List<Tile> temp = new List<World.Tile>();
+        float radiusSquared = radius * radius;
+        int xMin = gridLocation.x - radius;
+        int xMax = gridLocation.x + radius;
+        int yMin = gridLocation.y - radius;
+        int yMax = gridLocation.y + radius;
+        Vector2Int coordinates = new Vector2Int(xMin, yMin);
+        for (int x = xMin; x <= xMax; x++)
+        {
+            for (int y = yMin; y <= yMax; y++)
+            {
+                coordinates.x = x;
+                coordinates.y = y;
+                if (Tiles.ContainsKey(coordinates))
                 {
                     temp.Add(Tiles[coordinates]);
                 }
