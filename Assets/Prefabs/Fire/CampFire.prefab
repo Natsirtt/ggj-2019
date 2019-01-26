@@ -43,7 +43,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9aa7a6811a772114aad4102337c3995e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  burnRatePerSecond: 1
-  burnRatePerSecondIncrease: 1
+  burnRatePerSecond: 0.1
+  burnRatePerSecondIncrease: 0.1
   radiusOfInfluence: 5
   radiusOfInfluenceIncrease: 5
