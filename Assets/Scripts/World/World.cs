@@ -45,14 +45,14 @@ public class World : MonoBehaviour
     }
 
     [SerializeField]
-    private Vector2 TileSize;
+    private Vector2 TileSize = new Vector2(32, 32);
 
     public Dictionary<Vector2Int, Tile> Tiles { get; private set; }
     public Inventory GlobalInventory { get; private set; }
     public Vector2Int GridSize { get; private set; }
 
     [SerializeField]
-    private WorldGenerationParameters generationParameters;
+    private WorldGenerationParameters generationParameters = null;
 
     // Leave the seed to 0 for using the current time. Provide a hardcoded seed otherwise.
     [SerializeField]
@@ -72,6 +72,13 @@ public class World : MonoBehaviour
 
     void Start()
     {
+        if (generationParameters == null)
+        {
+            Debug.LogError("No World Generation Parameters asset provided! World is self destructing.");
+            Destroy(gameObject);
+            return;
+        }
+
         if (seed == 0)
         {
             // TODO TickCount is not the best to use
@@ -90,15 +97,22 @@ public class World : MonoBehaviour
 
     void GenerateWorld(int seed, WorldGenerationParameters parameters)
     {
-        Tiles.Clear();
+        Tiles = new Dictionary<Vector2Int, Tile>();
         Random.InitState(seed);
-        GridSize = parameters.worldGridSize;
+        GridSize = parameters.grid.Size;
 
         // Creating hearth
-        Vector2Int maxHearthGridPosition = parameters.worldGridSize - parameters.hearthMinDistanceFromMapEdge;
+        Vector2Int maxHearthGridPosition = GridSize- parameters.infrastructures.hearthMinDistanceFromMapEdge;
         var hearthGridPos = new Vector2Int(Random.Range(-maxHearthGridPosition.x, maxHearthGridPosition.x), Random.Range(-maxHearthGridPosition.y, maxHearthGridPosition.y));
         Tiles.Add(hearthGridPos, new Tile(hearthGridPos, Tile.Type.Hearth));
+        Debug.Log("Created Hearth at grid position " + hearthGridPos);
 
-        // Seeding woods
+        // Seeding woods paths
+        int numberOfPaths = Random.Range(parameters.forests.numberOfPathsRange.x, parameters.forests.numberOfPathsRange.y);
+        Debug.Log("Generating " + numberOfPaths + " forest paths...");
+        for (int i = 0; i < numberOfPaths; i++)
+        {
+
+        }
     }
 }
