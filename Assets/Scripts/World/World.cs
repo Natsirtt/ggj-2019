@@ -46,6 +46,17 @@ public class NamedArrayDrawer : PropertyDrawer
 }
 #endif
 
+[Serializable]
+public struct TileContainer
+{
+    public List<TileBase> TileSelection;
+
+    public TileBase GetRandomTile()
+    {
+        return TileSelection.Count <= 0 ? null : TileSelection[Random.Range(0, TileSelection.Count)];
+    }
+}
+
 public class World : MonoBehaviour
 {
     // Utils
@@ -177,7 +188,7 @@ public class World : MonoBehaviour
     public JobDispatcher JobDispatcher {get; private set;}
 
     [NamedArrayAttribute(typeof(Tile.Type))]
-    public TileBase[] TileTypes = new TileBase[(int)Tile.Type.MAX];
+    public TileContainer[] TileTypes = new TileContainer[(int)Tile.Type.MAX];
 
     [SerializeField]
     private WorldGenerationParameters generationParameters = null;
@@ -189,6 +200,9 @@ public class World : MonoBehaviour
     public GameObject workerPrefab;
     public GameObject firePrefab;
     public GameObject hearthPrefab;
+
+    public Tilemap TilemapGround;
+    public Tilemap TilemapTree;
 
     public List<GameObject> Workers { get; private set; }
     public List<GameObject> Fires { get; private set; }
@@ -335,8 +349,6 @@ public class World : MonoBehaviour
 
     void GenerateWorld(int seed, WorldGenerationParameters parameters)
     {
-        Tilemap tileMap = GetComponentInChildren<Tilemap>();
-
         Tiles = new Dictionary<Vector2Int, Tile>();
         Random.InitState(seed);
         GridSize = parameters.grid.Size;
@@ -351,11 +363,18 @@ public class World : MonoBehaviour
             {
                 var pos = new Vector2Int(x, y);
                 Tiles.Add(pos, new Tile(pos, Tile.Type.Grass));
+
+                TileBase tileToRender = TileTypes[(int)Tile.Type.Grass].GetRandomTile();
+                Vector2 tileMapPos = pos;// * TileSize;
+                if (tileToRender != null)
+                {
+                    TilemapGround.SetTile(new Vector3Int((int)tileMapPos.x, (int)tileMapPos.y, 0), tileToRender);
+                }
             }
         }
 
         // Creating hearth
-        Vector2Int maxHearthGridPosition = GridSize- parameters.infrastructures.hearthMinDistanceFromMapEdge;
+        Vector2Int maxHearthGridPosition = GetHalfGridSize() - parameters.infrastructures.hearthMinDistanceFromMapEdge;
         var hearthGridPos = new Vector2Int(Random.Range(-maxHearthGridPosition.x, maxHearthGridPosition.x), Random.Range(-maxHearthGridPosition.y, maxHearthGridPosition.y));
         Tiles[hearthGridPos].TileType = Tile.Type.Hearth;
         SpawnHearth(GetWorldLocation(hearthGridPos));
@@ -436,6 +455,13 @@ public class World : MonoBehaviour
                     {
                         Tiles[pos].TileType = Tile.Type.Tree;
                         theoreticalWoodAmount += treeWoodAmount;
+
+                        TileBase tileToRender = TileTypes[(int)Tiles[pos].TileType].GetRandomTile();
+                        Vector2 tileMapPos = pos;// * TileSize;
+                        if (tileToRender != null)
+                        {
+                            TilemapTree.SetTile(new Vector3Int((int)tileMapPos.x, (int)tileMapPos.y, 0), tileToRender);
+                        }
                     }
                 }
             }
