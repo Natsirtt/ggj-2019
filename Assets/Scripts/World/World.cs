@@ -100,6 +100,7 @@ public class World : MonoBehaviour
             Campfire,
             Hearth,
             Tree,
+            House,
             MAX
         }
 
@@ -299,6 +300,7 @@ public class World : MonoBehaviour
 
     [SerializeField]
     private WorldGenerationParameters generationParameters = null;
+    public WorldGenerationParameters GenerationParameters { get { return generationParameters; } }
 
     [SerializeField]
     [Tooltip("Leave the seed to 0 for using the current time, or provide your seed of choice.")]
@@ -550,8 +552,7 @@ public class World : MonoBehaviour
     }
 
     void Update()
-    {
-    }
+    {}
 
     void Awake()
     {
