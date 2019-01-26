@@ -373,13 +373,16 @@ public class World : MonoBehaviour
 
     public void SpawnHearth(Vector2 worldLocation)
     {
-        SetTileType(GetGridLocation(worldLocation), Tile.Type.Hearth);
+        Vector2Int gridPos = GetGridLocation(worldLocation);
+        SetTileType(gridPos, Tile.Type.Hearth);
         GameObject hearth = Instantiate<GameObject>(hearthPrefab, worldLocation, Quaternion.identity);
+        Fire fireScript = hearth.GetComponent<Fire>();
+        fireScript.SetWorldTile(Tiles[gridPos]);
         Fires.Add(hearth);
         
         Camera.main.transform.position = new Vector3(worldLocation.x, worldLocation.y, Camera.main.transform.position.z);
         // TODO clear the tiles and queue the trees
-        Debug.Log("Created Hearth at grid position " + GetGridLocation(worldLocation));
+        Debug.Log("Created Hearth at grid position " + gridPos);
     }
 
     public void SpawnCampFire(Vector2 worldLocation)

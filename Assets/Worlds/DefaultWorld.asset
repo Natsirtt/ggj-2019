@@ -15,7 +15,7 @@ MonoBehaviour:
   grid:
     Size: {x: 400, y: 400}
   resources:
-    startingWoodAmount: 300
+    startingWoodAmount: 200
     woodPerTree: 3
     expeditionWoodCostPerTile: 4
   infrastructures:
