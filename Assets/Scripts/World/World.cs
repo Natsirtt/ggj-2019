@@ -110,9 +110,30 @@ public class World : MonoBehaviour
         // Seeding woods paths
         int numberOfPaths = Random.Range(parameters.forests.numberOfPathsRange.x, parameters.forests.numberOfPathsRange.y);
         Debug.Log("Generating " + numberOfPaths + " forest paths...");
+        Vector2Int previousPatchCenter = hearthGridPos;
+        int theoreticalAvailableWood = parameters.resources.startingWoodAmount;
         for (int i = 0; i < numberOfPaths; i++)
         {
 
+        }
+
+        float snowDensity = 0.2f;
+        for (int i = -200; i < 200; i++)
+        {
+            for (int j = -200; j < 200; j++)
+            {
+                if (new Vector2Int(i, j) == hearthGridPos)
+                {
+                    continue;
+                }
+
+                Tile.Type type = Tile.Type.Grass;
+                if (Random.Range(0.0f, 1.0f) <= snowDensity)
+                {
+                    type = Tile.Type.Snow;
+                }
+                Tiles.Add(new Vector2Int(i, j), new Tile(new Vector2Int(i, j), type));
+            }
         }
     }
 }
