@@ -113,7 +113,7 @@ public class AStar
         }
 
         World.Tile curr = closed[closed.IndexOf(current)];
-        while(curr.Parent != start && curr != null)
+        while(curr != null && curr.Parent != start)
         {
             outPath.PathPoints.Add( World.GetWorldLocation(curr.Coordinates));
             curr = curr.Parent;
@@ -158,12 +158,13 @@ public class Pathfollowing : MonoBehaviour
 
     private void Start()
     {
-        InvokeRepeating("MoveToRandomLocationInSquare", 2.0f, 0.3f);
+        //InvokeRepeating("MoveToRandomLocationInSquare", 2.0f, 2.0f);
     }
 
     void MoveToRandomLocationInSquare()
     {
-        MoveToLocation(new Vector2(Random.Range(-10.0f, 10.0f), Random.Range(-10.0f, 10.0f)));
+        if(!CurrentPath.HasPath())
+            MoveToLocation(new Vector2(Random.Range(-100.0f, 100.0f), Random.Range(-100.0f, 100.0f)));
     }
 
     public void MoveToLocation(Vector2 location)
@@ -179,7 +180,6 @@ public class Pathfollowing : MonoBehaviour
         AgentMovement agentMovement = GetComponent<AgentMovement>();
         if(agentMovement && CurrentPath.HasPath())
         {
-
             Vector2 closestPointOnPath;// CurrentPath.GetClosestPointOnPath(transform.position, 0.1f);
             if (CurrentPath.GetNextPoint(transform.position, out closestPointOnPath))
             {
