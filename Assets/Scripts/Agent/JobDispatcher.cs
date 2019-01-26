@@ -85,6 +85,11 @@ public class JobDispatcher : MonoBehaviour
         chopWoodQueue.Enqueue(job);
     }
 
+    public Queue<Job> chopJobs()
+    {
+        return chopWoodQueue;
+    }
+
     public int Count
     {
         get
@@ -102,24 +107,4 @@ public class JobDispatcher : MonoBehaviour
         chopWoodQueue = new Queue<Job>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        foreach(Job job in expeditionQueue)
-        {
-            GameObject worker = world.GetClosestIdleWorker(job.Coordinates);
-            if (worker != null)
-            {
-                worker.GetComponent<AgentJobHandler>().TakeJob(job);
-            }
-        }
-        foreach (Job job in chopWoodQueue)
-        {
-            GameObject worker = world.GetClosestIdleWorker(job.Coordinates);
-            if (worker != null)
-            {
-                worker.GetComponent<AgentJobHandler>().TakeJob(job);
-            }
-        }
-    }
 }
