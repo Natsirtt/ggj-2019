@@ -5,21 +5,21 @@ using UnityEngine;
 public class Inventory : MonoBehaviour
 {
     [SerializeField]
-    private int StartingWood;
+    private int StartingWood = 0;
 
-    private int currentWood;
+    private int currentWood = 0;
     public int CurrentWood
     {
         get { return currentWood; }
         set { currentWood = value;  }
     }
 
-    public void addWood(int amount)
+    public void AddWood(int amount)
     {
         currentWood += amount;
     }
 
-    public void removeWood(int amount)
+    public void RemoveWood(int amount)
     {
         currentWood -= amount;
     }
@@ -27,6 +27,6 @@ public class Inventory : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        currentWood = StartingWood;   
+        currentWood = StartingWood;
     }
 }

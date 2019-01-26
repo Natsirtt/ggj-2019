@@ -8,7 +8,7 @@ public class World : MonoBehaviour
     // Utils
 
     private static World worldInstance = null;
-    static World Get()
+    public static World Get()
     {
         if (worldInstance == null)
         {
@@ -34,19 +34,18 @@ public class World : MonoBehaviour
             Fire
         }
 
-        public Vector2 coordinates { get; private set; }
-        public Type type { get; set; }
+        public Vector2 Coordinates { get; private set; }
+        public Type TileType { get; set; }
 
         public Tile(Vector2 coordinates, Type type)
         {
-            this.coordinates = coordinates;
-            this.type = type;
+            Coordinates = coordinates;
+            TileType = type;
         }
     }
 
-    // World members
-
-    public Dictionary<Vector2, Tile> tiles { get; private set; }
+    public Dictionary<Vector2, Tile> Tiles { get; private set; }
+    public Inventory GlobalInventory { get; private set; }
 
     // Leave the seed to 0 for using the current time. Provide a hardcoded seed otherwise.
     [SerializeField]
@@ -63,6 +62,11 @@ public class World : MonoBehaviour
         {
             GenerateWorld(seed);
         }
+    }
+
+    void Awake()
+    {
+        GlobalInventory = gameObject.AddComponent<Inventory>();
     }
 
     void GenerateWorld(int seed)
