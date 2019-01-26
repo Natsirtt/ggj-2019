@@ -245,19 +245,26 @@ public class World : MonoBehaviour
     public void SpawnCampFire(Vector2 worldLocation)
     {
         GameObject fire = Instantiate<GameObject>(firePrefab, worldLocation, Quaternion.identity);
-        Fires.Add(fire);
+        Fire fireScript = fire.GetComponent<Fire>();
+        if(fireScript != null)
+        {
+            Vector2Int tileLocationInGridSpace = GetGridLocation(fire.transform.position);
+            Tile tileToGiveToFireScript = Tiles[tileLocationInGridSpace];
+            fireScript.SetWorldTile(tileToGiveToFireScript);
+            Fires.Add(fire);
+        }
         // TODO clear the tiles and queue the trees
     }
 
     public Vector2Int GetGridLocation(Vector2 worldLocation)
     {
-        Vector2 transformedLocation = (worldLocation + TileSize * 0.5f) / TileSize;
-        return new Vector2Int((int)transformedLocation.x, (int)transformedLocation.y);
+        Vector2 transformedLocation = (worldLocation - TileSize * 0.5f) / TileSize;
+        return new Vector2Int(Mathf.RoundToInt(transformedLocation.x), Mathf.RoundToInt(transformedLocation.y));
     }
 
     public Vector2 GetWorldLocation(Vector2Int gridLocation)
     {
-        Vector2Int transformedLocation = gridLocation * new Vector2Int((int)TileSize.x, (int)TileSize.y);
+        Vector2Int transformedLocation = gridLocation * new Vector2Int(Mathf.RoundToInt(TileSize.x), Mathf.RoundToInt(TileSize.y));
         return new Vector2((float)transformedLocation.x, (float)transformedLocation.y) + TileSize * 0.5f;
     }
 
