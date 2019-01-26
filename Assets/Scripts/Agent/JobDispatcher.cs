@@ -24,6 +24,7 @@ public class JobDispatcher : MonoBehaviour
 
     }
 
+
     #region Job Handler private members
 
     private Queue<Job> expeditionQueue;
@@ -45,6 +46,33 @@ public class JobDispatcher : MonoBehaviour
         }
     }
 
+    public Job GetNearestJob(Vector2Int gridPosition)
+    {
+        int closestDistance = 999999;
+        Job closestJob = null;
+        foreach (Job job in expeditionQueue)
+        {
+            int distance = World.GetManhattanDistance(gridPosition, job.Coordinates);
+            if (distance < closestDistance)
+            {
+                closestJob = job;
+                closestDistance = distance;
+            }
+        }
+        return closestJob;
+    }
+
+
+    public void ClearJobs()
+    {
+        chopWoodQueue.Clear();
+    }
+
+    public bool HasJobs()
+    {
+        return chopWoodQueue.Count > 0 || expeditionQueue.Count > 0;
+    }
+
     public void QueueJob(Job job)
     {
         chopWoodQueue.Enqueue(job);
@@ -56,6 +84,8 @@ public class JobDispatcher : MonoBehaviour
     {
         world = World.Get();
         globalInventory = world.GlobalInventory;
+        expeditionQueue = new Queue<Job>();
+        chopWoodQueue = new Queue<Job>();
     }
 
     // Update is called once per frame

@@ -35,16 +35,24 @@ public class Fire : MonoBehaviour
     private Inventory globalInventory;
     private World world;
 
+    public JobDispatcher Jobs {get; private set;}
+
+    private List<World.Tile> influence;
+    void Awake()
+    {
+        Jobs = gameObject.AddComponent<JobDispatcher>();
+    }
+
+
+
     public World.Tile GridTile { get; private set; }
+
     // Start is called before the first frame update
     void Start()
     {
         world = World.Get();
         globalInventory = world.GlobalInventory;
-        burnProgress = 0f;
-        currentRadiusOfInfluence = radiusOfInfluence;
-        currentBurnRatePerSecond = burnRatePerSecond;
-        currentWorkerSpawnRate = workerSpawnRatePerSecond;
+        Activate();
     }
 
     // Update is called once per frame
@@ -71,7 +79,7 @@ public class Fire : MonoBehaviour
             while (spawning > 0)
             {
                 // TODO randomize this position
-                world.SpawnWorker(WorldPosition());
+                world.SpawnWorker(WorldPosition(), this);
                 spawning -= 1;
 
             }
@@ -98,6 +106,17 @@ public class Fire : MonoBehaviour
         burnProgress = 0f;
         currentRadiusOfInfluence = radiusOfInfluence;
         currentBurnRatePerSecond = burnRatePerSecond;
+        currentWorkerSpawnRate = workerSpawnRatePerSecond;
+        influence = World.Get().GetTilesInRadius(TilePosition(), CurrentRadiusOfInfluence);
+
+        foreach(World.Tile tile in influence)
+        {
+            tile.IsInSnow = false;
+            if (tile.TileType == World.Tile.Type.Tree)
+            {
+                Jobs.QueueJob(tile.Coordinates, JobDispatcher.Job.Type.Chop);
+            }
+        }
     }
 
     public void Feed()
@@ -111,6 +130,11 @@ public class Fire : MonoBehaviour
     public Vector2 WorldPosition()
     {
         return new Vector2(gameObject.transform.position.x, gameObject.transform.position.y);
+    }
+
+    public Vector2Int TilePosition()
+    {
+        return world.GetGridLocation(WorldPosition());
     }
 
     public void Shrink()
