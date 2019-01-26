@@ -120,12 +120,28 @@ public class World : MonoBehaviour
     private int seed = 0;
 
     public GameObject workerPrefab;
+    public GameObject firePrefab;
+    public GameObject hearthPrefab;
 
     public List<GameObject> Workers { get; private set; }
+    public List<GameObject> Fires { get; private set; }
 
     public void SpawnWorker(Vector2 worldLocation)
     {
         GameObject worker = Instantiate<GameObject>(workerPrefab, worldLocation, Quaternion.identity);
+        Workers.Add(worker);
+    }
+
+    public void SpawnHearth(Vector2 worldLocation)
+    {
+        GameObject hearth = Instantiate<GameObject>(hearthPrefab, worldLocation, Quaternion.identity);
+        Fires.Add(hearth);
+    }
+
+    public void SpawnCampFire(Vector2 worldLocation)
+    {
+        GameObject fire = Instantiate<GameObject>(firePrefab, worldLocation, Quaternion.identity);
+        Fires.Add(fire);
     }
 
     public static Vector2Int GetGridLocation(Vector2 worldLocation)
