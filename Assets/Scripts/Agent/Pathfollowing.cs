@@ -143,7 +143,7 @@ public class Pathfollowing : MonoBehaviour
 
     private void Start()
     {
-        InvokeRepeating("MoveToRandomLocationInSquare", 2.0f, 2.0f);
+        //InvokeRepeating("MoveToRandomLocationInSquare", 2.0f, 2.0f);
     }
 
     void MoveToRandomLocationInSquare()

@@ -194,45 +194,46 @@ public class World : MonoBehaviour
         public void SetIsInSnow(bool flag)
         {
             IsInSnow = flag;
-
-            List<World.Tile> adjacentTiles = World.Get().GetTilesInSquare(Coordinates, 1);
-            foreach(var tile in adjacentTiles)
-            {
-                tile.NeighborChangedIsInSnow(this);
-            }
-
-            TileBase newVisual = World.Get().TileTypes[(int)Type.Grass].GetRandomTile(IsInSnow);
-            World.Get().Tilemaps[(int)Type.Grass].SetTile(new Vector3Int(Coordinates.x, Coordinates.y, 0), newVisual);
+            
+            ChangedIsInSnow();
+            List<World.Tile> adjacentTiles = GetAdjacentTiles(World.Get().Tiles, this);
+           // List<World.Tile> adjacentTiles = new List<World.Tile>();
+           // adjacentTiles.Add(World.Get().Tiles[Coordinates + Vector2Int.left]);
+            foreach (World.Tile t in adjacentTiles)
+                t.ChangedIsInSnow();
         }
 
-        public void NeighborChangedIsInSnow(Tile neighbor)
+        public void ChangedIsInSnow()
         {
-            int neighborDifferentMask = 0;
+            int neighborSameMask = 0;
             TileBase newVisual = World.Get().TileTypes[(int)Type.Grass].GetRandomTile(IsInSnow);
 
+            //List<World.Tile> adjacentTiles = World.Get().GetTilesInSquare(Coordinates, 1);
             List<World.Tile> adjacentTiles = GetAdjacentTiles(World.Get().Tiles, this);
+            // List<World.Tile> adjacentTiles = new List<World.Tile>();
+            // adjacentTiles.Add(World.Get().Tiles[Coordinates + Vector2Int.up]);
+            //adjacentTiles.Add(World.Get().Tiles[Coordinates + Vector2Int.down]);
 
-            foreach(World.Tile t in adjacentTiles)
+            foreach (World.Tile t in adjacentTiles)
             {
-                neighborDifferentMask |= 0;
                 if (t.IsInSnow == IsInSnow)
                 {
                     continue;
                 }
 
-                Vector2Int offset = neighbor.Coordinates - Coordinates;
+                Vector2Int offset = t.Coordinates - Coordinates;
                 if (offset.x < 0)
-                    neighborDifferentMask |= (int)NeighborsThatAreDifferent.West;
+                    neighborSameMask |= (int)NeighborsThatAreDifferent.West;
                 else if (offset.x > 0)
-                    neighborDifferentMask |= (int)NeighborsThatAreDifferent.East;
+                    neighborSameMask |= (int)NeighborsThatAreDifferent.East;
 
                 if (offset.y < 0)
-                    neighborDifferentMask |= (int)NeighborsThatAreDifferent.South;
-                else if (offset.x > 0)
-                    neighborDifferentMask |= (int)NeighborsThatAreDifferent.North;
+                    neighborSameMask |= (int)NeighborsThatAreDifferent.South;
+                else if (offset.y > 0)
+                    neighborSameMask |= (int)NeighborsThatAreDifferent.North;
             }
 
-            TileNeighborTransition variation = Array.Find(World.Get().NeighborTransitions, x => (int)x.Mask == neighborDifferentMask);
+            TileNeighborTransition variation = Array.Find(World.Get().NeighborTransitions, x => (int)x.Mask == neighborSameMask);
             newVisual = IsInSnow ? variation.TileVariation.Snowed : variation.TileVariation.Normal;
             World.Get().Tilemaps[(int)Type.Grass].SetTile(new Vector3Int(Coordinates.x, Coordinates.y, 0), newVisual);
         }
