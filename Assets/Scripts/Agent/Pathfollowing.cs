@@ -43,10 +43,10 @@ public class Path
         if (!HasPath())
             return false;
 
-        outPoint = PathPoints[0];
-        if ((queryPosition - outPoint).magnitude < 0.1f)
+        outPoint = PathPoints.Last();
+        if ((queryPosition - outPoint).magnitude < 1.0f)
         {
-            PathPoints.RemoveAt(0);
+            PathPoints.RemoveAt(PathPoints.Count - 1);
             return GetNextPoint(queryPosition, out outPoint);
         }
 
@@ -82,8 +82,8 @@ public class AStar
 {
     public static bool BuildPath(Dictionary<Vector2Int, World.Tile> inGrid, Vector2 startPos, Vector2 endPos, ref Path outPath)
     {
-        Vector2Int startPosInt = World.GetGridLocation(startPos);
-        Vector2Int endPosInt = World.GetGridLocation(endPos);
+        Vector2Int startPosInt = World.Get().GetGridLocation(startPos);
+        Vector2Int endPosInt = World.Get().GetGridLocation(endPos);
         if (!inGrid.ContainsKey(startPosInt) || !inGrid.ContainsKey(endPosInt))
             return false;
 
@@ -98,7 +98,7 @@ public class AStar
 
         open.Add(current);
         
-        while(open.Count != 0 && !closed.Exists( x => x.Coordinates == end.Coordinates))
+        while(open.Count != 0 && !closed.Exists( x => x.Coordinates == end.Coordinates) && closed.Count < 1000)
         {
             current = open[0];
             open.Remove(current);
@@ -129,7 +129,7 @@ public class AStar
         World.Tile curr = closed[closed.IndexOf(current)];
         while(curr != null && curr.Parent != start)
         {
-            outPath.PathPoints.Add( World.GetWorldLocation(curr.Coordinates));
+            outPath.PathPoints.Add( World.Get().GetWorldLocation(curr.Coordinates));
             curr = curr.Parent;
         }
 
@@ -172,13 +172,13 @@ public class Pathfollowing : MonoBehaviour
 
     private void Start()
     {
-        //InvokeRepeating("MoveToRandomLocationInSquare", 2.0f, 2.0f);
+        InvokeRepeating("MoveToRandomLocationInSquare", 2.0f, 2.0f);
     }
 
     void MoveToRandomLocationInSquare()
     {
         if(!CurrentPath.HasPath())
-            MoveToLocation(new Vector2(Random.Range(-100.0f, 100.0f), Random.Range(-100.0f, 100.0f)));
+            MoveToLocation(new Vector2(Random.Range(-100.0f, 100.0f), Random.Range(-100.0f, 100.0f)) + new Vector2(transform.position.x, transform.position.y));
     }
 
 
@@ -189,7 +189,7 @@ public class Pathfollowing : MonoBehaviour
     
     public void MoveToLocation(Vector2 location)
     {
-        if(!AStar.BuildPath(World.Get().Tiles, transform.position, location, ref CurrentPath))
+        if (!AStar.BuildPath(World.Get().Tiles, transform.position, location, ref CurrentPath))
         {
             Debug.LogWarning("No path could be built for agent: " + gameObject.name + " at location " + location.ToString());
         }
@@ -205,7 +205,12 @@ public class Pathfollowing : MonoBehaviour
             {
                 Debug.DrawLine(transform.position, closestPointOnPath);
                 Vector2 vecTowards = closestPointOnPath - new Vector2(transform.position.x, transform.position.y);
-                agentMovement.AddMovementInput(vecTowards.normalized);
+                agentMovement.AddMovementInput(vecTowards.magnitude > 1.0f ? vecTowards.normalized : vecTowards);
+            }
+
+            for(int i = 0; i < CurrentPath.PathPoints.Count - 1; ++i)
+            {
+                Debug.DrawLine(CurrentPath.PathPoints[i], CurrentPath.PathPoints[i+1], Color.red);
             }
         }
     }

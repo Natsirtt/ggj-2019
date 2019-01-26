@@ -17,16 +17,14 @@ MonoBehaviour:
   resources:
     startingWoodAmount: 100
     woodPerTree: 5
-    expeditionWoodCost: 0
+    expeditionWoodCostPerTile: 3
   infrastructures:
     hearthMinDistanceFromMapEdge: {x: 100, y: 100}
   forests:
     numberOfPathsRange: {x: 3, y: 6}
     patchesPerPathRange: {x: 1, y: 4}
     woodAmountRangePerPatch: {x: 5, y: 100}
-    minDistanceFromPathLastSeed: 30
-    maxDistanceFromPathLastSeed: 150
+    patchesDifficultyDistanceModifier: 0
     minPatchEuclidianRadius: 1
     maxPatchEuclidianRadius: 10
-    patchDensityRange: {x: 20, y: 100}
-    angleForNextSeedInPath: 75
+    patchDensityRange: {x: 50, y: 100}
