@@ -12,7 +12,11 @@ public class Controller : MonoBehaviour
         Vector2 mousePosInWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         if (Input.GetButtonDown("PlaceCampFire"))
         {
-            World.Get().SpawnCampFire(mousePosInWorld);
+            World w = World.Get();
+            if (w.Tiles[w.GetGridLocation(mousePosInWorld)].TileType == World.Tile.Type.Grass)
+            {
+                w.SpawnCampFire(mousePosInWorld);
+            }
         }
 
         if(Input.GetButtonDown("DragCamera"))

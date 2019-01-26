@@ -45,16 +45,29 @@ public class NamedArrayDrawer : PropertyDrawer
         EditorGUI.PropertyField(position, property, label, property.isExpanded);
     }
 }
+
 #endif
+
+[Serializable]
+public struct TileVariation
+{
+    public TileBase Normal;
+    public TileBase Snowed;
+}
 
 [Serializable]
 public struct TileContainer
 {
-    public List<TileBase> TileSelection;
+    public List<TileVariation> Variations;
 
-    public TileBase GetRandomTile()
+    public TileBase GetRandomTile(bool snowed)
     {
-        return TileSelection.Count <= 0 ? null : TileSelection[Random.Range(0, TileSelection.Count)];
+        if (Variations.Count <= 0)
+            return null;
+
+        TileVariation result = Variations[Random.Range(0, Variations.Count)];
+
+        return result.Snowed == null ? result.Normal : (snowed ? result.Snowed : result.Normal);
     }
 }
 
@@ -90,9 +103,98 @@ public class World : MonoBehaviour
             MAX
         }
 
+        public enum NeighborsThatAreDifferent
+        {
+            None    = 0x00,
+            North   = 0x01,
+            East    = 0x02,
+            South   = 0x04,
+            West    = 0x08
+        }
+
         public Vector2Int Coordinates { get; private set; }
         public Type TileType { get; set; }
-        public bool IsInSnow { get; set; }
+        public bool IsInSnow { get; private set; }
+
+        public void SetIsInSnow(bool flag)
+        {
+            IsInSnow = flag;
+
+            List<World.Tile> adjacentTiles = World.Get().GetTilesInSquare(Coordinates, 1);
+            foreach(var tile in adjacentTiles)
+            {
+                tile.NeighborChangedIsInSnow(this);
+            }
+
+            TileBase newVisual = World.Get().TileTypes[(int)Type.Grass].GetRandomTile(IsInSnow);
+            World.Get().Tilemaps[(int)Type.Grass].SetTile(new Vector3Int(Coordinates.x, Coordinates.y, 0), newVisual);
+        }
+
+        public void NeighborChangedIsInSnow(Tile neighbor)
+        {
+            TileBase newVisual = null;
+            if (neighbor.IsInSnow == IsInSnow)
+            {
+                newVisual = World.Get().TileTypes[(int)Type.Grass].GetRandomTile(IsInSnow);
+                World.Get().Tilemaps[(int)Type.Grass].SetTile(new Vector3Int(Coordinates.x, Coordinates.y, 0), newVisual);
+                return;
+            }
+
+            List<World.Tile> adjacentTiles = World.Get().GetTilesInSquare(Coordinates, 1);
+
+
+            Vector2Int offset = neighbor.Coordinates - Coordinates;
+            World.Direction worldDirection = World.Direction.South;
+            if (offset.x == -1 && offset.y == -1)
+                worldDirection = World.Direction.SouthWest;
+            else if(offset.x == 0 && offset.y == -1)
+                worldDirection = World.Direction.South;
+            else if(offset.x == 1 && offset.y == -1)
+                worldDirection = World.Direction.SouthEast;
+            else if(offset.x == -1 && offset.y == 0)
+                worldDirection = World.Direction.West;
+            else if(offset.x == 1 && offset.y == 0)
+                worldDirection = World.Direction.East;
+            else if(offset.x == -1 && offset.y == 1)
+                worldDirection = World.Direction.NorthWest;
+            else if (offset.x == 0 && offset.y == 1)
+                worldDirection = World.Direction.North;
+            else if(offset.x == 1 && offset.y == 1)
+                worldDirection = World.Direction.NorthEast;
+
+            TileVariation variation = World.Get().GrassEdgeVariations[(int)worldDirection];
+            newVisual = IsInSnow ? variation.Snowed : variation.Normal;
+            World.Get().Tilemaps[(int)Type.Grass].SetTile(new Vector3Int(Coordinates.x, Coordinates.y, 0), newVisual);
+        }
+        
+        public static List<World.Tile> GetAdjacentTiles(Dictionary<Vector2Int, World.Tile> inGrid, World.Tile tile)
+        {
+            List<World.Tile> temp = new List<World.Tile>();
+
+            Vector2Int coordinates = tile.Coordinates;
+
+            if (inGrid.ContainsKey(coordinates + Vector2Int.up))
+            {
+                temp.Add(inGrid[coordinates + Vector2Int.up]);
+            }
+
+            if (inGrid.ContainsKey(coordinates + Vector2Int.down))
+            {
+                temp.Add(inGrid[coordinates + Vector2Int.down]);
+            }
+
+            if (inGrid.ContainsKey(coordinates + Vector2Int.left))
+            {
+                temp.Add(inGrid[coordinates + Vector2Int.left]);
+            }
+
+            if (inGrid.ContainsKey(coordinates + Vector2Int.right))
+            {
+                temp.Add(inGrid[coordinates + Vector2Int.right]);
+            }
+
+            return temp;
+        }
 
         public World.Tile Parent { get; set; }
         public float DistanceToTarget { get; set; }
@@ -188,8 +290,14 @@ public class World : MonoBehaviour
     public Vector2Int GridSize { get; private set; }
     public JobDispatcher JobDispatcher {get; private set;}
 
-    [NamedArrayAttribute(typeof(Tile.Type))]
+    [NamedArray(typeof(Tile.Type))]
     public TileContainer[] TileTypes = new TileContainer[(int)Tile.Type.MAX];
+
+    [NamedArray(typeof(Direction))]
+    public TileVariation[] GrassEdgeVariations = new TileVariation[(int)Direction.NorthWest + 1];
+
+    [NamedArray(typeof(Tile.Type))]
+    public Tilemap[] Tilemaps = new Tilemap[(int)Tile.Type.MAX];
 
     [SerializeField]
     private WorldGenerationParameters generationParameters = null;
@@ -202,10 +310,6 @@ public class World : MonoBehaviour
     public GameObject firePrefab;
     public GameObject hearthPrefab;
     public GameObject fireParticleSystemPrefab;
-
-    public Tilemap TilemapGround;
-    public Tilemap TilemapTrees;
-    public Tilemap TilemapFires;
 
     public List<GameObject> Workers { get; private set; }
     public List<GameObject> Fires { get; private set; }
@@ -270,9 +374,11 @@ public class World : MonoBehaviour
 
     public void SpawnCampFire(Vector2 worldLocation)
     {
+        var gridPos = GetGridLocation(worldLocation);
+        SetTileType(gridPos, Tile.Type.Campfire);
         GameObject fire = Instantiate<GameObject>(firePrefab, worldLocation, Quaternion.identity);
         float depth = fireParticleSystemPrefab.transform.position.z;
-        GameObject fireParticleSystem = Instantiate<GameObject>(fireParticleSystemPrefab, (Vector3)GetWorldLocation(GetGridLocation(worldLocation)) + new Vector3(0, 0, depth), fireParticleSystemPrefab.transform.rotation);
+        GameObject fireParticleSystem = Instantiate<GameObject>(fireParticleSystemPrefab, (Vector3)GetWorldLocation(gridPos) + new Vector3(0, 0, depth), fireParticleSystemPrefab.transform.rotation);
         Fire fireScript = fire.GetComponent<Fire>();
         if (fireScript != null)
         {
@@ -327,7 +433,6 @@ public class World : MonoBehaviour
             && -halfGridSize.y <= gridLocation.y && gridLocation.y <= halfGridSize.y;
     }
 
-
     public void SetTileType(Vector2Int pos, Tile.Type type)
     {
         if (!Tiles.ContainsKey(pos))
@@ -336,22 +441,14 @@ public class World : MonoBehaviour
         }
 
         Tiles[pos].TileType = type;
-        TileBase tileToRender = TileTypes[(int)type].GetRandomTile();
+        TileBase tileToRender = TileTypes[(int)type].GetRandomTile(Tiles[pos].IsInSnow);
         if (tileToRender == null)
         {
             Debug.LogError("Could not find a valid tile to render for type " + type);
             return;
         }
 
-        Vector2 tileMapPos = pos;// * TileSize;
-        if (type == Tile.Type.Tree)
-        {
-            TilemapTrees.SetTile(new Vector3Int((int)tileMapPos.x, (int)tileMapPos.y, 0), tileToRender);
-        }
-        else
-        {
-            TilemapGround.SetTile(new Vector3Int((int)tileMapPos.x, (int)tileMapPos.y, 0), tileToRender);
-        }
+        Tilemaps[(int)type].SetTile(new Vector3Int(pos.x, pos.y, 0), tileToRender);
     }
 
     public Direction GetRandomDirection()
@@ -379,13 +476,37 @@ public class World : MonoBehaviour
         int yMin = gridLocation.y - radius;
         int yMax = gridLocation.y + radius;
         Vector2Int coordinates = new Vector2Int(xMin, yMin);
-        for (int x = xMin; x < xMax; x++)
+        for (int x = xMin; x <= xMax; x++)
         {
-            for (int y = yMin; y < yMax; y++)
+            for (int y = yMin; y <= yMax; y++)
             {
                 coordinates.x = x;
                 coordinates.y = y;
                 if (GetManhattanDistance(gridLocation, coordinates) < radius && Tiles.ContainsKey(coordinates))
+                {
+                    temp.Add(Tiles[coordinates]);
+                }
+            }
+        }
+        return temp;
+    }
+
+    public List<Tile> GetTilesInSquare(Vector2Int gridLocation, int radius)
+    {
+        List<Tile> temp = new List<World.Tile>();
+        float radiusSquared = radius * radius;
+        int xMin = gridLocation.x - radius;
+        int xMax = gridLocation.x + radius;
+        int yMin = gridLocation.y - radius;
+        int yMax = gridLocation.y + radius;
+        Vector2Int coordinates = new Vector2Int(xMin, yMin);
+        for (int x = xMin; x <= xMax; x++)
+        {
+            for (int y = yMin; y <= yMax; y++)
+            {
+                coordinates.x = x;
+                coordinates.y = y;
+                if (Tiles.ContainsKey(coordinates))
                 {
                     temp.Add(Tiles[coordinates]);
                 }
