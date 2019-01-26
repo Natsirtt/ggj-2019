@@ -5,10 +5,10 @@ using UnityEngine;
 public class Fire : MonoBehaviour
 {
     [SerializeField]
-    private int burnRatePerSecond = 0;
+    private float burnRatePerSecond = 0f;
 
     [SerializeField]
-    private int burnRatePerSecondIncrease = 1;
+    private float burnRatePerSecondIncrease = 1f;
 
     [SerializeField]
     private int radiusOfInfluence = 0;
@@ -16,35 +16,59 @@ public class Fire : MonoBehaviour
     [SerializeField]
     private int radiusOfInfluenceIncrease = 5;
 
-    private int currentBurnRatePerSecond;
+    [SerializeField]
+    private float workerSpawnRatePerSecond = 0f;
+
+    [SerializeField]
+    private float workerSpawnRateIncrease = 0f;
+
+    private float currentBurnRatePerSecond;
     private int currentRadiusOfInfluence;
+    private float currentWorkerSpawnRate;
 
     private float burnProgress;
+    private float spawnProgress;
     private Inventory globalInventory;
+    private World world;
     // Start is called before the first frame update
     void Start()
     {
-        World world = World.Get();
+        world = World.Get();
         globalInventory = world.GlobalInventory;
         burnProgress = 0f;
         currentRadiusOfInfluence = radiusOfInfluence;
         currentBurnRatePerSecond = burnRatePerSecond;
+        currentWorkerSpawnRate = workerSpawnRatePerSecond;
     }
 
     // Update is called once per frame
     void Update()
     {
-        burnProgress += Time.deltaTime;
+        burnProgress += Time.deltaTime * currentBurnRatePerSecond;
         if (burnProgress >= 1f)
         {
-            if (globalInventory.CurrentWood < burnRatePerSecond)
+            int woodBurnt = Mathf.FloorToInt(burnProgress);
+            if (globalInventory.CurrentWood < woodBurnt)
             {
                 // Warn the player, dim down the fire?
                 Shrink();
                 return;
             }
-            globalInventory.RemoveWood(burnRatePerSecond);
-            burnProgress = 0f;
+            globalInventory.RemoveWood(woodBurnt);
+            burnProgress -= (float) woodBurnt;
+        }
+        spawnProgress += Time.deltaTime * currentWorkerSpawnRate;
+        if (spawnProgress >= 1f)
+        {
+            int spawning = Mathf.FloorToInt(spawnProgress);
+            spawnProgress = spawnProgress - spawning;
+            while (spawning > 0)
+            {
+                // TODO randomize this position
+                world.SpawnWorker(WorldPosition());
+                spawning -= 1;
+
+            }
         }
     }
 
@@ -74,7 +98,13 @@ public class Fire : MonoBehaviour
     {
         currentRadiusOfInfluence += radiusOfInfluenceIncrease;
         currentBurnRatePerSecond += burnRatePerSecondIncrease;
+        currentWorkerSpawnRate += workerSpawnRateIncrease;
 
+    }
+
+    public Vector2 WorldPosition()
+    {
+        return new Vector2(gameObject.transform.position.x, gameObject.transform.position.y);
     }
 
     public void Shrink()

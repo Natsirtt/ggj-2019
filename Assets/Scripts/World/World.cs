@@ -72,6 +72,15 @@ public class World : MonoBehaviour
     [SerializeField]
     private int seed = 0;
 
+    public GameObject workerPrefab;
+
+    public List<GameObject> Workers { get; private set; }
+
+    public void SpawnWorker(Vector2 worldLocation)
+    {
+        GameObject worker = Instantiate<GameObject>(workerPrefab, worldLocation, Quaternion.identity);
+    }
+
     public static Vector2Int GetGridLocation(Vector2 worldLocation)
     {
         Vector2 transformedLocation = worldLocation / World.Get().TileSize;
