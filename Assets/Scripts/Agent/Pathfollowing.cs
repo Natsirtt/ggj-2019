@@ -12,6 +12,20 @@ public class Path
         return PathPoints.Count > 0;
     }
 
+    public float PathLength()
+    {
+        if (!HasPath()) return -1f;
+
+        Vector2 previous = PathPoints[0];
+        float distance = 0f;
+        foreach(Vector2 point in PathPoints)
+        {
+            distance += (point - previous).magnitude;
+            previous = point;
+        }
+        return distance;
+    }
+
     public static Vector2 GetClosestPointOnSegment(Vector2 A, Vector2 B, Vector2 P)
     {
         float l2 = (A - B).magnitude;
@@ -68,8 +82,8 @@ public class AStar
 {
     public static bool BuildPath(Dictionary<Vector2Int, World.Tile> inGrid, Vector2 startPos, Vector2 endPos, ref Path outPath)
     {
-        Vector2Int startPosInt = World.GetGridLocation(startPos);
-        Vector2Int endPosInt = World.GetGridLocation(endPos);
+        Vector2Int startPosInt = World.Get().GetGridLocation(startPos);
+        Vector2Int endPosInt = World.Get().GetGridLocation(endPos);
         if (!inGrid.ContainsKey(startPosInt) || !inGrid.ContainsKey(endPosInt))
             return false;
 
@@ -115,7 +129,7 @@ public class AStar
         World.Tile curr = closed[closed.IndexOf(current)];
         while(curr != null && curr.Parent != start)
         {
-            outPath.PathPoints.Add( World.GetWorldLocation(curr.Coordinates));
+            outPath.PathPoints.Add( World.Get().GetWorldLocation(curr.Coordinates));
             curr = curr.Parent;
         }
 
@@ -167,6 +181,12 @@ public class Pathfollowing : MonoBehaviour
             MoveToLocation(new Vector2(Random.Range(-100.0f, 100.0f), Random.Range(-100.0f, 100.0f)) + new Vector2(transform.position.x, transform.position.y));
     }
 
+
+    public void ReplacePath(Path path)
+    {
+        CurrentPath = path;
+    }
+    
     public void MoveToLocation(Vector2 location)
     {
         if (!AStar.BuildPath(World.Get().Tiles, transform.position, location, ref CurrentPath))
