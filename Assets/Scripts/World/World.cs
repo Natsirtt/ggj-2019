@@ -262,6 +262,7 @@ public class World : MonoBehaviour
     {
         GameObject hearth = Instantiate<GameObject>(hearthPrefab, worldLocation, Quaternion.identity);
         Fires.Add(hearth);
+        Camera.main.transform.position = worldLocation;
         // TODO clear the tiles and queue the trees
     }
 
@@ -416,6 +417,16 @@ public class World : MonoBehaviour
         Workers = new List<GameObject>();
     }
 
+    private List<Direction> GetRandomDirectionsList(int minListSize, int maxListSize)
+    {
+        var directions = new List<Direction>();
+        for (int i = 0; i < Random.Range(minListSize, maxListSize); i++)
+        {
+            directions.Add(GetRandomDirection());
+        }
+        return directions;
+    }
+
     void GenerateWorld(int seed, WorldGenerationParameters parameters)
     {
         Tiles = new Dictionary<Vector2Int, Tile>();
@@ -451,13 +462,7 @@ public class World : MonoBehaviour
         // Generating all paths
         for (int pathID = 0; pathID < numberOfPaths; pathID++)
         {
-            // TODO not hardcode this? have heuristics for it?
-            var directions = new List<Direction>();
-            for (int i = 0; i < Random.Range(10, 50); i++)
-            {
-                directions.Add(GetRandomDirection());
-            }
-            theoreticalAvailableWood = GenerateForestPath(hearthGridPos, theoreticalAvailableWood, directions, parameters);
+            theoreticalAvailableWood = GenerateForestPath(hearthGridPos, theoreticalAvailableWood, GetRandomDirectionsList(10, 50), parameters);
         }
     }
 
@@ -472,9 +477,15 @@ public class World : MonoBehaviour
         int numberOfPatches = Random.Range(parameters.forests.patchesPerPathRange.x, parameters.forests.patchesPerPathRange.y);
         Debug.Log("Generating " + numberOfPatches + " patches");
         Vector2Int seedPosition = hearthPosition;
+        int numberOfPatchesConsistentWithDirection = 0;
         // Generating all patches of the current path
         for (int patchID = 0; patchID < numberOfPatches; patchID++)
         {
+            if (numberOfPatchesConsistentWithDirection == parameters.forests.numberOfPatchesWithConsistentDirection)
+            {
+                directions = GetRandomDirectionsList(10, 30);
+                numberOfPatchesConsistentWithDirection = 0;
+            }
             // Snaking away using the resources
             int travelledTilesNb = 0;
             while (theoreticalWoodAmount > 0 && theoreticalWoodAmount > parameters.resources.expeditionWoodCostPerTile)
@@ -514,12 +525,13 @@ public class World : MonoBehaviour
                 {
                     break;
                 }
-                if (Random.value <= patchDensity)
+                if (Random.value <= patchDensity && t.TileType != Tile.Type.Hearth)
                 {
                     SetTileType(t.Coordinates, Tile.Type.Tree);
                     theoreticalWoodAmount += treeWoodAmount;
                 }
             }
+            numberOfPatchesConsistentWithDirection++;
         }
 
         return theoreticalWoodAmount;
