@@ -340,6 +340,12 @@ public class World : MonoBehaviour
         return closest;
     }
 
+    public void ChoppedTree(Vector2Int tilePosition)
+    {
+        SetTileType(tilePosition, Tile.Type.Grass);
+        GlobalInventory.AddWood(GenerationParameters.resources.woodPerTree);
+    }
+
     public GameObject GetClosestIdleWorker (Vector2 location)
     {
         float shortestPathLength = 999999f;

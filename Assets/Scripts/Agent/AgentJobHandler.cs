@@ -80,7 +80,7 @@ public class AgentJobHandler : MonoBehaviour
                 {
                     gameObject.GetComponent<Animator>().SetBool("isChopping", false);
                     Debug.Log("Changing Tile of Type " +  World.Get().Tiles[Job.Coordinates].TileType.ToString());
-                    World.Get().SetTileType(Job.Coordinates, World.Tile.Type.Grass);
+                    World.Get().ChoppedTree(Job.Coordinates);
                     JobProgress = 0f;
                     Job = null;
                     IsIdle = true;
