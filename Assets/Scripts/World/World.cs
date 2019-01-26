@@ -23,7 +23,7 @@ public class World : MonoBehaviour
         get { return worldInventory; }
     }
 
-    void Start()
+    void Awake()
     {
         worldInventory = gameObject.AddComponent<Inventory>();
     }
