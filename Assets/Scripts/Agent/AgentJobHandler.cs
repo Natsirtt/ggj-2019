@@ -18,8 +18,9 @@ public class AgentJobHandler : MonoBehaviour
     public void TakeJob(JobDispatcher.Job job)
     {
         // trigger animation
-        gameObject.GetComponent<Pathfollowing>().MoveToLocation(job.Coordinates);
+        gameObject.GetComponent<Pathfollowing>().MoveToLocation(World.Get().GetWorldLocation(job.Coordinates));
         Job = job;
+        IsIdle = false;
     }
 
     public void AbortJob()
@@ -28,7 +29,7 @@ public class AgentJobHandler : MonoBehaviour
     }
     
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         IsIdle = true;
     }
