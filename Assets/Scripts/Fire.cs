@@ -27,7 +27,7 @@ public class Fire : MonoBehaviour
         World world = World.Get();
         globalInventory = world.GlobalInventory;
         burnProgress = 0f;
-        radiusOfInfluence = 
+        currentRadiusOfInfluence = radiusOfInfluence;
         currentBurnRatePerSecond = burnRatePerSecond;
     }
 
