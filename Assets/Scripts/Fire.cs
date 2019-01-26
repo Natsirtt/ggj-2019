@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -23,9 +22,6 @@ public class Fire : MonoBehaviour
     [SerializeField]
     private float workerSpawnRateIncrease = 0f;
 
-    [SerializeField]
-    private TileBase FirePlaceTile = null;
-
     private float currentBurnRatePerSecond;
     private int currentRadiusOfInfluence;
     private float currentWorkerSpawnRate;
@@ -42,8 +38,6 @@ public class Fire : MonoBehaviour
     {
         Jobs = gameObject.AddComponent<JobDispatcher>();
     }
-
-
 
     public World.Tile GridTile { get; private set; }
 
@@ -152,6 +146,5 @@ public class Fire : MonoBehaviour
     public void SetWorldTile(World.Tile tileToGiveToFireScript)
     {
         GridTile = tileToGiveToFireScript;
-        World.Get().TilemapFires.SetTile(new Vector3Int(GridTile.Coordinates.x, GridTile.Coordinates.y, 0), FirePlaceTile);
     }
 }

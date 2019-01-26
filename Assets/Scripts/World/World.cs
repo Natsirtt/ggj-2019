@@ -127,7 +127,7 @@ public class World : MonoBehaviour
             }
 
             TileBase newVisual = World.Get().TileTypes[(int)Type.Grass].GetRandomTile(IsInSnow);
-            World.Get().TilemapGround.SetTile(new Vector3Int(Coordinates.x, Coordinates.y, 0), newVisual);
+            World.Get().Tilemaps[(int)Type.Grass].SetTile(new Vector3Int(Coordinates.x, Coordinates.y, 0), newVisual);
         }
 
         public void NeighborChangedIsInSnow(Tile neighbor)
@@ -136,7 +136,7 @@ public class World : MonoBehaviour
             if (neighbor.IsInSnow == IsInSnow)
             {
                 newVisual = World.Get().TileTypes[(int)Type.Grass].GetRandomTile(IsInSnow);
-                World.Get().TilemapGround.SetTile(new Vector3Int(Coordinates.x, Coordinates.y, 0), newVisual);
+                World.Get().Tilemaps[(int)Type.Grass].SetTile(new Vector3Int(Coordinates.x, Coordinates.y, 0), newVisual);
                 return;
             }
 
@@ -164,7 +164,7 @@ public class World : MonoBehaviour
 
             TileVariation variation = World.Get().GrassEdgeVariations[(int)worldDirection];
             newVisual = IsInSnow ? variation.Snowed : variation.Normal;
-            World.Get().TilemapGround.SetTile(new Vector3Int(Coordinates.x, Coordinates.y, 0), newVisual);
+            World.Get().Tilemaps[(int)Type.Grass].SetTile(new Vector3Int(Coordinates.x, Coordinates.y, 0), newVisual);
         }
         
         public static List<World.Tile> GetAdjacentTiles(Dictionary<Vector2Int, World.Tile> inGrid, World.Tile tile)
@@ -290,11 +290,14 @@ public class World : MonoBehaviour
     public Vector2Int GridSize { get; private set; }
     public JobDispatcher JobDispatcher {get; private set;}
 
-    [NamedArrayAttribute(typeof(Tile.Type))]
+    [NamedArray(typeof(Tile.Type))]
     public TileContainer[] TileTypes = new TileContainer[(int)Tile.Type.MAX];
 
-    [NamedArrayAttribute(typeof(Direction))]
+    [NamedArray(typeof(Direction))]
     public TileVariation[] GrassEdgeVariations = new TileVariation[(int)Direction.NorthWest + 1];
+
+    [NamedArray(typeof(Tile.Type))]
+    public Tilemap[] Tilemaps = new Tilemap[(int)Tile.Type.MAX];
 
     [SerializeField]
     private WorldGenerationParameters generationParameters = null;
@@ -307,10 +310,6 @@ public class World : MonoBehaviour
     public GameObject firePrefab;
     public GameObject hearthPrefab;
     public GameObject fireParticleSystemPrefab;
-
-    public Tilemap TilemapGround;
-    public Tilemap TilemapTrees;
-    public Tilemap TilemapFires;
 
     public List<GameObject> Workers { get; private set; }
     public List<GameObject> Fires { get; private set; }
@@ -375,9 +374,11 @@ public class World : MonoBehaviour
 
     public void SpawnCampFire(Vector2 worldLocation)
     {
+        var gridPos = GetGridLocation(worldLocation);
+        SetTileType(gridPos, Tile.Type.Campfire);
         GameObject fire = Instantiate<GameObject>(firePrefab, worldLocation, Quaternion.identity);
         float depth = fireParticleSystemPrefab.transform.position.z;
-        GameObject fireParticleSystem = Instantiate<GameObject>(fireParticleSystemPrefab, (Vector3)GetWorldLocation(GetGridLocation(worldLocation)) + new Vector3(0, 0, depth), fireParticleSystemPrefab.transform.rotation);
+        GameObject fireParticleSystem = Instantiate<GameObject>(fireParticleSystemPrefab, (Vector3)GetWorldLocation(gridPos) + new Vector3(0, 0, depth), fireParticleSystemPrefab.transform.rotation);
         Fire fireScript = fire.GetComponent<Fire>();
         if (fireScript != null)
         {
@@ -432,7 +433,6 @@ public class World : MonoBehaviour
             && -halfGridSize.y <= gridLocation.y && gridLocation.y <= halfGridSize.y;
     }
 
-
     public void SetTileType(Vector2Int pos, Tile.Type type)
     {
         if (!Tiles.ContainsKey(pos))
@@ -448,15 +448,7 @@ public class World : MonoBehaviour
             return;
         }
 
-        Vector2 tileMapPos = pos;// * TileSize;
-        if (type == Tile.Type.Tree)
-        {
-            TilemapTrees.SetTile(new Vector3Int((int)tileMapPos.x, (int)tileMapPos.y, 0), tileToRender);
-        }
-        else
-        {
-            TilemapGround.SetTile(new Vector3Int((int)tileMapPos.x, (int)tileMapPos.y, 0), tileToRender);
-        }
+        Tilemaps[(int)type].SetTile(new Vector3Int(pos.x, pos.y, 0), tileToRender);
     }
 
     public Direction GetRandomDirection()
