@@ -84,6 +84,10 @@ public class Fire : MonoBehaviour
 
             }
         }
+        foreach (JobDispatcher.Job job in Jobs.chopJobs())
+        {
+            Debug.DrawLine(transform.position, world.GetWorldLocation(job.Coordinates));
+        }
     }
 
     public int CurrentRadiusOfInfluence
@@ -115,7 +119,6 @@ public class Fire : MonoBehaviour
             if (tile.TileType == World.Tile.Type.Tree)
             {
                 Jobs.QueueJob(tile.Coordinates, JobDispatcher.Job.Type.Chop);
-                Debug.DrawLine(transform.position, World.Get().GetWorldLocation(tile.Coordinates));
             }
         }
         Debug.Log("Found jobs: " + Jobs.Count.ToString());
