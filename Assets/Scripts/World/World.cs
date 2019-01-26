@@ -289,7 +289,7 @@ public class World : MonoBehaviour
             {
                 coordinates.x = x;
                 coordinates.y = y;
-                if ((coordinates - gridLocation).sqrMagnitude < radiusSquared && Tiles.ContainsKey(coordinates))
+                if (GetManhattanDistance(gridLocation, coordinates) < radius && Tiles.ContainsKey(coordinates))
                 {
                     temp.Add(Tiles[coordinates]);
                 }
@@ -360,6 +360,8 @@ public class World : MonoBehaviour
         Tiles[hearthGridPos].TileType = Tile.Type.Hearth;
         SpawnHearth(GetWorldLocation(hearthGridPos));
         Debug.Log("Created Hearth at grid position " + hearthGridPos);
+
+        GlobalInventory.CurrentWood = parameters.resources.startingWoodAmount;
 
         // Seeding woods paths
         int numberOfPaths = Random.Range(parameters.forests.numberOfPathsRange.x, parameters.forests.numberOfPathsRange.y);
