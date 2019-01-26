@@ -22,6 +22,10 @@ public class JobDispatcher : MonoBehaviour
             JobType = type;
         }
 
+        public float Duration()
+        {
+            return 5f;
+        }
     }
 
 

@@ -105,8 +105,7 @@ public class Fire : MonoBehaviour
         currentRadiusOfInfluence = radiusOfInfluence;
         currentBurnRatePerSecond = burnRatePerSecond;
         currentWorkerSpawnRate = workerSpawnRatePerSecond;
-        influence = World.Get().GetTilesInRadius(TilePosition(), CurrentRadiusOfInfluence);
-        Debug.Log("Tiles in influence radius: " + influence.Count.ToString());
+        influence = World.SortByDistance(World.Get().GetTilesInRadius(TilePosition(), CurrentRadiusOfInfluence), TilePosition());
         foreach(World.Tile tile in influence)
         {
             tile.SetIsInSnow(false);
@@ -115,7 +114,6 @@ public class Fire : MonoBehaviour
                 Jobs.QueueJob(tile.Coordinates, JobDispatcher.Job.Type.Chop);
             }
         }
-        Debug.Log("Found jobs: " + Jobs.Count.ToString());
     }
 
     public void Feed()

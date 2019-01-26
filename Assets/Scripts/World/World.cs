@@ -207,10 +207,7 @@ public class World : MonoBehaviour
         public bool IsTraversable()
         {
             return 
-                TileType != Type.Mountain
-                && TileType != Type.Campfire
-                && TileType != Type.Hearth
-                && TileType != Type.Tree;
+                TileType != Type.Mountain;
         }
 
         public Tile(Vector2Int coordinates, Type type)
@@ -450,6 +447,17 @@ public class World : MonoBehaviour
         }
 
         Tilemaps[(int)type].SetTile(new Vector3Int(pos.x, pos.y, 0), tileToRender);
+        if (type == Tile.Type.Grass)
+        {
+            // Clear props rendering
+            for (int i = 0; i < (int)Tile.Type.MAX; i++)
+            {
+                if ((Tile.Type) i != Tile.Type.Grass && Tilemaps[i] != null)
+                {
+                    Tilemaps[i].SetTile(new Vector3Int(pos.x, pos.y, 0), null);
+                }
+            }
+        }
     }
 
     public Direction GetRandomDirection()
@@ -466,6 +474,11 @@ public class World : MonoBehaviour
                 return Direction.West;
         }
         throw new Exception("No");
+    }
+
+    public static List<Tile> SortByDistance(List<Tile> tiles, Vector2Int gridLocation)
+    {
+        return tiles.OrderBy(o => GetManhattanDistance(gridLocation, o.Coordinates)).ToList();
     }
 
     public List<Tile> GetTilesInRadius(Vector2Int gridLocation, int radius)
