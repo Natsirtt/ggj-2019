@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System;
 using Random = UnityEngine.Random;
 using UnityEngine.Tilemaps;
+using System.Linq;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -341,7 +342,9 @@ public class World : MonoBehaviour
                     {
                         nearestWorker = worker;
                     }
+                    
                 }
+                Debug.LogWarning("Cannot build path!");
             }
         }
         return nearestWorker;
@@ -351,6 +354,8 @@ public class World : MonoBehaviour
     {
         GameObject hearth = Instantiate<GameObject>(hearthPrefab, worldLocation, Quaternion.identity);
         Fires.Add(hearth);
+
+        Camera.main.transform.position = new Vector3(worldLocation.x, worldLocation.y, Camera.main.transform.position.z);
         // TODO clear the tiles and queue the trees
     }
 
@@ -434,9 +439,25 @@ public class World : MonoBehaviour
         }
     }
 
-    public List<World.Tile> GetTilesInRadius(Vector2Int gridLocation, int radius)
+    public Direction GetRandomDirection()
     {
-        List<World.Tile> temp = new List<World.Tile>();
+        switch(Random.Range(0, 4))
+        {
+            case 0:
+                return Direction.North;
+            case 1:
+                return Direction.East;
+            case 2:
+                return Direction.South;
+            case 3:
+                return Direction.West;
+        }
+        throw new Exception("No");
+    }
+
+    public List<Tile> GetTilesInRadius(Vector2Int gridLocation, int radius)
+    {
+        List<Tile> temp = new List<World.Tile>();
         float radiusSquared = radius * radius;
         int xMin = gridLocation.x - radius;
         int xMax = gridLocation.x + radius;
@@ -480,10 +501,6 @@ public class World : MonoBehaviour
 
     void Update()
     {
-        Debug.DrawLine(Vector2.zero, new Vector2(0, -1), Color.green);
-        Debug.DrawLine(Vector2.zero, new Vector2(0, 1), Color.blue);
-        Debug.DrawLine(Vector2.zero, new Vector2(-1, 0), Color.cyan);
-        Debug.DrawLine(Vector2.zero, new Vector2(1, 0), Color.red);
     }
 
     void Awake()
@@ -491,6 +508,16 @@ public class World : MonoBehaviour
         GlobalInventory = gameObject.AddComponent<Inventory>();
         Fires = new List<GameObject>();
         Workers = new List<GameObject>();
+    }
+
+    private List<Direction> GetRandomDirectionsList(int minListSize, int maxListSize)
+    {
+        var directions = new List<Direction>();
+        for (int i = 0; i < Random.Range(minListSize, maxListSize); i++)
+        {
+            directions.Add(GetRandomDirection());
+        }
+        return directions;
     }
 
     void GenerateWorld(int seed, WorldGenerationParameters parameters)
@@ -528,13 +555,7 @@ public class World : MonoBehaviour
         // Generating all paths
         for (int pathID = 0; pathID < numberOfPaths; pathID++)
         {
-            // TODO not hardcode this? have heuristics for it?
-            var directions = new List<Direction>();
-            for (int i = 0; i < Random.Range(10, 50); i++)
-            {
-                directions.Add((Direction) Random.Range(0, 7));
-            }
-            theoreticalAvailableWood = GenerateForestPath(hearthGridPos, theoreticalAvailableWood, directions, parameters);
+            theoreticalAvailableWood = GenerateForestPath(hearthGridPos, theoreticalAvailableWood, GetRandomDirectionsList(10, 50), parameters);
         }
     }
 
@@ -547,55 +568,63 @@ public class World : MonoBehaviour
             return 0;
         }
         int numberOfPatches = Random.Range(parameters.forests.patchesPerPathRange.x, parameters.forests.patchesPerPathRange.y);
-        Debug.Log("\t- Generating " + numberOfPatches + " patches");
+        Debug.Log("Generating " + numberOfPatches + " patches");
         Vector2Int seedPosition = hearthPosition;
+        int numberOfPatchesConsistentWithDirection = 0;
         // Generating all patches of the current path
         for (int patchID = 0; patchID < numberOfPatches; patchID++)
         {
+            if (numberOfPatchesConsistentWithDirection == parameters.forests.numberOfPatchesWithConsistentDirection)
+            {
+                directions = GetRandomDirectionsList(10, 30);
+                numberOfPatchesConsistentWithDirection = 0;
+            }
             // Snaking away using the resources
+            int travelledTilesNb = 0;
             while (theoreticalWoodAmount > 0 && theoreticalWoodAmount > parameters.resources.expeditionWoodCostPerTile)
             {
                 Direction direction = directions[Random.Range(0, directions.Count - 1)];
                 // Remove the direction's "opposite" so that a forest path always goes towards a similar direction-ish
                 foreach (Direction dir in GetDirectionOpposites(direction))
                 {
-                    directions.Remove(dir);
+                    directions.RemoveAll(x => x == dir);
                 }
                 if (directions.Count == 0)
                 {
                     Debug.LogError("List of directions was empty!");
-                    direction = (Direction) Random.Range(0, 7);
+                    direction = GetRandomDirection();
+                }
+                Debug.Log("Travelling " + direction);
+                if (!GetNeighbourAt(seedPosition, direction).HasValue)
+                {
+                    Debug.Log("Seeding new patch would have exited the map. Seeding at edge");
+                    break;
                 }
                 seedPosition += GetDirectionVector(direction);
+                travelledTilesNb++;
                 theoreticalWoodAmount -= parameters.resources.expeditionWoodCostPerTile;
             }
+            Debug.Log("Travelled " + travelledTilesNb + " tiles to seed new patch");
 
             // Creating the patch
             float patchDensity = Random.Range(parameters.forests.patchDensityRange.x, parameters.forests.patchDensityRange.y);
             int treeWoodAmount = parameters.resources.woodPerTree;
             int patchWoodMaxAmount = Random.Range(parameters.forests.woodAmountRangePerPatch.x, parameters.forests.woodAmountRangePerPatch.y);
-            Debug.Log("\t\t+ Generating patch " + patchID + ". Core is at " + seedPosition);
+            Debug.Log("Generating patch " + patchID + ". Core is at " + seedPosition);
             int patchHalfSize = Random.Range(parameters.forests.minPatchEuclidianRadius, parameters.forests.maxPatchEuclidianRadius);
-            for (int x = -patchHalfSize; x <= patchHalfSize; x++)
+            foreach (Tile t in GetTilesInRadius(seedPosition, patchHalfSize).OrderBy(x => Random.value).ToList())
             {
-                for (int y = -patchHalfSize; y <= patchHalfSize; y++)
+                if (theoreticalWoodAmount >= patchWoodMaxAmount)
                 {
-                    var pos = new Vector2Int(x, y);
-                    if (theoreticalWoodAmount >= patchWoodMaxAmount)
-                    {
-                        break;
-                    }
-                    if (!IsInWorld(pos))
-                    {
-                        continue;
-                    }
-                    if (Random.value <= patchDensity)
-                    {
-                        SetTileType(pos, Tile.Type.Tree);
-                        theoreticalWoodAmount += treeWoodAmount;
-                    }
+                    break;
+                }
+                if (Random.value <= patchDensity && t.TileType != Tile.Type.Hearth)
+                {
+                    SetTileType(t.Coordinates, Tile.Type.Tree);
+                    theoreticalWoodAmount += treeWoodAmount;
                 }
             }
+            numberOfPatchesConsistentWithDirection++;
         }
 
         return theoreticalWoodAmount;

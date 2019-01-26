@@ -12,7 +12,7 @@ public class JobDispatcher : MonoBehaviour
             Chop,
             Expedition
         }
-        
+
         public Vector2Int Coordinates { get; private set; }
         public Type JobType { get; set; }
 
@@ -46,9 +46,16 @@ public class JobDispatcher : MonoBehaviour
         }
     }
 
+
+
     public Job GetNearestJob(Vector2Int gridPosition)
     {
-        int closestDistance = 999999;
+        if (expeditionQueue.Count > 0)
+        {
+            return expeditionQueue.Dequeue();
+        }
+        return chopWoodQueue.Dequeue();
+        /*int closestDistance = 999999;
         Job closestJob = null;
         foreach (Job job in expeditionQueue)
         {
@@ -59,7 +66,7 @@ public class JobDispatcher : MonoBehaviour
                 closestDistance = distance;
             }
         }
-        return closestJob;
+        return closestJob;*/
     }
 
 
@@ -78,9 +85,16 @@ public class JobDispatcher : MonoBehaviour
         chopWoodQueue.Enqueue(job);
     }
 
+    public int Count
+    {
+        get
+        {
+            return chopWoodQueue.Count + expeditionQueue.Count;
+        }
+    }
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         world = World.Get();
         globalInventory = world.GlobalInventory;
