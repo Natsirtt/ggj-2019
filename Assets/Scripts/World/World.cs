@@ -202,7 +202,8 @@ public class World : MonoBehaviour
     public GameObject hearthPrefab;
 
     public Tilemap TilemapGround;
-    public Tilemap TilemapTree;
+    public Tilemap TilemapTrees;
+    public Tilemap TilemapFires;
 
     public List<GameObject> Workers { get; private set; }
     public List<GameObject> Fires { get; private set; }
@@ -245,19 +246,26 @@ public class World : MonoBehaviour
     public void SpawnCampFire(Vector2 worldLocation)
     {
         GameObject fire = Instantiate<GameObject>(firePrefab, worldLocation, Quaternion.identity);
-        Fires.Add(fire);
+        Fire fireScript = fire.GetComponent<Fire>();
+        if(fireScript != null)
+        {
+            Vector2Int tileLocationInGridSpace = GetGridLocation(fire.transform.position);
+            Tile tileToGiveToFireScript = Tiles[tileLocationInGridSpace];
+            fireScript.SetWorldTile(tileToGiveToFireScript);
+            Fires.Add(fire);
+        }
         // TODO clear the tiles and queue the trees
     }
 
     public Vector2Int GetGridLocation(Vector2 worldLocation)
     {
-        Vector2 transformedLocation = (worldLocation + TileSize * 0.5f) / TileSize;
-        return new Vector2Int((int)transformedLocation.x, (int)transformedLocation.y);
+        Vector2 transformedLocation = (worldLocation - TileSize * 0.5f) / TileSize;
+        return new Vector2Int(Mathf.RoundToInt(transformedLocation.x), Mathf.RoundToInt(transformedLocation.y));
     }
 
     public Vector2 GetWorldLocation(Vector2Int gridLocation)
     {
-        Vector2Int transformedLocation = gridLocation * new Vector2Int((int)TileSize.x, (int)TileSize.y);
+        Vector2Int transformedLocation = gridLocation * new Vector2Int(Mathf.RoundToInt(TileSize.x), Mathf.RoundToInt(TileSize.y));
         return new Vector2((float)transformedLocation.x, (float)transformedLocation.y) + TileSize * 0.5f;
     }
 
@@ -294,6 +302,7 @@ public class World : MonoBehaviour
         {
             Tiles.Add(pos, new Tile(pos, Tile.Type.Grass));
         }
+
         Tiles[pos].TileType = type;
         TileBase tileToRender = TileTypes[(int)type].GetRandomTile();
         if (tileToRender == null)
@@ -301,10 +310,11 @@ public class World : MonoBehaviour
             Debug.LogError("Could not find a valid tile to render for type " + type);
             return;
         }
+
         Vector2 tileMapPos = pos;// * TileSize;
         if (type == Tile.Type.Tree)
         {
-            TilemapTree.SetTile(new Vector3Int((int)tileMapPos.x, (int)tileMapPos.y, 0), tileToRender);
+            TilemapTrees.SetTile(new Vector3Int((int)tileMapPos.x, (int)tileMapPos.y, 0), tileToRender);
         }
         else
         {
