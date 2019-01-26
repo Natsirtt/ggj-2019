@@ -8,6 +8,15 @@ TextureImporter:
     21300006: TEX_GrassAndSnow_Extras_Spritesheet_3
     21300008: TEX_GrassAndSnow_Extras_Spritesheet_4
     21300010: TEX_GrassAndSnow_Extras_Spritesheet_5
+    21300012: TEX_GrassAndSnow_Extras_Spritesheet_6
+    21300014: TEX_GrassAndSnow_Extras_Spritesheet_7
+    21300016: TEX_GrassAndSnow_Extras_Spritesheet_8
+    21300018: TEX_GrassAndSnow_Extras_Spritesheet_9
+    21300020: TEX_GrassAndSnow_Extras_Spritesheet_10
+    21300022: TEX_GrassAndSnow_Extras_Spritesheet_11
+    21300024: TEX_GrassAndSnow_Extras_Spritesheet_12
+    21300026: TEX_GrassAndSnow_Extras_Spritesheet_13
+    21300028: TEX_GrassAndSnow_Extras_Spritesheet_14
   externalObjects: {}
   serializedVersion: 7
   mipmaps:
@@ -104,7 +113,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6f534380870106f4aa94b9b631e070f5
+      spriteID: 5753510f216fbda419ff79da5aeebcd0
       vertices: []
       indices: 
       edges: []
@@ -124,7 +133,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 62fef2e28883da94eb81c98f85c8b2e5
+      spriteID: cf65ed3eb1f723d4d951b586195a67ea
       vertices: []
       indices: 
       edges: []
@@ -133,8 +142,8 @@ TextureImporter:
       name: TEX_GrassAndSnow_Extras_Spritesheet_2
       rect:
         serializedVersion: 2
-        x: 0
-        y: 32
+        x: 64
+        y: 64
         width: 32
         height: 32
       alignment: 0
@@ -144,7 +153,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7c0afc637ff25dc4db5518cf2cc8cf16
+      spriteID: d7bf07bd7a119a94d88b128e1d804713
       vertices: []
       indices: 
       edges: []
@@ -153,6 +162,66 @@ TextureImporter:
       name: TEX_GrassAndSnow_Extras_Spritesheet_3
       rect:
         serializedVersion: 2
+        x: 96
+        y: 64
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 99f6b4127a253944180da47ef5578de2
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TEX_GrassAndSnow_Extras_Spritesheet_4
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 64
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3ac9e5f906ed9824a86f6da195ae069c
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TEX_GrassAndSnow_Extras_Spritesheet_5
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e861485267b1e6549aa85b0695c8f2e1
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TEX_GrassAndSnow_Extras_Spritesheet_6
+      rect:
+        serializedVersion: 2
         x: 32
         y: 32
         width: 32
@@ -164,13 +233,73 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 1f898cff0f0035f4ebebcc656b69d395
+      spriteID: aff7033763c503d4a96af16dbf50d40e
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: TEX_GrassAndSnow_Extras_Spritesheet_4
+      name: TEX_GrassAndSnow_Extras_Spritesheet_7
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f58ede232550d5d438fd2c7022ad58de
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TEX_GrassAndSnow_Extras_Spritesheet_8
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8f9a20d8007216e4182c81f3ad97a80e
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TEX_GrassAndSnow_Extras_Spritesheet_9
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 00034ac2a5c86574c84b5a8b5b3983bc
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TEX_GrassAndSnow_Extras_Spritesheet_10
       rect:
         serializedVersion: 2
         x: 0
@@ -184,13 +313,13 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 529de7d2b1771e349a063e0656de1389
+      spriteID: 6d5e5e5e06d87234eb0cacc980945899
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: TEX_GrassAndSnow_Extras_Spritesheet_5
+      name: TEX_GrassAndSnow_Extras_Spritesheet_11
       rect:
         serializedVersion: 2
         x: 32
@@ -204,7 +333,67 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 0e7303864a1647742bd19565bf9bcacf
+      spriteID: 213f43060a22de241a81fd065dfb279f
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TEX_GrassAndSnow_Extras_Spritesheet_12
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 084afb90ea4eec640ba1331983c4ad2e
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TEX_GrassAndSnow_Extras_Spritesheet_13
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 610e3a59d2340324bab9b4e9fa49aef0
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TEX_GrassAndSnow_Extras_Spritesheet_14
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8b3677dbbbda6bf46aa1da08b86de6e9
       vertices: []
       indices: 
       edges: []
