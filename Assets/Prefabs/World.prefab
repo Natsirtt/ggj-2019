@@ -50,7 +50,7 @@ Tilemap:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Origin: {x: 0, y: 0, z: 0}
   m_Size: {x: 0, y: 0, z: 1}
-  m_TileAnchor: {x: 0.5, y: 0.5, z: 0}
+  m_TileAnchor: {x: 0.5, y: 1, z: 0}
   m_TileOrientation: 0
   m_TileOrientationMatrix:
     e00: 1
@@ -105,7 +105,7 @@ TilemapRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
   m_MaxChunkCount: 16
@@ -162,18 +162,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TileSize: {x: 32, y: 32}
   TileTypes:
-  - {fileID: 11400000, guid: a81de9fc6f121bb46a2066bac34af1dc, type: 2}
-  - {fileID: 11400000, guid: bec37674d1aba5c4ca3fd15bd5882b1e, type: 2}
-  - {fileID: 11400000, guid: 5a9a86b583db2dc4f8ba6f42f611ffea, type: 2}
-  - {fileID: 11400000, guid: 49aa31dbfb67a654187ec4c8b773365e, type: 2}
-  - {fileID: 11400000, guid: 72057a4e8e2c3f348be679e6db0bab18, type: 2}
-  - {fileID: 11400000, guid: e59039ff816fbab46813904d493b8939, type: 2}
+  - TileSelection:
+    - {fileID: 11400000, guid: a81de9fc6f121bb46a2066bac34af1dc, type: 2}
+  - TileSelection: []
+  - TileSelection: []
+  - TileSelection: []
+  - TileSelection:
+    - {fileID: 11400000, guid: e59039ff816fbab46813904d493b8939, type: 2}
+    - {fileID: 11400000, guid: 106d3d1368441fc4b85be69c12918138, type: 2}
+  - TileSelection: []
   generationParameters: {fileID: 11400000, guid: 617268a62919790429246e76e827943d,
     type: 2}
-  seed: 42
-  workerPrefab: {fileID: 0}
-  firePrefab: {fileID: 0}
-  hearthPrefab: {fileID: 0}
+  seed: 0
+  workerPrefab: {fileID: 1235590261510027719, guid: 1c62993b37a664a47a70fe3a7eab9178,
+    type: 3}
+  firePrefab: {fileID: 7681504405642858328, guid: 25bf8b3278134704085dc188660db9d5,
+    type: 3}
+  hearthPrefab: {fileID: 2068627889015018793, guid: 759c19fee639ec249980e4c93c59ef53,
+    type: 3}
   TilemapGround: {fileID: 7851526018243658318}
   TilemapTree: {fileID: 6395997584509847593}
 --- !u!156049354 &7851526017737909041
