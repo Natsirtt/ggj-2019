@@ -34,17 +34,17 @@ public class World : MonoBehaviour
             Fire
         }
 
-        public Vector2 Coordinates { get; private set; }
+        public Vector2Int Coordinates { get; private set; }
         public Type TileType { get; set; }
 
-        public Tile(Vector2 coordinates, Type type)
+        public Tile(Vector2Int coordinates, Type type)
         {
             Coordinates = coordinates;
             TileType = type;
         }
     }
 
-    public Dictionary<Vector2, Tile> Tiles { get; private set; }
+    public Dictionary<Vector2Int, Tile> Tiles { get; private set; }
     public Inventory GlobalInventory { get; private set; }
 
     // Leave the seed to 0 for using the current time. Provide a hardcoded seed otherwise.
