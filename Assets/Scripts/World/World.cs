@@ -207,15 +207,34 @@ public class World : MonoBehaviour
     public List<GameObject> Workers { get; private set; }
     public List<GameObject> Fires { get; private set; }
 
-    public void SpawnWorker(Vector2 worldLocation)
+    public void SpawnWorker(Vector2 worldLocation, Fire fire)
     {
         GameObject worker = Instantiate<GameObject>(workerPrefab, worldLocation, Quaternion.identity);
-        Workers.Add(worker);
+        AgentJobHandler jobsScript = worker.GetComponent<AgentJobHandler>();
+        if (jobsScript != null) {
+            Workers.Add(worker);
+            jobsScript.Fire = fire;
+        }
+    }
+
+    private GameObject GetClosestFire(Vector2 worldLocation) {
+        int nearestDistance = 99999;
+        GameObject closest = null;
+        Vector2Int location = GetGridLocation(worldLocation);
+        foreach(GameObject fire in Fires)
+        {
+            int distance = GetManhattanDistance(location, fire.GetComponent<Fire>().TilePosition());
+            if (distance < nearestDistance)
+            {
+                distance = nearestDistance;
+                closest = fire;
+            }
+        }
+        return closest;
     }
 
     public GameObject GetClosestIdleWorker (Vector2 location)
     {
-        List<GameObject> idles = new List<GameObject>();
         float shortestPathLength = 999999f;
         Path currentPath = new Path();
         GameObject nearestWorker = null;
@@ -276,7 +295,7 @@ public class World : MonoBehaviour
         return result;
     }
 
-    public int GetManhattanDistance(Vector2Int a, Vector2Int b)
+    public static int GetManhattanDistance(Vector2Int a, Vector2Int b)
     {
         return Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y);
     }
@@ -288,7 +307,7 @@ public class World : MonoBehaviour
             && -halfGridSize.y <= gridLocation.y && gridLocation.y <= halfGridSize.y;
     }
 
-    private List<World.Tile> GetTilesInRadius(Vector2Int gridLocation, int radius)
+    public List<World.Tile> GetTilesInRadius(Vector2Int gridLocation, int radius)
     {
         List<World.Tile> temp = new List<World.Tile>();
         float radiusSquared = radius * radius;
