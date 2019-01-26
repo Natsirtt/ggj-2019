@@ -21,10 +21,10 @@ MonoBehaviour:
   infrastructures:
     hearthMinDistanceFromMapEdge: {x: 100, y: 100}
   forests:
-    numberOfPathsRange: {x: 5, y: 10}
-    patchesPerPathRange: {x: 2, y: 10}
-    woodAmountRangePerPatch: {x: 200, y: 800}
+    numberOfPathsRange: {x: 2, y: 10}
+    patchesPerPathRange: {x: 5, y: 20}
+    woodAmountRangePerPatch: {x: 200, y: 1000}
     patchesDifficultyDistanceModifier: 0
-    minPatchEuclidianRadius: 4
-    maxPatchEuclidianRadius: 10
-    patchDensityRange: {x: 0.1, y: 0.6}
+    minPatchEuclidianRadius: 2
+    maxPatchEuclidianRadius: 15
+    patchDensityRange: {x: 0.1, y: 0.4}

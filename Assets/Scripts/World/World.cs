@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System;
 using Random = UnityEngine.Random;
 using UnityEngine.Tilemaps;
+using System.Linq;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -338,9 +339,9 @@ public class World : MonoBehaviour
         throw new Exception("No");
     }
 
-    private List<World.Tile> GetTilesInRadius(Vector2Int gridLocation, int radius)
+    private List<Tile> GetTilesInRadius(Vector2Int gridLocation, int radius)
     {
-        List<World.Tile> temp = new List<World.Tile>();
+        List<Tile> temp = new List<World.Tile>();
         float radiusSquared = radius * radius;
         int xMin = gridLocation.x - radius;
         int xMax = gridLocation.x + radius;
@@ -483,24 +484,16 @@ public class World : MonoBehaviour
             int patchWoodMaxAmount = Random.Range(parameters.forests.woodAmountRangePerPatch.x, parameters.forests.woodAmountRangePerPatch.y);
             Debug.Log("Generating patch " + patchID + ". Core is at " + seedPosition);
             int patchHalfSize = Random.Range(parameters.forests.minPatchEuclidianRadius, parameters.forests.maxPatchEuclidianRadius);
-            for (int x = -patchHalfSize; x <= patchHalfSize; x++)
+            foreach (Tile t in GetTilesInRadius(seedPosition, patchHalfSize).OrderBy(x => Random.value).ToList())
             {
-                for (int y = -patchHalfSize; y <= patchHalfSize; y++)
+                if (theoreticalWoodAmount >= patchWoodMaxAmount)
                 {
-                    var pos = new Vector2Int(x, y) + seedPosition;
-                    if (theoreticalWoodAmount >= patchWoodMaxAmount)
-                    {
-                        break;
-                    }
-                    if (!IsInWorld(pos))
-                    {
-                        continue;
-                    }
-                    if (Random.value <= patchDensity)
-                    {
-                        SetTileType(pos, Tile.Type.Tree);
-                        theoreticalWoodAmount += treeWoodAmount;
-                    }
+                    break;
+                }
+                if (Random.value <= patchDensity)
+                {
+                    SetTileType(t.Coordinates, Tile.Type.Tree);
+                    theoreticalWoodAmount += treeWoodAmount;
                 }
             }
         }
