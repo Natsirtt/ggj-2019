@@ -47,6 +47,6 @@ MonoBehaviour:
   burnRatePerSecondIncrease: 0.1
   radiusOfInfluence: 20
   radiusOfInfluenceIncrease: 5
-  workerSpawnRatePerSecond: 0
+  workerSpawnRatePerSecond: 1
   workerSpawnRateIncrease: 0
   FirePlaceTile: {fileID: 11400000, guid: ed54393cc48e83c4e896ec73ac52101f, type: 2}

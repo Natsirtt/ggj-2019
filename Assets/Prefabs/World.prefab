@@ -386,7 +386,7 @@ MonoBehaviour:
   generationParameters: {fileID: 11400000, guid: 617268a62919790429246e76e827943d,
     type: 2}
   seed: 0
-  workerPrefab: {fileID: 1235590261510027719, guid: 1c62993b37a664a47a70fe3a7eab9178,
+  workerPrefab: {fileID: 7224492686635031575, guid: 71fb2bbb724b5b24f9b139af5f5f25b4,
     type: 3}
   firePrefab: {fileID: 7681504405642858328, guid: 25bf8b3278134704085dc188660db9d5,
     type: 3}

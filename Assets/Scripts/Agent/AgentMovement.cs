@@ -7,16 +7,32 @@ public class AgentMovement : MonoBehaviour
     private Vector2 AccumulatedInput;
     private Vector2 Velocity;
     public float MaxSpeed = 5.0f;
+    Animator animator;
 
     public void AddMovementInput(Vector2 inputVector)
     {
         AccumulatedInput += inputVector;
     }
 
+    private void Awake()
+    {
+        animator = GetComponent<Animator>();
+    }
+
     void Update()
     {
         HandleInput();
         HandleTranslation();
+        if (Velocity.SqrMagnitude() > 0)
+        {
+            animator.SetBool("isWalking", true);
+
+        }
+        else
+        {
+            animator.SetBool("isWalking", false);
+
+        }
     }
 
     void HandleInput()
@@ -32,6 +48,8 @@ public class AgentMovement : MonoBehaviour
         {
             Velocity = Vector2.zero;
         }
+
+
 
         AccumulatedInput = Vector2.zero;
     }
