@@ -110,6 +110,10 @@ public class Fire : MonoBehaviour
         burnProgress = 0f;
         radiusOfInfluence = 0;
         burnRatePerSecond = 0;
+        if (GridTile.TileType == World.Tile.Type.Hearth)
+        {
+            world.GameOver(GridTile);
+        }
     }
 
     public void Activate()

@@ -365,11 +365,13 @@ public class World : MonoBehaviour
 
     public void SpawnHearth(Vector2 worldLocation)
     {
+        SetTileType(GetGridLocation(worldLocation), Tile.Type.Hearth);
         GameObject hearth = Instantiate<GameObject>(hearthPrefab, worldLocation, Quaternion.identity);
         Fires.Add(hearth);
 
         Camera.main.transform.position = new Vector3(worldLocation.x, worldLocation.y, Camera.main.transform.position.z);
         // TODO clear the tiles and queue the trees
+        Debug.Log("Created Hearth at grid position " + GetGridLocation(worldLocation));
     }
 
     public void SpawnCampFire(Vector2 worldLocation)
@@ -433,6 +435,12 @@ public class World : MonoBehaviour
             && -halfGridSize.y <= gridLocation.y && gridLocation.y <= halfGridSize.y;
     }
 
+    public void GameOver(Tile hearthTile)
+    {
+        TileBase tileToRender = TileTypes[(int)Tile.Type.Hearth].Variations[1].Normal;
+        Tilemaps[(int)Tile.Type.Hearth].SetTile(new Vector3Int(hearthTile.Coordinates.x, hearthTile.Coordinates.y, 0), tileToRender);
+    }
+
     public void SetTileType(Vector2Int pos, Tile.Type type)
     {
         if (!Tiles.ContainsKey(pos))
@@ -441,7 +449,8 @@ public class World : MonoBehaviour
         }
 
         Tiles[pos].TileType = type;
-        TileBase tileToRender = TileTypes[(int)type].GetRandomTile(Tiles[pos].IsInSnow);
+
+        TileBase tileToRender = type == Tile.Type.Hearth ? TileTypes[(int)Tile.Type.Hearth].Variations[0].Normal : TileTypes[(int)type].GetRandomTile(Tiles[pos].IsInSnow);
         if (tileToRender == null)
         {
             Debug.LogError("Could not find a valid tile to render for type " + type);
@@ -592,9 +601,7 @@ public class World : MonoBehaviour
         // Creating hearth
         Vector2Int maxHearthGridPosition = GetHalfGridSize() - parameters.infrastructures.hearthMinDistanceFromMapEdge;
         var hearthGridPos = new Vector2Int(Random.Range(-maxHearthGridPosition.x, maxHearthGridPosition.x), Random.Range(-maxHearthGridPosition.y, maxHearthGridPosition.y));
-        Tiles[hearthGridPos].TileType = Tile.Type.Hearth;
         SpawnHearth(GetWorldLocation(hearthGridPos));
-        Debug.Log("Created Hearth at grid position " + hearthGridPos);
 
         GlobalInventory.CurrentWood = parameters.resources.startingWoodAmount;
 
