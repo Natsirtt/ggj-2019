@@ -207,37 +207,33 @@ public class World : MonoBehaviour
 
         public void NeighborChangedIsInSnow(Tile neighbor)
         {
-            TileBase newVisual = null;
-            if (neighbor.IsInSnow == IsInSnow)
+            int neighborDifferentMask = 0;
+            TileBase newVisual = World.Get().TileTypes[(int)Type.Grass].GetRandomTile(IsInSnow);
+
+            List<World.Tile> adjacentTiles = GetAdjacentTiles(World.Get().Tiles, this);
+
+            foreach(World.Tile t in adjacentTiles)
             {
-                newVisual = World.Get().TileTypes[(int)Type.Grass].GetRandomTile(IsInSnow);
-                World.Get().Tilemaps[(int)Type.Grass].SetTile(new Vector3Int(Coordinates.x, Coordinates.y, 0), newVisual);
-                return;
+                neighborDifferentMask |= 0;
+                if (t.IsInSnow == IsInSnow)
+                {
+                    continue;
+                }
+
+                Vector2Int offset = neighbor.Coordinates - Coordinates;
+                if (offset.x < 0)
+                    neighborDifferentMask |= (int)NeighborsThatAreDifferent.West;
+                else if (offset.x > 0)
+                    neighborDifferentMask |= (int)NeighborsThatAreDifferent.East;
+
+                if (offset.y < 0)
+                    neighborDifferentMask |= (int)NeighborsThatAreDifferent.South;
+                else if (offset.x > 0)
+                    neighborDifferentMask |= (int)NeighborsThatAreDifferent.North;
             }
 
-            List<World.Tile> adjacentTiles = World.Get().GetTilesInSquare(Coordinates, 1);
-
-            Vector2Int offset = neighbor.Coordinates - Coordinates;
-            World.Direction worldDirection = World.Direction.South;
-            if (offset.x == -1 && offset.y == -1)
-                worldDirection = World.Direction.SouthWest;
-            else if(offset.x == 0 && offset.y == -1)
-                worldDirection = World.Direction.South;
-            else if(offset.x == 1 && offset.y == -1)
-                worldDirection = World.Direction.SouthEast;
-            else if(offset.x == -1 && offset.y == 0)
-                worldDirection = World.Direction.West;
-            else if(offset.x == 1 && offset.y == 0)
-                worldDirection = World.Direction.East;
-            else if(offset.x == -1 && offset.y == 1)
-                worldDirection = World.Direction.NorthWest;
-            else if (offset.x == 0 && offset.y == 1)
-                worldDirection = World.Direction.North;
-            else if(offset.x == 1 && offset.y == 1)
-                worldDirection = World.Direction.NorthEast;
-
-            TileVariation variation = World.Get().GrassEdgeVariations[(int)worldDirection];
-            newVisual = IsInSnow ? variation.Snowed : variation.Normal;
+            TileNeighborTransition variation = Array.Find(World.Get().NeighborTransitions, x => (int)x.Mask == neighborDifferentMask);
+            newVisual = IsInSnow ? variation.TileVariation.Snowed : variation.TileVariation.Normal;
             World.Get().Tilemaps[(int)Type.Grass].SetTile(new Vector3Int(Coordinates.x, Coordinates.y, 0), newVisual);
         }
         
@@ -366,9 +362,6 @@ public class World : MonoBehaviour
 
     [NamedArray(typeof(Tile.Type))]
     public TileContainer[] TileTypes = new TileContainer[(int)Tile.Type.MAX];
-
-    [NamedArray(typeof(Direction))]
-    public TileVariation[] GrassEdgeVariations = new TileVariation[(int)Direction.NorthWest + 1];
     
     [SerializeField]
     public TileNeighborTransition[] NeighborTransitions;

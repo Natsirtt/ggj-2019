@@ -335,8 +335,8 @@ MonoBehaviour:
       Snowed: {fileID: 11400000, guid: b33a60f4d86e56643b5fbfae89c6222b, type: 2}
   - Mask: 5
     TileVariation:
-      Normal: {fileID: 0}
-      Snowed: {fileID: 0}
+      Normal: {fileID: 11400000, guid: 78a8cf3689aea88408acf7d9ff770018, type: 2}
+      Snowed: {fileID: 11400000, guid: 552a9f234bffb8540b50d2bb98eb12ef, type: 2}
   - Mask: 9
     TileVariation:
       Normal: {fileID: 11400000, guid: 7c885fcb1eb41594d9efdcfb284d018e, type: 2}
@@ -355,8 +355,8 @@ MonoBehaviour:
       Snowed: {fileID: 11400000, guid: 73b876cef5481e442a3ac640cf4095a0, type: 2}
   - Mask: 10
     TileVariation:
-      Normal: {fileID: 11400000, guid: 9226563515c924b458e025566d804f05, type: 2}
-      Snowed: {fileID: 11400000, guid: 4678d9613d416974bbc308b4a6a33404, type: 2}
+      Normal: {fileID: 11400000, guid: 144819bb3a0c050448fcb8bcc47eb29d, type: 2}
+      Snowed: {fileID: 11400000, guid: 0202d3de531edcc4c8737ccc32eb4ef1, type: 2}
   - Mask: 13
     TileVariation:
       Normal: {fileID: 0}
