@@ -42,12 +42,16 @@ public class World : MonoBehaviour
         public float DistanceToTarget { get; set; }
         public float Cost { get; set; }
         public float F { get { return DistanceToTarget >= 0.0f && Cost >= 0.0f ? DistanceToTarget + Cost : -1.0f; } }
+        public float Distance(Tile other)
+        {
+            return (Coordinates - other.Coordinates).magnitude;
+        }
 
         public bool IsTraversable()
         {
-            return 
-                TileType != Type.Mountain && 
-                TileType != Type.Campfire && 
+            return
+                TileType != Type.Mountain &&
+                TileType != Type.Campfire &&
                 TileType != Type.Tree;
         }
 
@@ -64,6 +68,7 @@ public class World : MonoBehaviour
     public Dictionary<Vector2Int, Tile> Tiles { get; private set; }
     public Inventory GlobalInventory { get; private set; }
     public Vector2Int GridSize { get; private set; }
+    public JobDispatcher JobDispatcher {get; private set;}
 
     [SerializeField]
     private WorldGenerationParameters generationParameters = null;
@@ -85,16 +90,40 @@ public class World : MonoBehaviour
         Workers.Add(worker);
     }
 
+    public GameObject GetClosestIdleWorker (Vector2 location)
+    {
+        List<GameObject> idles = new List<GameObject>();
+        float shortestPathLength = 999999f;
+        Path currentPath = new Path();
+        GameObject nearestWorker = null;
+        foreach (GameObject worker in Workers)
+        {
+            if (worker.GetComponent<AgentJobHandler>().IsIdle)
+            {
+                if (AStar.BuildPath(Tiles, new Vector2(worker.transform.position.x, worker.transform.position.y), location, ref currentPath))
+                {
+                    if (currentPath.PathLength() < shortestPathLength)
+                    {
+                        nearestWorker = worker;
+                    }
+                }
+            }
+        }
+        return nearestWorker;
+    }
+
     public void SpawnHearth(Vector2 worldLocation)
     {
         GameObject hearth = Instantiate<GameObject>(hearthPrefab, worldLocation, Quaternion.identity);
         Fires.Add(hearth);
+        // TODO clear the tiles and queue the trees
     }
 
     public void SpawnCampFire(Vector2 worldLocation)
     {
         GameObject fire = Instantiate<GameObject>(firePrefab, worldLocation, Quaternion.identity);
         Fires.Add(fire);
+        // TODO clear the tiles and queue the trees
     }
 
     public static Vector2Int GetGridLocation(Vector2 worldLocation)
@@ -107,6 +136,30 @@ public class World : MonoBehaviour
     {
         Vector2Int transformedLocation = gridLocation * new Vector2Int((int)World.Get().TileSize.x, (int)World.Get().TileSize.y);
         return new Vector2((float)transformedLocation.x, (float)transformedLocation.y);
+    }
+
+    private List<World.Tile> GetTilesInRadius(Vector2Int gridLocation, int radius)
+    {
+        List<World.Tile> temp = new List<World.Tile>();
+        float radiusSquared = radius * radius;
+        int xMin = gridLocation.x - radius;
+        int xMax = gridLocation.x + radius;
+        int yMin = gridLocation.y - radius;
+        int yMax = gridLocation.y + radius;
+        Vector2Int coordinates = new Vector2Int(xMin, yMin);
+        for (int x = xMin; x < xMax; x++)
+        {
+            for (int y = yMin; y < yMax; y++)
+            {
+                coordinates.x = x;
+                coordinates.y = y;
+                if ((coordinates - gridLocation).sqrMagnitude < radiusSquared && Tiles.ContainsKey(coordinates))
+                {
+                    temp.Add(Tiles[coordinates]);
+                }
+            }
+        }
+        return temp;
     }
 
     void Start()
