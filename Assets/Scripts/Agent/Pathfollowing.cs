@@ -103,7 +103,7 @@ public class AStar
             current = open[0];
             open.Remove(current);
             closed.Add(current);
-            adjancencies = AStar.GetAdjacentNodes(inGrid, current);
+            adjancencies = World.Tile.GetAdjacentTiles(inGrid, current);
 
             foreach(World.Tile tile in adjancencies)
             {
@@ -134,35 +134,6 @@ public class AStar
         }
 
         return true;
-    }
-
-    private static List<World.Tile> GetAdjacentNodes(Dictionary<Vector2Int, World.Tile> inGrid, World.Tile tile)
-    {
-        List<World.Tile> temp = new List<World.Tile>();
-
-        Vector2Int coordinates = tile.Coordinates;
-
-        if (inGrid.ContainsKey(coordinates + Vector2Int.up))
-        {
-            temp.Add(inGrid[coordinates + Vector2Int.up]);
-        }
-
-        if (inGrid.ContainsKey(coordinates + Vector2Int.down))
-        {
-            temp.Add(inGrid[coordinates + Vector2Int.down]);
-        }
-
-        if (inGrid.ContainsKey(coordinates + Vector2Int.left))
-        {
-            temp.Add(inGrid[coordinates + Vector2Int.left]);
-        }
-
-        if (inGrid.ContainsKey(coordinates + Vector2Int.right))
-        {
-            temp.Add(inGrid[coordinates + Vector2Int.right]);
-        }
-
-        return temp;
     }
 }
 

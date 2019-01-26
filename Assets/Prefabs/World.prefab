@@ -277,15 +277,39 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TileSize: {x: 32, y: 32}
   TileTypes:
-  - TileSelection:
-    - {fileID: 11400000, guid: 4678d9613d416974bbc308b4a6a33404, type: 2}
-  - TileSelection: []
-  - TileSelection: []
-  - TileSelection: []
-  - TileSelection:
-    - {fileID: 11400000, guid: e59039ff816fbab46813904d493b8939, type: 2}
-    - {fileID: 11400000, guid: 106d3d1368441fc4b85be69c12918138, type: 2}
-  - TileSelection: []
+  - Variations:
+    - Normal: {fileID: 11400000, guid: a81de9fc6f121bb46a2066bac34af1dc, type: 2}
+      Snowed: {fileID: 11400000, guid: bec37674d1aba5c4ca3fd15bd5882b1e, type: 2}
+  - Variations: []
+  - Variations: []
+  - Variations: []
+  - Variations:
+    - Normal: {fileID: 11400000, guid: e59039ff816fbab46813904d493b8939, type: 2}
+      Snowed: {fileID: 0}
+    - Normal: {fileID: 11400000, guid: 106d3d1368441fc4b85be69c12918138, type: 2}
+      Snowed: {fileID: 0}
+    - Normal: {fileID: 11400000, guid: d9feefee11d91f14e9ff0b7afcbaf93a, type: 2}
+      Snowed: {fileID: 0}
+    - Normal: {fileID: 11400000, guid: 88eee65752574e24482461ec55461b69, type: 2}
+      Snowed: {fileID: 0}
+  - Variations: []
+  GrassEdgeVariations:
+  - Normal: {fileID: 11400000, guid: 49aa31dbfb67a654187ec4c8b773365e, type: 2}
+    Snowed: {fileID: 11400000, guid: c381a536505308d47bbea29e598593ff, type: 2}
+  - Normal: {fileID: 11400000, guid: e8daee66d488af2458ed7bcfbb67d46c, type: 2}
+    Snowed: {fileID: 11400000, guid: 3a2686353c1ac614ab80be5d35bf9abd, type: 2}
+  - Normal: {fileID: 11400000, guid: 88f2188e2d338dd46a20552dbdb4c6a5, type: 2}
+    Snowed: {fileID: 11400000, guid: b33a60f4d86e56643b5fbfae89c6222b, type: 2}
+  - Normal: {fileID: 11400000, guid: 72057a4e8e2c3f348be679e6db0bab18, type: 2}
+    Snowed: {fileID: 11400000, guid: 73b876cef5481e442a3ac640cf4095a0, type: 2}
+  - Normal: {fileID: 11400000, guid: 7945f33bb22adc347a8765bda5c81f0f, type: 2}
+    Snowed: {fileID: 11400000, guid: 92307a1ee0581d74b99d7e275e7d446f, type: 2}
+  - Normal: {fileID: 11400000, guid: 9226563515c924b458e025566d804f05, type: 2}
+    Snowed: {fileID: 11400000, guid: 4678d9613d416974bbc308b4a6a33404, type: 2}
+  - Normal: {fileID: 11400000, guid: ef8d194c401389f4c8738e6867dfc017, type: 2}
+    Snowed: {fileID: 11400000, guid: 1911e718fe2e12f44b639cc6fe68e78d, type: 2}
+  - Normal: {fileID: 11400000, guid: 7c885fcb1eb41594d9efdcfb284d018e, type: 2}
+    Snowed: {fileID: 11400000, guid: 5a9a86b583db2dc4f8ba6f42f611ffea, type: 2}
   generationParameters: {fileID: 11400000, guid: 617268a62919790429246e76e827943d,
     type: 2}
   seed: 0

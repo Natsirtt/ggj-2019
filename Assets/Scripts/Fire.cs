@@ -111,7 +111,7 @@ public class Fire : MonoBehaviour
 
         foreach(World.Tile tile in influence)
         {
-            tile.IsInSnow = false;
+            tile.SetIsInSnow(false);
             if (tile.TileType == World.Tile.Type.Tree)
             {
                 Jobs.QueueJob(tile.Coordinates, JobDispatcher.Job.Type.Chop);
