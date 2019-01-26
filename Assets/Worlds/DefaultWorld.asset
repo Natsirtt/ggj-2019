@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47d3f2adb3defd445a1f80416c0de596, type: 3}
+  m_Name: DefaultWorld
+  m_EditorClassIdentifier: 
+  grid:
+    Size: {x: 400, y: 400}
+  resources:
+    startingWoodAmount: 100
+    woodPerTree: 5
+    expeditionWoodCost: 0
+  infrastructures:
+    hearthMinDistanceFromMapEdge: {x: 100, y: 100}
+  forests:
+    numberOfPathsRange: {x: 3, y: 6}
+    patchesPerPathRange: {x: 1, y: 4}
+    woodAmountRangePerPatch: {x: 5, y: 100}
+    minDistanceFromPathLastSeed: 30
+    maxDistanceFromPathLastSeed: 150
+    minPatchEuclidianRadius: 1
+    maxPatchEuclidianRadius: 10
+    patchDensityRange: {x: 20, y: 100}
+    angleForNextSeedInPath: 75
