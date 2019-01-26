@@ -324,7 +324,7 @@ public class World : MonoBehaviour
         }
     }
 
-    private GameObject GetClosestFire(Vector2 worldLocation) {
+    public GameObject GetClosestFire(Vector2 worldLocation) {
         int nearestDistance = 99999;
         GameObject closest = null;
         Vector2Int location = GetGridLocation(worldLocation);
@@ -375,7 +375,6 @@ public class World : MonoBehaviour
         Fires.Add(hearth);
 
         Camera.main.transform.position = new Vector3(worldLocation.x, worldLocation.y, Camera.main.transform.position.z);
-        // TODO clear the tiles and queue the trees
     }
 
     public void SpawnCampFire(Vector2 worldLocation)
@@ -397,7 +396,6 @@ public class World : MonoBehaviour
         {
             Debug.LogError("Failed to spawn a campfire. The coming days are going to be cold...");
         }
-        // TODO clear the tiles and queue the trees
     }
 
     public Vector2Int GetGridLocation(Vector2 worldLocation)

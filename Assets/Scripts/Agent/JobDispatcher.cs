@@ -16,10 +16,20 @@ public class JobDispatcher : MonoBehaviour
         public Vector2Int Coordinates { get; private set; }
         public Type JobType { get; set; }
 
-        public Job(Vector2Int coordinates, Type type)
+        public int NumWorkers { get; set; }
+        public int RequiredWorkers { get; set; }
+
+        public Job(Vector2Int coordinates, Type type, int requiredWorkers = 1)
         {
             Coordinates = coordinates;
+            RequiredWorkers = requiredWorkers;
+            NumWorkers = 0;
             JobType = type;
+        }
+
+        public bool IsReady()
+        {
+            return RequiredWorkers < NumWorkers;
         }
 
         public float Duration()
@@ -45,7 +55,7 @@ public class JobDispatcher : MonoBehaviour
                 chopWoodQueue.Enqueue(new Job(jobLocation, type));
                 break;
             case Job.Type.Expedition:
-                expeditionQueue.Enqueue(new Job(jobLocation, type));
+                expeditionQueue.Enqueue(new Job(jobLocation, type, 5));
                 break;
         }
     }
@@ -56,7 +66,7 @@ public class JobDispatcher : MonoBehaviour
     {
         if (expeditionQueue.Count > 0)
         {
-            return expeditionQueue.Dequeue();
+            return expeditionQueue.Peek();
         }
         return chopWoodQueue.Dequeue();
         /*int closestDistance = 999999;
@@ -73,6 +83,10 @@ public class JobDispatcher : MonoBehaviour
         return closestJob;*/
     }
 
+    public void dequeueExpedition()
+    {
+        expeditionQueue.Dequeue();
+    }
 
     public void ClearJobs()
     {
