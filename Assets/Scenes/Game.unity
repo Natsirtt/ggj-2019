@@ -123,6 +123,7 @@ GameObject:
   - component: {fileID: 519420032}
   - component: {fileID: 519420031}
   - component: {fileID: 519420029}
+  - component: {fileID: 519420030}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -138,6 +139,18 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
   m_Enabled: 1
+--- !u!114 &519420030
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519420028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2dcead972bf3cb4ba80260405fa040b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0
@@ -164,7 +177,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 100
+  orthographic size: 200
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -334,62 +347,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7851526017737909055, guid: 4d790d3c70b94f747a83e6e95f5c8cd2,
-        type: 3}
-      propertyPath: TileTypes.Array.data[0].TileSelection.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7851526017737909055, guid: 4d790d3c70b94f747a83e6e95f5c8cd2,
-        type: 3}
-      propertyPath: TileTypes.Array.data[4].TileSelection.Array.size
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 7851526017737909055, guid: 4d790d3c70b94f747a83e6e95f5c8cd2,
-        type: 3}
-      propertyPath: TileTypes.Array.data[0].TileSelection.Array.data[0]
-      value: 
-      objectReference: {fileID: 11400000, guid: a81de9fc6f121bb46a2066bac34af1dc,
-        type: 2}
-    - target: {fileID: 7851526017737909055, guid: 4d790d3c70b94f747a83e6e95f5c8cd2,
-        type: 3}
-      propertyPath: firePrefab
-      value: 
-      objectReference: {fileID: 7681504405642858328, guid: 25bf8b3278134704085dc188660db9d5,
-        type: 3}
-    - target: {fileID: 7851526017737909055, guid: 4d790d3c70b94f747a83e6e95f5c8cd2,
-        type: 3}
-      propertyPath: hearthPrefab
-      value: 
-      objectReference: {fileID: 2068627889015018793, guid: 759c19fee639ec249980e4c93c59ef53,
-        type: 3}
-    - target: {fileID: 7851526017737909055, guid: 4d790d3c70b94f747a83e6e95f5c8cd2,
-        type: 3}
-      propertyPath: workerPrefab
-      value: 
-      objectReference: {fileID: 1235590261510027719, guid: 1c62993b37a664a47a70fe3a7eab9178,
-        type: 3}
-    - target: {fileID: 7851526017737909055, guid: 4d790d3c70b94f747a83e6e95f5c8cd2,
-        type: 3}
-      propertyPath: TileTypes.Array.data[4].TileSelection.Array.data[0]
-      value: 
-      objectReference: {fileID: 11400000, guid: e59039ff816fbab46813904d493b8939,
-        type: 2}
-    - target: {fileID: 7851526017737909055, guid: 4d790d3c70b94f747a83e6e95f5c8cd2,
-        type: 3}
-      propertyPath: TileTypes.Array.data[4].TileSelection.Array.data[1]
-      value: 
-      objectReference: {fileID: 11400000, guid: 106d3d1368441fc4b85be69c12918138,
-        type: 2}
-    - target: {fileID: 6395997584509847593, guid: 4d790d3c70b94f747a83e6e95f5c8cd2,
-        type: 3}
-      propertyPath: m_TileAnchor.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3281465539611747813, guid: 4d790d3c70b94f747a83e6e95f5c8cd2,
-        type: 3}
-      propertyPath: m_SortingOrder
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4d790d3c70b94f747a83e6e95f5c8cd2, type: 3}

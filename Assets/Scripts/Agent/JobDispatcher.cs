@@ -12,7 +12,7 @@ public class JobDispatcher : MonoBehaviour
             Chop,
             Expedition
         }
-        
+
         public Vector2Int Coordinates { get; private set; }
         public Type JobType { get; set; }
 
@@ -23,6 +23,7 @@ public class JobDispatcher : MonoBehaviour
         }
 
     }
+
 
     #region Job Handler private members
 
@@ -45,17 +46,60 @@ public class JobDispatcher : MonoBehaviour
         }
     }
 
+
+
+    public Job GetNearestJob(Vector2Int gridPosition)
+    {
+        if (expeditionQueue.Count > 0)
+        {
+            return expeditionQueue.Dequeue();
+        }
+        return chopWoodQueue.Dequeue();
+        /*int closestDistance = 999999;
+        Job closestJob = null;
+        foreach (Job job in expeditionQueue)
+        {
+            int distance = World.GetManhattanDistance(gridPosition, job.Coordinates);
+            if (distance < closestDistance)
+            {
+                closestJob = job;
+                closestDistance = distance;
+            }
+        }
+        return closestJob;*/
+    }
+
+
+    public void ClearJobs()
+    {
+        chopWoodQueue.Clear();
+    }
+
+    public bool HasJobs()
+    {
+        return chopWoodQueue.Count > 0 || expeditionQueue.Count > 0;
+    }
+
     public void QueueJob(Job job)
     {
         chopWoodQueue.Enqueue(job);
     }
 
+    public int Count
+    {
+        get
+        {
+            return chopWoodQueue.Count + expeditionQueue.Count;
+        }
+    }
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         world = World.Get();
         globalInventory = world.GlobalInventory;
+        expeditionQueue = new Queue<Job>();
+        chopWoodQueue = new Queue<Job>();
     }
 
     // Update is called once per frame

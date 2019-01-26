@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class Fire : MonoBehaviour
 {
@@ -22,6 +23,9 @@ public class Fire : MonoBehaviour
     [SerializeField]
     private float workerSpawnRateIncrease = 0f;
 
+    [SerializeField]
+    private TileBase FirePlaceTile;
+
     private float currentBurnRatePerSecond;
     private int currentRadiusOfInfluence;
     private float currentWorkerSpawnRate;
@@ -30,15 +34,25 @@ public class Fire : MonoBehaviour
     private float spawnProgress;
     private Inventory globalInventory;
     private World world;
+
+    public JobDispatcher Jobs {get; private set;}
+
+    private List<World.Tile> influence;
+    void Awake()
+    {
+        Jobs = gameObject.AddComponent<JobDispatcher>();
+    }
+
+
+
+    public World.Tile GridTile { get; private set; }
+
     // Start is called before the first frame update
     void Start()
     {
         world = World.Get();
         globalInventory = world.GlobalInventory;
-        burnProgress = 0f;
-        currentRadiusOfInfluence = radiusOfInfluence;
-        currentBurnRatePerSecond = burnRatePerSecond;
-        currentWorkerSpawnRate = workerSpawnRatePerSecond;
+        Activate();
     }
 
     // Update is called once per frame
@@ -65,7 +79,7 @@ public class Fire : MonoBehaviour
             while (spawning > 0)
             {
                 // TODO randomize this position
-                world.SpawnWorker(WorldPosition());
+                world.SpawnWorker(WorldPosition(), this);
                 spawning -= 1;
 
             }
@@ -92,6 +106,19 @@ public class Fire : MonoBehaviour
         burnProgress = 0f;
         currentRadiusOfInfluence = radiusOfInfluence;
         currentBurnRatePerSecond = burnRatePerSecond;
+        currentWorkerSpawnRate = workerSpawnRatePerSecond;
+        influence = World.Get().GetTilesInRadius(TilePosition(), CurrentRadiusOfInfluence);
+        Debug.Log("Tiles in influence radius: " + influence.Count.ToString());
+        foreach(World.Tile tile in influence)
+        {
+            tile.IsInSnow = false;
+            if (tile.TileType == World.Tile.Type.Tree)
+            {
+                Jobs.QueueJob(tile.Coordinates, JobDispatcher.Job.Type.Chop);
+                Debug.DrawLine(transform.position, World.Get().GetWorldLocation(tile.Coordinates));
+            }
+        }
+        Debug.Log("Found jobs: " + Jobs.Count.ToString());
     }
 
     public void Feed()
@@ -107,6 +134,11 @@ public class Fire : MonoBehaviour
         return new Vector2(gameObject.transform.position.x, gameObject.transform.position.y);
     }
 
+    public Vector2Int TilePosition()
+    {
+        return world.GetGridLocation(WorldPosition());
+    }
+
     public void Shrink()
     {
         currentRadiusOfInfluence -= radiusOfInfluenceIncrease;
@@ -117,4 +149,9 @@ public class Fire : MonoBehaviour
         }
     }
 
+    public void SetWorldTile(World.Tile tileToGiveToFireScript)
+    {
+        GridTile = tileToGiveToFireScript;
+        World.Get().TilemapFires.SetTile(new Vector3Int(GridTile.Coordinates.x, GridTile.Coordinates.y, 0), FirePlaceTile);
+    }
 }

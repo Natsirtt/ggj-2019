@@ -33,6 +33,8 @@ public class WorldGenerationParameters : ScriptableObject
         public int minPatchEuclidianRadius;
         public int maxPatchEuclidianRadius;
         public Vector2 patchDensityRange;
+        [Tooltip("The direction list patches can take will be re-populated after this number of patches were consistent.")]
+        public int numberOfPatchesWithConsistentDirection;
     }
 
     public Grid grid;
