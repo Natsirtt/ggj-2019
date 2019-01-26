@@ -59,7 +59,7 @@ public class World : MonoBehaviour
     }
 
     [SerializeField]
-    private Vector2 TileSize = new Vector2(32, 32);
+    private Vector2 TileSize = new Vector2(5, 5);
 
     public Dictionary<Vector2Int, Tile> Tiles { get; private set; }
     public Inventory GlobalInventory { get; private set; }
@@ -144,8 +144,9 @@ public class World : MonoBehaviour
                 Tile.Type type = Tile.Type.Grass;
                 if (Random.Range(0.0f, 1.0f) <= snowDensity)
                 {
-                    type = Tile.Type.Snow;
+                    type = Tile.Type.Mountain;
                 }
+
                 Tiles.Add(new Vector2Int(i, j), new Tile(new Vector2Int(i, j), type));
             }
         }
