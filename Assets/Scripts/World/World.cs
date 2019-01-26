@@ -142,7 +142,6 @@ public class World : MonoBehaviour
 
             List<World.Tile> adjacentTiles = World.Get().GetTilesInSquare(Coordinates, 1);
 
-
             Vector2Int offset = neighbor.Coordinates - Coordinates;
             World.Direction worldDirection = World.Direction.South;
             if (offset.x == -1 && offset.y == -1)
@@ -295,6 +294,8 @@ public class World : MonoBehaviour
 
     [NamedArray(typeof(Direction))]
     public TileVariation[] GrassEdgeVariations = new TileVariation[(int)Direction.NorthWest + 1];
+
+
 
     [NamedArray(typeof(Tile.Type))]
     public Tilemap[] Tilemaps = new Tilemap[(int)Tile.Type.MAX];
