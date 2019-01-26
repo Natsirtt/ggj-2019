@@ -250,7 +250,9 @@ public class World : MonoBehaviour
                     {
                         nearestWorker = worker;
                     }
+                    
                 }
+                Debug.LogWarning("Cannot build path!");
             }
         }
         return nearestWorker;
@@ -359,7 +361,7 @@ public class World : MonoBehaviour
         throw new Exception("No");
     }
 
-    private List<Tile> GetTilesInRadius(Vector2Int gridLocation, int radius)
+    public List<Tile> GetTilesInRadius(Vector2Int gridLocation, int radius)
     {
         List<Tile> temp = new List<World.Tile>();
         float radiusSquared = radius * radius;
