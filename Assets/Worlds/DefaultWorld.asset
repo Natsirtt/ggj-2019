@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: DefaultWorld
   m_EditorClassIdentifier: 
   grid:
-    Size: {x: 500, y: 500}
+    Size: {x: 400, y: 400}
   resources:
     startingWoodAmount: 300
     woodPerTree: 3
@@ -28,3 +28,4 @@ MonoBehaviour:
     minPatchEuclidianRadius: 2
     maxPatchEuclidianRadius: 15
     patchDensityRange: {x: 0.1, y: 0.4}
+    numberOfPatchesWithConsistentDirection: 4

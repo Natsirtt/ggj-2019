@@ -105,7 +105,7 @@ TilemapRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 0
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
   m_MaxChunkCount: 16
@@ -219,7 +219,7 @@ TilemapRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 0
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
   m_MaxChunkCount: 16
@@ -294,6 +294,8 @@ MonoBehaviour:
   firePrefab: {fileID: 7681504405642858328, guid: 25bf8b3278134704085dc188660db9d5,
     type: 3}
   hearthPrefab: {fileID: 2068627889015018793, guid: 759c19fee639ec249980e4c93c59ef53,
+    type: 3}
+  fireParticleSystemPrefab: {fileID: 4322275919001543451, guid: 0a611ac8fe8bed54f8af6f26397f3ad4,
     type: 3}
   TilemapGround: {fileID: 7851526018243658318}
   TilemapTrees: {fileID: 6395997584509847593}
@@ -415,7 +417,7 @@ TilemapRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -1
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
   m_MaxChunkCount: 16

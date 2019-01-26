@@ -201,6 +201,7 @@ public class World : MonoBehaviour
     public GameObject workerPrefab;
     public GameObject firePrefab;
     public GameObject hearthPrefab;
+    public GameObject fireParticleSystemPrefab;
 
     public Tilemap TilemapGround;
     public Tilemap TilemapTrees;
@@ -270,13 +271,19 @@ public class World : MonoBehaviour
     public void SpawnCampFire(Vector2 worldLocation)
     {
         GameObject fire = Instantiate<GameObject>(firePrefab, worldLocation, Quaternion.identity);
+        float depth = fireParticleSystemPrefab.transform.position.z;
+        GameObject fireParticleSystem = Instantiate<GameObject>(fireParticleSystemPrefab, (Vector3)GetWorldLocation(GetGridLocation(worldLocation)) + new Vector3(0, 0, depth), fireParticleSystemPrefab.transform.rotation);
         Fire fireScript = fire.GetComponent<Fire>();
-        if(fireScript != null)
+        if (fireScript != null)
         {
             Vector2Int tileLocationInGridSpace = GetGridLocation(fire.transform.position);
             Tile tileToGiveToFireScript = Tiles[tileLocationInGridSpace];
             fireScript.SetWorldTile(tileToGiveToFireScript);
             Fires.Add(fire);
+        }
+        else
+        {
+            Debug.LogError("Failed to spawn a campfire. The coming days are going to be cold...");
         }
         // TODO clear the tiles and queue the trees
     }
