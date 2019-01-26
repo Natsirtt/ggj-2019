@@ -46,6 +46,17 @@ public class NamedArrayDrawer : PropertyDrawer
 }
 #endif
 
+[Serializable]
+public struct TileContainer
+{
+    public List<TileBase> TileSelection;
+
+    public TileBase GetRandomTile()
+    {
+        return TileSelection.Count <= 0 ? null : TileSelection[Random.Range(0, TileSelection.Count)];
+    }
+}
+
 public class World : MonoBehaviour
 {
     // Utils
@@ -110,7 +121,7 @@ public class World : MonoBehaviour
     public Vector2Int GridSize { get; private set; }
 
     [NamedArrayAttribute(typeof(Tile.Type))]
-    public TileBase[] TileTypes = new TileBase[(int)Tile.Type.MAX];
+    public TileContainer[] TileTypes = new TileContainer[(int)Tile.Type.MAX];
 
     [SerializeField]
     private WorldGenerationParameters generationParameters = null;
@@ -122,6 +133,9 @@ public class World : MonoBehaviour
     public GameObject workerPrefab;
     public GameObject firePrefab;
     public GameObject hearthPrefab;
+
+    public Tilemap TilemapGround;
+    public Tilemap TilemapTree;
 
     public List<GameObject> Workers { get; private set; }
     public List<GameObject> Fires { get; private set; }
@@ -183,8 +197,6 @@ public class World : MonoBehaviour
 
     void GenerateWorld(int seed, WorldGenerationParameters parameters)
     {
-        Tilemap tileMap = GetComponentInChildren<Tilemap>();
-
         Tiles = new Dictionary<Vector2Int, Tile>();
         Random.InitState(seed);
         GridSize = parameters.grid.Size;
@@ -224,10 +236,22 @@ public class World : MonoBehaviour
                 Vector2Int tilePos = new Vector2Int(i, j);
                 Tiles.Add(tilePos, new Tile(tilePos, type));
 
-                TileBase tileToRender;
-                tileToRender = TileTypes[(int)type];
-                Vector2 tileMapPos = tilePos;// * TileSize;
-                tileMap.SetTile(new Vector3Int((int)tileMapPos.x, (int)tileMapPos.y, 0), tileToRender);
+                if((int)type < TileTypes.Length)
+                {
+                    TileBase tileToRender = TileTypes[(int)type].GetRandomTile();
+                    Vector2 tileMapPos = tilePos;// * TileSize;
+                    if (tileToRender != null)
+                    {
+                        if(type == Tile.Type.Tree)
+                            TilemapTree.SetTile(new Vector3Int((int)tileMapPos.x, (int)tileMapPos.y, 0), tileToRender);
+                    }
+
+                    tileToRender = TileTypes[(int)Tile.Type.Grass].GetRandomTile();
+                    if (tileToRender != null)
+                    {
+                        TilemapGround.SetTile(new Vector3Int((int)tileMapPos.x, (int)tileMapPos.y, 0), tileToRender);
+                    }
+                }
             }
         }
     }
