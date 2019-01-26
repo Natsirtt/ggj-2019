@@ -13,18 +13,18 @@ MonoBehaviour:
   m_Name: DefaultWorld
   m_EditorClassIdentifier: 
   grid:
-    Size: {x: 400, y: 400}
+    Size: {x: 500, y: 500}
   resources:
-    startingWoodAmount: 100
-    woodPerTree: 5
-    expeditionWoodCostPerTile: 3
+    startingWoodAmount: 300
+    woodPerTree: 3
+    expeditionWoodCostPerTile: 4
   infrastructures:
     hearthMinDistanceFromMapEdge: {x: 100, y: 100}
   forests:
-    numberOfPathsRange: {x: 3, y: 6}
-    patchesPerPathRange: {x: 1, y: 4}
-    woodAmountRangePerPatch: {x: 5, y: 100}
+    numberOfPathsRange: {x: 5, y: 10}
+    patchesPerPathRange: {x: 2, y: 10}
+    woodAmountRangePerPatch: {x: 200, y: 800}
     patchesDifficultyDistanceModifier: 0
-    minPatchEuclidianRadius: 1
+    minPatchEuclidianRadius: 4
     maxPatchEuclidianRadius: 10
-    patchDensityRange: {x: 50, y: 100}
+    patchDensityRange: {x: 0.1, y: 0.6}
