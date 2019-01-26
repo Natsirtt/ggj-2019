@@ -1,39 +1,25 @@
 fileFormatVersion: 2
-guid: 258d30d65cd45fd48a58cccbe999ce35
+guid: e15f2f8a4c195e24a81737fbc15602ce
 TextureImporter:
   fileIDToRecycleName:
-    21300000: TEX_GrassAndSnow_Spritesheet_0
-    21300002: TEX_GrassAndSnow_Spritesheet_1
-    21300004: TEX_GrassAndSnow_Spritesheet_2
-    21300006: TEX_GrassAndSnow_Spritesheet_3
-    21300008: TEX_GrassAndSnow_Spritesheet_4
-    21300010: TEX_GrassAndSnow_Spritesheet_5
-    21300012: TEX_GrassAndSnow_Spritesheet_6
-    21300014: TEX_GrassAndSnow_Spritesheet_7
-    21300016: TEX_GrassAndSnow_Spritesheet_8
-    21300018: TEX_GrassAndSnow_Spritesheet_9
-    21300020: TEX_GrassAndSnow_Spritesheet_10
-    21300022: TEX_GrassAndSnow_Spritesheet_11
-    21300024: TEX_GrassAndSnow_Spritesheet_12
-    21300026: TEX_GrassAndSnow_Spritesheet_13
-    21300028: TEX_GrassAndSnow_Spritesheet_14
-    21300030: TEX_GrassAndSnow_Spritesheet_15
-    21300032: TEX_GrassAndSnow_Spritesheet_16
-    21300034: TEX_GrassAndSnow_Spritesheet_17
-    21300036: TEX_GrassAndSnow_Spritesheet_18
-    21300038: TEX_GrassAndSnow_Spritesheet_19
-    21300040: TEX_GrassAndSnow_Spritesheet_20
-    21300042: TEX_GrassAndSnow_Spritesheet_21
-    21300044: TEX_GrassAndSnow_Spritesheet_22
-    21300046: TEX_GrassAndSnow_Spritesheet_23
-    21300048: TEX_GrassAndSnow_Spritesheet_24
-    21300050: TEX_GrassAndSnow_Spritesheet_25
-    21300052: TEX_GrassAndSnow_Spritesheet_26
-    21300054: TEX_GrassAndSnow_Spritesheet_27
-    21300056: TEX_GrassAndSnow_Spritesheet_28
-    21300058: TEX_GrassAndSnow_Spritesheet_29
-    21300060: TEX_GrassAndSnow_Spritesheet_30
-    21300062: TEX_GrassAndSnow_Spritesheet_31
+    21300000: Character_02_ColorMask_Spritesheet_0
+    21300002: Character_02_ColorMask_Spritesheet_1
+    21300004: Character_02_ColorMask_Spritesheet_2
+    21300006: Character_02_ColorMask_Spritesheet_3
+    21300008: Character_02_ColorMask_Spritesheet_4
+    21300010: Character_02_ColorMask_Spritesheet_5
+    21300012: Character_02_ColorMask_Spritesheet_6
+    21300014: Character_02_ColorMask_Spritesheet_7
+    21300016: Character_02_ColorMask_Spritesheet_8
+    21300018: Character_02_ColorMask_Spritesheet_9
+    21300020: Character_02_ColorMask_Spritesheet_10
+    21300022: Character_02_ColorMask_Spritesheet_11
+    21300024: Character_02_ColorMask_Spritesheet_12
+    21300026: Character_02_ColorMask_Spritesheet_13
+    21300028: Character_02_ColorMask_Spritesheet_14
+    21300030: Character_02_ColorMask_Spritesheet_15
+    21300032: Character_02_ColorMask_Spritesheet_16
+    21300034: Character_02_ColorMask_Spritesheet_17
   externalObjects: {}
   serializedVersion: 7
   mipmaps:
@@ -77,7 +63,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 1
+  spritePixelsToUnits: 100
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -116,253 +102,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: TEX_GrassAndSnow_Spritesheet_0
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 64
-        width: 32
-        height: 32
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: c27c2dd7343c7a8448b142f992dfe06e
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: TEX_GrassAndSnow_Spritesheet_1
-      rect:
-        serializedVersion: 2
-        x: 32
-        y: 64
-        width: 32
-        height: 32
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 152e3d30cd48f13438b9412722b144be
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: TEX_GrassAndSnow_Spritesheet_2
-      rect:
-        serializedVersion: 2
-        x: 64
-        y: 64
-        width: 32
-        height: 32
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 8e68afa1ff65f614f89dc28791c11fac
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: TEX_GrassAndSnow_Spritesheet_3
-      rect:
-        serializedVersion: 2
-        x: 96
-        y: 64
-        width: 32
-        height: 32
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 363c7c45731586443825fe9040852bab
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: TEX_GrassAndSnow_Spritesheet_4
-      rect:
-        serializedVersion: 2
-        x: 128
-        y: 64
-        width: 32
-        height: 32
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: ae7aabfaa8e9d3242ae0f81dae29d95f
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: TEX_GrassAndSnow_Spritesheet_5
-      rect:
-        serializedVersion: 2
-        x: 160
-        y: 64
-        width: 32
-        height: 32
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 905915cab22e2614ab0da9cbf68c0ef0
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: TEX_GrassAndSnow_Spritesheet_6
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 32
-        width: 32
-        height: 32
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 519978cc20747294c82e6f3aff9d7b56
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: TEX_GrassAndSnow_Spritesheet_7
-      rect:
-        serializedVersion: 2
-        x: 32
-        y: 32
-        width: 32
-        height: 32
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: c833d53d93b007740935f7b676dd49f0
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: TEX_GrassAndSnow_Spritesheet_8
-      rect:
-        serializedVersion: 2
-        x: 64
-        y: 32
-        width: 32
-        height: 32
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: c19556b049165fa49b7148aa7b00ca94
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: TEX_GrassAndSnow_Spritesheet_9
-      rect:
-        serializedVersion: 2
-        x: 96
-        y: 32
-        width: 32
-        height: 32
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 681106e0520f71f40bb6c1a513067b16
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: TEX_GrassAndSnow_Spritesheet_10
-      rect:
-        serializedVersion: 2
-        x: 128
-        y: 32
-        width: 32
-        height: 32
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 39b45a3446200ea40ba68a3c12af9cdf
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: TEX_GrassAndSnow_Spritesheet_11
-      rect:
-        serializedVersion: 2
-        x: 160
-        y: 32
-        width: 32
-        height: 32
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 48260898506ae994394c9ff92cb97dd4
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: TEX_GrassAndSnow_Spritesheet_12
+      name: Character_02_ColorMask_Spritesheet_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 32
-        height: 32
+        width: 16
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -370,19 +116,39 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 5072f99f11835c3458ce19b30d16c720
+      spriteID: 7a26129503fc92748ac4b917abb143dc
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: TEX_GrassAndSnow_Spritesheet_13
+      name: Character_02_ColorMask_Spritesheet_1
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 0
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: baf9862af319376488f4b50e707a8a26
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Character_02_ColorMask_Spritesheet_2
       rect:
         serializedVersion: 2
         x: 32
         y: 0
-        width: 32
-        height: 32
+        width: 16
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -390,19 +156,39 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 175560e0b8073134587199add739d28e
+      spriteID: a1ba2f1e47894f04a97e25d4adc6bf08
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: TEX_GrassAndSnow_Spritesheet_14
+      name: Character_02_ColorMask_Spritesheet_3
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 0
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6558a9c682caee94e80066b94e20f31b
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Character_02_ColorMask_Spritesheet_4
       rect:
         serializedVersion: 2
         x: 64
         y: 0
-        width: 32
-        height: 32
+        width: 16
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -410,19 +196,39 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 740682189cc152449a72a5e53af3ae07
+      spriteID: 57374077832b90a4d9e042c0a06d0b08
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: TEX_GrassAndSnow_Spritesheet_15
+      name: Character_02_ColorMask_Spritesheet_5
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 0
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9d42d3841469b3a4382b3833829ddc04
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Character_02_ColorMask_Spritesheet_6
       rect:
         serializedVersion: 2
         x: 96
         y: 0
-        width: 32
-        height: 32
+        width: 16
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -430,19 +236,39 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a7e26283af5a1b2499d462bc66aa44a5
+      spriteID: 12a283459fc168f4fa42d4fb9c9c509a
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: TEX_GrassAndSnow_Spritesheet_16
+      name: Character_02_ColorMask_Spritesheet_7
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 0
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bbc985c665c22cc4a85549c6851f35c1
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Character_02_ColorMask_Spritesheet_8
       rect:
         serializedVersion: 2
         x: 128
         y: 0
-        width: 32
-        height: 32
+        width: 16
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -450,19 +276,19 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 0f797415644904a4a8c2f037e3c1b9f6
+      spriteID: 92ed927b73ef4fa4a8d7d1b4eb3c2448
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: TEX_GrassAndSnow_Spritesheet_17
+      name: Character_02_ColorMask_Spritesheet_9
       rect:
         serializedVersion: 2
-        x: 160
+        x: 144
         y: 0
-        width: 32
-        height: 32
+        width: 16
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -470,7 +296,167 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7f4d94ece55925c41b87d5da6d70ccbc
+      spriteID: 27742839061fe684294c66dafce9e5a3
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Character_02_ColorMask_Spritesheet_10
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 0
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 605fa8079b02cd34282d5b0df3419863
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Character_02_ColorMask_Spritesheet_11
+      rect:
+        serializedVersion: 2
+        x: 176
+        y: 0
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 52749791d8ddd18499c51bc217db2e2d
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Character_02_ColorMask_Spritesheet_12
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 0
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2b14cd3b8c32c5046a9b7c9bf07c1a18
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Character_02_ColorMask_Spritesheet_13
+      rect:
+        serializedVersion: 2
+        x: 208
+        y: 0
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8fa31fc82fb686f4897078819fdcf036
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Character_02_ColorMask_Spritesheet_14
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 0
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6cf7402f237f7b049b875545fd2ba308
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Character_02_ColorMask_Spritesheet_15
+      rect:
+        serializedVersion: 2
+        x: 240
+        y: 0
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 16e9acf1f17a47640a1ec8a25dd5f5e8
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Character_02_ColorMask_Spritesheet_16
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 0
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fbc4bae95b9505443abebb627ad6ad84
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Character_02_ColorMask_Spritesheet_17
+      rect:
+        serializedVersion: 2
+        x: 272
+        y: 0
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1df59a54cb4176844a03309a424c5d20
       vertices: []
       indices: 
       edges: []
@@ -478,7 +464,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 28bb53350b145114db37419c515cdcd2
+    spriteID: 7d771452d0c73cf41910721dae348379
     vertices: []
     indices: 
     edges: []

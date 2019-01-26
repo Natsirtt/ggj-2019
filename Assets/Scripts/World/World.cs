@@ -2,6 +2,49 @@
 using System.Collections.Generic;
 using System;
 using Random = UnityEngine.Random;
+using UnityEngine.Tilemaps;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
+public class NamedArrayAttribute : PropertyAttribute
+{
+    public Type TargetEnum;
+    public NamedArrayAttribute(Type TargetEnum)
+    {
+        this.TargetEnum = TargetEnum;
+    }
+}
+
+#if UNITY_EDITOR
+[CustomPropertyDrawer(typeof(NamedArrayAttribute))]
+public class NamedArrayDrawer : PropertyDrawer
+{
+    public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
+    {
+        return EditorGUI.GetPropertyHeight(property, label, property.isExpanded);
+    }
+    public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+    {
+        try
+        {
+            var config = attribute as NamedArrayAttribute;
+            var enum_names = System.Enum.GetNames(config.TargetEnum);
+            int pos = int.Parse(property.propertyPath.Split('[', ']')[1]);
+            var enum_label = enum_names.GetValue(pos) as string;
+            // Make names nicer to read (but won't exactly match enum definition).
+            enum_label = ObjectNames.NicifyVariableName(enum_label.ToLower());
+            label = new GUIContent(enum_label);
+        }
+        catch
+        {
+            // keep default label
+        }
+        EditorGUI.PropertyField(position, property, label, property.isExpanded);
+    }
+}
+#endif
 
 public class World : MonoBehaviour
 {
@@ -31,7 +74,8 @@ public class World : MonoBehaviour
             Mountain,
             Campfire,
             Hearth,
-            Tree
+            Tree,
+            MAX
         }
 
         public Vector2Int Coordinates { get; private set; }
@@ -127,6 +171,9 @@ public class World : MonoBehaviour
     public Inventory GlobalInventory { get; private set; }
     public Vector2Int GridSize { get; private set; }
 
+    [NamedArrayAttribute(typeof(Tile.Type))]
+    public TileBase[] TileTypes = new TileBase[(int)Tile.Type.MAX];
+
     [SerializeField]
     private WorldGenerationParameters generationParameters = null;
 
@@ -161,14 +208,14 @@ public class World : MonoBehaviour
 
     public Vector2Int GetGridLocation(Vector2 worldLocation)
     {
-        Vector2 transformedLocation = worldLocation / TileSize;
+        Vector2 transformedLocation = (worldLocation + TileSize * 0.5f) / TileSize;
         return new Vector2Int((int)transformedLocation.x, (int)transformedLocation.y);
     }
 
     public Vector2 GetWorldLocation(Vector2Int gridLocation)
     {
         Vector2Int transformedLocation = gridLocation * new Vector2Int((int)TileSize.x, (int)TileSize.y);
-        return new Vector2((float)transformedLocation.x, (float)transformedLocation.y);
+        return new Vector2((float)transformedLocation.x, (float)transformedLocation.y) + TileSize * 0.5f;
     }
 
     public Vector2Int GetHalfGridSize()
@@ -235,6 +282,8 @@ public class World : MonoBehaviour
 
     void GenerateWorld(int seed, WorldGenerationParameters parameters)
     {
+        Tilemap tileMap = GetComponentInChildren<Tilemap>();
+
         Tiles = new Dictionary<Vector2Int, Tile>();
         Random.InitState(seed);
         GridSize = parameters.grid.Size;
@@ -292,7 +341,7 @@ public class World : MonoBehaviour
         for (int patchID = 0; patchID < numberOfPatches; patchID++)
         {
             // Snaking away using the resources
-            while (theoreticalWoodAmount > 0 || theoreticalWoodAmount < parameters.resources.expeditionWoodCostPerTile)
+            while (theoreticalWoodAmount > 0 && theoreticalWoodAmount > parameters.resources.expeditionWoodCostPerTile)
             {
                 Direction direction = directions[Random.Range(0, directions.Count - 1)];
                 // Remove the direction's "opposite" so that a forest path always goes towards a similar direction-ish

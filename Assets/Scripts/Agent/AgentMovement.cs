@@ -23,7 +23,7 @@ public class AgentMovement : MonoBehaviour
     {
         if(AccumulatedInput.magnitude > 0.0f) // accelerate
         {
-            Vector2 normalizedInput = AccumulatedInput.normalized;
+            Vector2 normalizedInput = AccumulatedInput.magnitude > 1.0f ? AccumulatedInput.normalized : AccumulatedInput;
 
             Velocity += normalizedInput * MaxSpeed;
             Velocity = Velocity.normalized * Mathf.Min(MaxSpeed, Velocity.magnitude);
