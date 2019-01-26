@@ -262,7 +262,8 @@ public class World : MonoBehaviour
     {
         GameObject hearth = Instantiate<GameObject>(hearthPrefab, worldLocation, Quaternion.identity);
         Fires.Add(hearth);
-        Camera.main.transform.position = worldLocation;
+
+        Camera.main.transform.position = new Vector3(worldLocation.x, worldLocation.y, Camera.main.transform.position.z);
         // TODO clear the tiles and queue the trees
     }
 
