@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -30,6 +31,7 @@ public class Fire : MonoBehaviour
     private float spawnProgress;
     private Inventory globalInventory;
     private World world;
+    private float nextHouseSpawnTick;
 
     public JobDispatcher Jobs {get; private set;}
 
@@ -46,12 +48,23 @@ public class Fire : MonoBehaviour
     {
         world = World.Get();
         globalInventory = world.GlobalInventory;
+        nextHouseSpawnTick = Random.Range(world.GenerationParameters.infrastructures.houseSpawnPerSecondInterval.x, world.GenerationParameters.infrastructures.houseSpawnPerSecondInterval.y);
         Activate();
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (nextHouseSpawnTick <= Time.time)
+        {
+            World.Tile tile = influence.OrderBy(t => Random.value).ToList().Find(t => t.TileType == World.Tile.Type.Grass && !world.GetTilesInRadius(t.Coordinates, world.GenerationParameters.infrastructures.minimumManhattanDistanceBetweenHouses).Any(neighbour => neighbour.TileType == World.Tile.Type.House));
+            if (tile != null)
+            {
+                world.SetTileType(tile.Coordinates, World.Tile.Type.House);
+            }
+            nextHouseSpawnTick = Time.time + Random.Range(world.GenerationParameters.infrastructures.houseSpawnPerSecondInterval.x, world.GenerationParameters.infrastructures.houseSpawnPerSecondInterval.y);
+        }
+
         burnProgress += Time.deltaTime * currentBurnRatePerSecond;
         if (burnProgress >= 1f)
         {

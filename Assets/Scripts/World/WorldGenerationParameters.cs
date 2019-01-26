@@ -19,6 +19,8 @@ public class WorldGenerationParameters : ScriptableObject
     [Serializable] public struct Infrastructures
     {
         public Vector2Int hearthMinDistanceFromMapEdge;
+        public Vector2 houseSpawnPerSecondInterval;
+        public int minimumManhattanDistanceBetweenHouses;
     }
 
     [Serializable] public struct Forests
