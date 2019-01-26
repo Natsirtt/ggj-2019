@@ -98,7 +98,7 @@ public class AStar
 
         open.Add(current);
         
-        while(open.Count != 0 && !closed.Exists( x => x.Coordinates == end.Coordinates) && closed.Count < 1000)
+        while(open.Count != 0 && !closed.Exists( x => x.Coordinates == end.Coordinates) && closed.Count < 100)
         {
             current = open[0];
             open.Remove(current);
@@ -191,7 +191,7 @@ public class Pathfollowing : MonoBehaviour
     {
         if (!AStar.BuildPath(World.Get().Tiles, transform.position, location, ref CurrentPath))
         {
-            Debug.LogWarning("No path could be built for agent: " + gameObject.name + " at location " + location.ToString());
+            Debug.LogWarning("No path could be built for agent: " + gameObject.name + " from location " + transform.position.ToString() + " to " + location.ToString());
         }
     }
 
