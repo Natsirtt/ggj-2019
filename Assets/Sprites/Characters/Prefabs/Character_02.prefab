@@ -114,7 +114,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4a7b5966df6c76408dfa684cadc2692, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MaxSpeed: 20
+  MaxSpeed: 25
 --- !u!114 &7596325738556851015
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -139,3 +139,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6cdc8b774e0eef846af14dc0f22c8c80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SecondsToDeath: 5
+  Despawn: 2

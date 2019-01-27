@@ -18,6 +18,12 @@ public class AgentJobHandler : MonoBehaviour
     Pathfollowing pathFollowing;
     public float JobProgress { set; get; }
 
+    public float SecondsToDeath;
+    public float Despawn;
+    private float despawnTimer;
+    private float deathTimer;
+    private bool isDead = false;
+
     public void TakeJob(JobDispatcher.Job job)
     {
         // trigger animation
@@ -64,6 +70,15 @@ public class AgentJobHandler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (isDead)
+        {
+            despawnTimer += Time.deltaTime;
+            if (despawnTimer > Despawn)
+            {
+                Destroy(gameObject);
+            }
+            return;
+        }
         // somehow check if you are at the jobsite and once done remove the job
         if (Job == null)
         {
@@ -78,7 +93,6 @@ public class AgentJobHandler : MonoBehaviour
             else
             {
                 // TODO look for next fire
-                IsIdle = true;
                 pathFollowing.MoveToRandomLocationInSquare();
             }
         }
@@ -114,6 +128,19 @@ public class AgentJobHandler : MonoBehaviour
                     IsIdle = true;
                 }
             }
+        }
+        if (Fire.CurrentRadiusOfInfluence == 0)
+        {
+            deathTimer += Time.deltaTime;
+            if (deathTimer > SecondsToDeath)
+            {
+                gameObject.GetComponent<Animator>().SetBool("isDead", true);
+                isDead = true;
+            }
+        }
+        else
+        {
+            deathTimer = 0f;
         }
     }
 }
