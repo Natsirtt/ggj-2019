@@ -141,6 +141,17 @@ public struct TileContainer
 
         return snowed ? result.Snowed : result.Normal;
     }
+
+    public TileBase GetVariationMode(TileBase original, bool snowed)
+    {
+        TileVariation variation = Variations.Find(x => x.Normal == original || x.Snowed == original);
+        if (snowed && variation.Snowed == null)
+        {
+            Debug.LogWarning("Tile container needed to produce a snowed tile but none was provided.");
+            return variation.Normal;
+        }
+        return snowed ? variation.Snowed : variation.Normal;
+    }
 }
 
 [Serializable]
@@ -203,10 +214,8 @@ public class World : MonoBehaviour
             IsInSnow = flag;
 
             ChangedIsInSnow();
-            List<World.Tile> adjacentTiles = World.Get().GetTilesInSquare(Coordinates, 1);
-            //List<World.Tile> adjacentTiles = GetAdjacentTiles(World.Get().Tiles, this);
-            // List<World.Tile> adjacentTiles = new List<World.Tile>();
-            // adjacentTiles.Add(World.Get().Tiles[Coordinates + Vector2Int.left]);
+            List<World.Tile> adjacentTiles = GetAdjacentTiles(World.Get().Tiles, this);
+
             foreach (World.Tile t in adjacentTiles)
                 t.ChangedIsInSnow();
         }
@@ -215,22 +224,23 @@ public class World : MonoBehaviour
         {
             if (TileType != Type.Grass)
             {
-                TileBase newTile = World.Get().TileTypes[(int)TileType].GetRandomTile(IsInSnow);
-                World.Get().Tilemaps[(int)TileType].SetTile(new Vector3Int(Coordinates.x, Coordinates.y, 0), newTile);
+                Tilemap tMap = World.Get().Tilemaps[(int)TileType];
+                TileBase oldTile = tMap.GetTile(new Vector3Int(Coordinates.x, Coordinates.y, 0));
+                TileBase newTile = World.Get().TileTypes[(int)TileType].GetVariationMode(oldTile, IsInSnow);
+                if(newTile != null)
+                {
+                    World.Get().Tilemaps[(int)TileType].SetTile(new Vector3Int(Coordinates.x, Coordinates.y, 0), newTile);
+                }
             }
 
             int neighborSameMask = 0;
             TileBase newVisual = World.Get().TileTypes[(int)Type.Grass].GetRandomTile(IsInSnow);
 
-            List<World.Tile> adjacentTiles = World.Get().GetTilesInSquare(Coordinates, 1);
-            //List<World.Tile> adjacentTiles = GetAdjacentTiles(World.Get().Tiles, this);
-            // List<World.Tile> adjacentTiles = new List<World.Tile>();
-            // adjacentTiles.Add(World.Get().Tiles[Coordinates + Vector2Int.up]);
-            //adjacentTiles.Add(World.Get().Tiles[Coordinates + Vector2Int.down]);
+            List<World.Tile> adjacentTiles = GetAdjacentTiles(World.Get().Tiles, this);
 
             foreach (World.Tile t in adjacentTiles)
             {
-                if (t.IsInSnow == IsInSnow)
+                if (t.IsInSnow != IsInSnow)
                 {
                     continue;
                 }
@@ -581,6 +591,7 @@ public class World : MonoBehaviour
         }
 
         Tilemaps[(int)type].SetTile(new Vector3Int(pos.x, pos.y, 0), tileToRender);
+        Tiles[pos].SetIsInSnow(Tiles[pos].IsInSnow);
         if (type == Tile.Type.Grass)
         {
             // Clear props rendering

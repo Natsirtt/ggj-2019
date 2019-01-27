@@ -155,7 +155,7 @@ public class Pathfollowing : MonoBehaviour
             Vector2Int? randomGrassCoord = GetComponent<AgentJobHandler>().Fire.GetInfluence().OrderBy(x => Random.value).ToList().Find(t => t.TileType == World.Tile.Type.Grass)?.Coordinates;
             if (randomGrassCoord.HasValue)
             {
-                MoveToLocation(new Vector2(Random.Range(-100.0f, 100.0f), Random.Range(-100.0f, 100.0f)) + new Vector2(transform.position.x, transform.position.y));
+                MoveToLocation( World.Get().GetWorldLocation(randomGrassCoord.Value) );
             }
         }
     }

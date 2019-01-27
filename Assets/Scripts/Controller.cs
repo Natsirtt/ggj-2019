@@ -32,6 +32,8 @@ public class Controller : MonoBehaviour
 
             World w = World.Get();
             Vector2Int gridLocation = w.GetGridLocation(mousePosInWorld);
+            //w.Tiles[gridLocation].SetIsInSnow(false);
+
             if (w.Tiles[gridLocation].TileType == World.Tile.Type.Grass)
             {
                 GameObject fire = w.GetClosestFire(mousePosInWorld);
