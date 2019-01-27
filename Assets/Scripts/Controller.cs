@@ -13,12 +13,20 @@ public class Controller : MonoBehaviour
         if (Input.GetButtonDown("PlaceCampFire"))
         {
             World w = World.Get();
-            if (w.Tiles[w.GetGridLocation(mousePosInWorld)].TileType == World.Tile.Type.Grass)
+            Vector2Int gridLocation = w.GetGridLocation(mousePosInWorld);
+            if (w.Tiles[gridLocation].TileType == World.Tile.Type.Grass)
             {
-                w.SetTileType(w.GetGridLocation(mousePosInWorld), World.Tile.Type.ExpeditionSite);
                 GameObject fire = w.GetClosestFire(mousePosInWorld);
-                JobDispatcher jobScript = fire.GetComponent<JobDispatcher>();
-                jobScript.QueueJob(w.GetGridLocation(mousePosInWorld), JobDispatcher.Job.Type.Expedition);
+                Vector2Int closestFireGridLocation = w.GetGridLocation(fire.transform.position);
+                int distance = World.GetManhattanDistance(gridLocation, closestFireGridLocation);
+                int cost = w.GenerationParameters.resources.expeditionWoodCostPerTile * distance;
+                
+                if (w.GlobalInventory.CurrentWood > cost) {
+                    w.SetTileType(gridLocation, World.Tile.Type.ExpeditionSite);
+                    JobDispatcher jobScript = fire.GetComponent<JobDispatcher>();
+                    jobScript.QueueJob(gridLocation, JobDispatcher.Job.Type.Expedition);
+                    w.GlobalInventory.RemoveWood(cost);
+                }
             }
         }
 
