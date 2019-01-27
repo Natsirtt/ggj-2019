@@ -15,6 +15,7 @@ public class Controller : MonoBehaviour
             World w = World.Get();
             if (w.Tiles[w.GetGridLocation(mousePosInWorld)].TileType == World.Tile.Type.Grass)
             {
+                w.SetTileType(w.GetGridLocation(mousePosInWorld), World.Tile.Type.ExpeditionSite);
                 GameObject fire = w.GetClosestFire(mousePosInWorld);
                 JobDispatcher jobScript = fire.GetComponent<JobDispatcher>();
                 jobScript.QueueJob(w.GetGridLocation(mousePosInWorld), JobDispatcher.Job.Type.Expedition);

@@ -119,7 +119,7 @@ public class Fire : MonoBehaviour
         }
         if (GridTile.TileType == World.Tile.Type.Campfire)
         {
-            world.SetFireRenderTile(GridTile);
+            world.SetFireRenderTile(GridTile, 1);
         }
         if (gameObject.GetComponent<ParticleSystem>() != null)
         {
@@ -137,7 +137,7 @@ public class Fire : MonoBehaviour
         influence = World.SortByDistance(World.Get().GetTilesInRadius(TilePosition(), CurrentRadiusOfInfluence), TilePosition());
         if (GridTile.TileType == World.Tile.Type.Campfire)
         {
-            world.SetFireRenderTile(GridTile, false);
+            world.SetFireRenderTile(GridTile, 0);
         }
         foreach (World.Tile tile in influence)
         {

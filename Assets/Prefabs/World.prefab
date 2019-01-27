@@ -303,6 +303,9 @@ MonoBehaviour:
   - Variations:
     - Normal: {fileID: 11400000, guid: b170744847babac4b86d6675d7637e12, type: 2}
       Snowed: {fileID: 0}
+  - Variations:
+    - Normal: {fileID: 11400000, guid: a19d71509c4ee8d4d87f38b44b2a3084, type: 2}
+      Snowed: {fileID: 0}
   NeighborTransitions:
   - Mask: 0
     TileVariation:
@@ -395,6 +398,7 @@ MonoBehaviour:
   - {fileID: 999806160701248121}
   - {fileID: 999806159487332968}
   - {fileID: 999806159487332968}
+  - {fileID: 999806160701248121}
   generationParameters: {fileID: 11400000, guid: 617268a62919790429246e76e827943d,
     type: 2}
   seed: 0
