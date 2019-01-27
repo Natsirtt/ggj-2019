@@ -133,8 +133,13 @@ public struct TileContainer
             return null;
 
         TileVariation result = Variations[Random.Range(0, Variations.Count)];
+        if (snowed && result.Snowed == null)
+        {
+            Debug.LogWarning("Tile container needed to produce a snowed tile but none was provided.");
+            return result.Normal;
+        }
 
-        return result.Snowed == null ? result.Normal : (snowed ? result.Snowed : result.Normal);
+        return snowed ? result.Snowed : result.Normal;
     }
 }
 
@@ -208,6 +213,12 @@ public class World : MonoBehaviour
 
         public void ChangedIsInSnow()
         {
+            if (TileType != Type.Grass)
+            {
+                TileBase newTile = World.Get().TileTypes[(int)TileType].GetRandomTile(IsInSnow);
+                World.Get().Tilemaps[(int)TileType].SetTile(new Vector3Int(Coordinates.x, Coordinates.y, 0), newTile);
+            }
+
             int neighborSameMask = 0;
             TileBase newVisual = World.Get().TileTypes[(int)Type.Grass].GetRandomTile(IsInSnow);
 
@@ -386,7 +397,7 @@ public class World : MonoBehaviour
     [Tooltip("Leave the seed to 0 for using the current time, or provide your seed of choice.")]
     private int seed = 0;
 
-    public GameObject[] workerPrefab;
+    public GameObject workerPrefab;
     public GameObject firePrefab;
     public GameObject hearthPrefab;
     public GameObject UI;
@@ -401,7 +412,7 @@ public class World : MonoBehaviour
     {
         // This order by with weighed random will shuffle the list but segregate the shuffle grass tiled as more important than the others
         Vector2Int pos = fire.GetInfluence().OrderBy(t => Random.value * (t.TileType == Tile.Type.Grass ? 1f : 10f)).ToList().Find(t => t.TileType == Tile.Type.Grass || t.TileType == Tile.Type.Tree).Coordinates;
-        GameObject worker = Instantiate<GameObject>(workerPrefab[Random.Range(0, workerPrefab.Length)], GetWorldLocation(pos), Quaternion.identity);
+        GameObject worker = Instantiate<GameObject>(workerPrefab, GetWorldLocation(pos), Quaternion.identity);
         AgentJobHandler jobsScript = worker.GetComponent<AgentJobHandler>();
         if (jobsScript != null) {
             Workers.Add(worker);
@@ -477,7 +488,7 @@ public class World : MonoBehaviour
             return;
         }
         SetTileType(gridPos, Tile.Type.Campfire);
-        GameObject fire = Instantiate<GameObject>(firePrefab, worldLocation, Quaternion.identity);
+        GameObject fire = Instantiate<GameObject>(firePrefab, worldLocation, firePrefab.transform.rotation);
         //float depth = fireParticleSystemPrefab.transform.position.z;
         //GameObject fireParticleSystem = Instantiate<GameObject>(fireParticleSystemPrefab, (Vector3)GetWorldLocation(gridPos) + new Vector3(0, 0, depth), fireParticleSystemPrefab.transform.rotation);
         Fire fireScript = fire.GetComponent<Fire>();
