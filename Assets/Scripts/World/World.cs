@@ -319,6 +319,7 @@ public class World : MonoBehaviour
     public void GameOverButYouWin()
     {
         FindObjectOfType<Controller>().BlockGameplayInputs = true;
+        DisplayText("You have won!");
     }
 
     public enum Direction
@@ -490,6 +491,12 @@ public class World : MonoBehaviour
         Hearth = hearth;
     }
 
+    public int GetNewFireRadius()
+    {
+        Fire fire = firePrefab.GetComponent<Fire>();
+        return fire.DefaultRadius;
+    }
+
     public void SpawnCampFire(Vector2 worldLocation)
     {
         var gridPos = GetGridLocation(worldLocation);
@@ -557,6 +564,7 @@ public class World : MonoBehaviour
     public void GameOver(Tile hearthTile)
     {
         TileBase tileToRender = TileTypes[(int)Tile.Type.Hearth].Variations[1].Normal;
+        DisplayText("The World froze.");
         Tilemaps[(int)Tile.Type.Hearth].SetTile(new Vector3Int(hearthTile.Coordinates.x, hearthTile.Coordinates.y, 0), tileToRender);
     }
 
@@ -698,9 +706,9 @@ public class World : MonoBehaviour
         MainUIPrompts = MainUI.GetComponent<UIPrompts>();
     }
 
-    public void DisplayText(string text)
+    public void DisplayText(string text, float seconds = -1f)
     {
-        MainUIPrompts.SetText(text);
+        MainUIPrompts.SetText(text, seconds);
     }
 
     private List<Direction> GetRandomDirectionsList(int minListSize, int maxListSize)
@@ -748,7 +756,7 @@ public class World : MonoBehaviour
         {
             theoreticalAvailableWood = GenerateForestPath(hearthGridPos, theoreticalAvailableWood, GetRandomDirectionsList(10, 50), parameters);
         }
-        DisplayText("Protect your Hearth.<br>Winter is coming!");
+        DisplayText("Protect your Hearth");
     }
 
     int GenerateForestPath(Vector2Int hearthPosition, int theoreticalWoodAmount, List<Direction> directions, WorldGenerationParameters parameters)
