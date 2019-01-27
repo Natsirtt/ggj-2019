@@ -48,6 +48,8 @@ public class Fire : MonoBehaviour
 
     private List<GameObject> listOfAssociatedWorkers;
 
+    public List<GameObject> ListOfWorkers { get { return listOfAssociatedWorkers; } }
+
     public JobDispatcher Jobs {get; private set;}
 
     private List<World.Tile> influence;
