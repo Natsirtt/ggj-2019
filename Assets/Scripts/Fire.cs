@@ -123,8 +123,8 @@ public class Fire : MonoBehaviour
         }
         if (gameObject.GetComponent<ParticleSystem>() != null)
         {
-            gameObject.GetComponent<ParticleSystem>().enableEmission = false;
-
+            var emission = gameObject.GetComponent<ParticleSystem>().emission;
+            emission.enabled = false;
         }
     }
 
@@ -149,7 +149,8 @@ public class Fire : MonoBehaviour
         }
         if (gameObject.GetComponent<ParticleSystem>() != null)
         {
-            gameObject.GetComponent<ParticleSystem>().emission.enabled = true;
+            var emission = gameObject.GetComponent<ParticleSystem>().emission;
+            emission.enabled = true;
 
         }
     }
