@@ -150,8 +150,14 @@ public class Pathfollowing : MonoBehaviour
 
     public void MoveToRandomLocationInSquare()
     {
-        if(!CurrentPath.HasPath())
-            MoveToLocation(new Vector2(Random.Range(-100.0f, 100.0f), Random.Range(-100.0f, 100.0f)) + new Vector2(transform.position.x, transform.position.y));
+        if (!CurrentPath.HasPath())
+        {
+            Vector2Int? randomGrassCoord = GetComponent<AgentJobHandler>().Fire.GetInfluence().OrderBy(x => Random.value).ToList().Find(t => t.TileType == World.Tile.Type.Grass)?.Coordinates;
+            if (randomGrassCoord.HasValue)
+            {
+                MoveToLocation(new Vector2(Random.Range(-100.0f, 100.0f), Random.Range(-100.0f, 100.0f)) + new Vector2(transform.position.x, transform.position.y));
+            }
+        }
     }
 
 
