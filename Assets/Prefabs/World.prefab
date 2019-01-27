@@ -309,88 +309,68 @@ MonoBehaviour:
   NeighborTransitions:
   - Mask: 0
     TileVariation:
-      Normal: {fileID: 11400000, guid: a81de9fc6f121bb46a2066bac34af1dc, type: 2}
+      Normal: {fileID: 11400000, guid: 2db00b574750a0e4aa772c86cec6a8ba, type: 2}
       Snowed: {fileID: 11400000, guid: bec37674d1aba5c4ca3fd15bd5882b1e, type: 2}
   - Mask: 1
     TileVariation:
-      Normal: {fileID: 11400000, guid: a81de9fc6f121bb46a2066bac34af1dc, type: 2}
-      Snowed: {fileID: 11400000, guid: c381a536505308d47bbea29e598593ff, type: 2}
+      Normal: {fileID: 11400000, guid: 1569536cee7793b4db195abe152332cf, type: 2}
+      Snowed: {fileID: 11400000, guid: bec37674d1aba5c4ca3fd15bd5882b1e, type: 2}
   - Mask: 4
     TileVariation:
-      Normal: {fileID: 11400000, guid: a81de9fc6f121bb46a2066bac34af1dc, type: 2}
-      Snowed: {fileID: 11400000, guid: 92307a1ee0581d74b99d7e275e7d446f, type: 2}
+      Normal: {fileID: 11400000, guid: 9f381a10afa734b45a7579772eb0c001, type: 2}
+      Snowed: {fileID: 11400000, guid: bec37674d1aba5c4ca3fd15bd5882b1e, type: 2}
   - Mask: 8
     TileVariation:
-      Normal: {fileID: 11400000, guid: a81de9fc6f121bb46a2066bac34af1dc, type: 2}
-      Snowed: {fileID: 11400000, guid: 1911e718fe2e12f44b639cc6fe68e78d, type: 2}
+      Normal: {fileID: 11400000, guid: cbee91c04cbbddf42baa376fd19b68ce, type: 2}
+      Snowed: {fileID: 11400000, guid: bec37674d1aba5c4ca3fd15bd5882b1e, type: 2}
   - Mask: 2
     TileVariation:
-      Normal: {fileID: 11400000, guid: a81de9fc6f121bb46a2066bac34af1dc, type: 2}
-      Snowed: {fileID: 11400000, guid: b33a60f4d86e56643b5fbfae89c6222b, type: 2}
+      Normal: {fileID: 11400000, guid: a779d42d2920ef440afc9d88fd1947e1, type: 2}
+      Snowed: {fileID: 11400000, guid: bec37674d1aba5c4ca3fd15bd5882b1e, type: 2}
   - Mask: 5
     TileVariation:
-      Normal: {fileID: 11400000, guid: a81de9fc6f121bb46a2066bac34af1dc, type: 2}
-      Snowed: {fileID: 11400000, guid: 552a9f234bffb8540b50d2bb98eb12ef, type: 2}
+      Normal: {fileID: 11400000, guid: 9f3265ed85b7e814caf8dfbebb0bcb8d, type: 2}
+      Snowed: {fileID: 11400000, guid: bec37674d1aba5c4ca3fd15bd5882b1e, type: 2}
   - Mask: 9
     TileVariation:
-      Normal: {fileID: 11400000, guid: a81de9fc6f121bb46a2066bac34af1dc, type: 2}
-      Snowed: {fileID: 11400000, guid: 5a9a86b583db2dc4f8ba6f42f611ffea, type: 2}
+      Normal: {fileID: 11400000, guid: dfd5a976d3d589f4b83ad01d2ee463a4, type: 2}
+      Snowed: {fileID: 11400000, guid: bec37674d1aba5c4ca3fd15bd5882b1e, type: 2}
   - Mask: 3
     TileVariation:
-      Normal: {fileID: 11400000, guid: a81de9fc6f121bb46a2066bac34af1dc, type: 2}
-      Snowed: {fileID: 11400000, guid: 3a2686353c1ac614ab80be5d35bf9abd, type: 2}
+      Normal: {fileID: 11400000, guid: f3449a8c558580346863de095c754ec4, type: 2}
+      Snowed: {fileID: 11400000, guid: bec37674d1aba5c4ca3fd15bd5882b1e, type: 2}
   - Mask: 12
     TileVariation:
-      Normal: {fileID: 11400000, guid: a81de9fc6f121bb46a2066bac34af1dc, type: 2}
-      Snowed: {fileID: 11400000, guid: 4678d9613d416974bbc308b4a6a33404, type: 2}
+      Normal: {fileID: 11400000, guid: 93c4439f3570f984a8c21a1a7816942e, type: 2}
+      Snowed: {fileID: 11400000, guid: bec37674d1aba5c4ca3fd15bd5882b1e, type: 2}
   - Mask: 6
     TileVariation:
-      Normal: {fileID: 11400000, guid: a81de9fc6f121bb46a2066bac34af1dc, type: 2}
-      Snowed: {fileID: 11400000, guid: 73b876cef5481e442a3ac640cf4095a0, type: 2}
+      Normal: {fileID: 11400000, guid: 91cfbc19648b8be44992c50be7290d95, type: 2}
+      Snowed: {fileID: 11400000, guid: bec37674d1aba5c4ca3fd15bd5882b1e, type: 2}
   - Mask: 10
     TileVariation:
-      Normal: {fileID: 11400000, guid: a81de9fc6f121bb46a2066bac34af1dc, type: 2}
-      Snowed: {fileID: 11400000, guid: 0202d3de531edcc4c8737ccc32eb4ef1, type: 2}
+      Normal: {fileID: 11400000, guid: f1cb07f83fc13e74abf25c180c49e1f2, type: 2}
+      Snowed: {fileID: 11400000, guid: bec37674d1aba5c4ca3fd15bd5882b1e, type: 2}
   - Mask: 13
     TileVariation:
-      Normal: {fileID: 11400000, guid: a81de9fc6f121bb46a2066bac34af1dc, type: 2}
-      Snowed: {fileID: 11400000, guid: bb7978542e5e9bb43807a8e237ddbb07, type: 2}
+      Normal: {fileID: 11400000, guid: 11599fce1a7b57d4cbfbb5491bd21e5f, type: 2}
+      Snowed: {fileID: 11400000, guid: bec37674d1aba5c4ca3fd15bd5882b1e, type: 2}
   - Mask: 7
     TileVariation:
-      Normal: {fileID: 11400000, guid: a81de9fc6f121bb46a2066bac34af1dc, type: 2}
-      Snowed: {fileID: 11400000, guid: 666f3c607857eed4096de60ed7872986, type: 2}
+      Normal: {fileID: 11400000, guid: 28eff16e20a146b4c8094ae19798c7d9, type: 2}
+      Snowed: {fileID: 11400000, guid: bec37674d1aba5c4ca3fd15bd5882b1e, type: 2}
   - Mask: 11
     TileVariation:
-      Normal: {fileID: 11400000, guid: a81de9fc6f121bb46a2066bac34af1dc, type: 2}
-      Snowed: {fileID: 11400000, guid: dd79597048864c642be00261528ba9d7, type: 2}
+      Normal: {fileID: 11400000, guid: 790c02c02fd2b5e49bfe76878eb959bf, type: 2}
+      Snowed: {fileID: 11400000, guid: bec37674d1aba5c4ca3fd15bd5882b1e, type: 2}
   - Mask: 14
     TileVariation:
-      Normal: {fileID: 11400000, guid: a81de9fc6f121bb46a2066bac34af1dc, type: 2}
-      Snowed: {fileID: 11400000, guid: 0a7af022b2401c0459f6d05429a783e4, type: 2}
+      Normal: {fileID: 11400000, guid: 9b228cf7c4594c5478605dac4dfa4ede, type: 2}
+      Snowed: {fileID: 11400000, guid: bec37674d1aba5c4ca3fd15bd5882b1e, type: 2}
   - Mask: 15
     TileVariation:
       Normal: {fileID: 11400000, guid: a81de9fc6f121bb46a2066bac34af1dc, type: 2}
-      Snowed: {fileID: 11400000, guid: ef1cc2163d5bdfb45a592e40d8959341, type: 2}
-  - Mask: 15
-    TileVariation:
-      Normal: {fileID: 11400000, guid: a81de9fc6f121bb46a2066bac34af1dc, type: 2}
-      Snowed: {fileID: 11400000, guid: ef1cc2163d5bdfb45a592e40d8959341, type: 2}
-  - Mask: 16
-    TileVariation:
-      Normal: {fileID: 11400000, guid: a81de9fc6f121bb46a2066bac34af1dc, type: 2}
-      Snowed: {fileID: 11400000, guid: e8daee66d488af2458ed7bcfbb67d46c, type: 2}
-  - Mask: 32
-    TileVariation:
-      Normal: {fileID: 11400000, guid: a81de9fc6f121bb46a2066bac34af1dc, type: 2}
-      Snowed: {fileID: 11400000, guid: 7c885fcb1eb41594d9efdcfb284d018e, type: 2}
-  - Mask: 64
-    TileVariation:
-      Normal: {fileID: 11400000, guid: a81de9fc6f121bb46a2066bac34af1dc, type: 2}
-      Snowed: {fileID: 11400000, guid: 72057a4e8e2c3f348be679e6db0bab18, type: 2}
-  - Mask: 128
-    TileVariation:
-      Normal: {fileID: 11400000, guid: a81de9fc6f121bb46a2066bac34af1dc, type: 2}
-      Snowed: {fileID: 11400000, guid: 9226563515c924b458e025566d804f05, type: 2}
+      Snowed: {fileID: 11400000, guid: bec37674d1aba5c4ca3fd15bd5882b1e, type: 2}
   Tilemaps:
   - {fileID: 999806160047329526}
   - {fileID: 0}
@@ -402,15 +382,10 @@ MonoBehaviour:
   generationParameters: {fileID: 11400000, guid: 617268a62919790429246e76e827943d,
     type: 2}
   seed: 0
-  workerPrefab: {fileID: 7224492686635031575, guid: 71fb2bbb724b5b24f9b139af5f5f25b4,
-    type: 3}
+  workerPrefab: []
   firePrefab: {fileID: 7681504405642858328, guid: 25bf8b3278134704085dc188660db9d5,
     type: 3}
   hearthPrefab: {fileID: 2068627889015018793, guid: 759c19fee639ec249980e4c93c59ef53,
-    type: 3}
-  fireParticleSystemPrefab: {fileID: 4322275919001543451, guid: 0a611ac8fe8bed54f8af6f26397f3ad4,
-    type: 3}
-  hearthParticleSystemPrefab: {fileID: 130791980114054718, guid: 22466fabc964f9244a3024bd6c88c9e4,
     type: 3}
 --- !u!156049354 &999806160564032471
 Grid:

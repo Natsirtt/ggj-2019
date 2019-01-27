@@ -203,10 +203,10 @@ public class World : MonoBehaviour
             IsInSnow = flag;
             
             ChangedIsInSnow();
-            List<World.Tile> adjacentTiles = World.Get().GetTilesInSquare(Coordinates, 1);
+            List<World.Tile> adjacentTiles = GetAdjacentTiles(World.Get().Tiles, this);
             //List<World.Tile> adjacentTiles = GetAdjacentTiles(World.Get().Tiles, this);
-           // List<World.Tile> adjacentTiles = new List<World.Tile>();
-           // adjacentTiles.Add(World.Get().Tiles[Coordinates + Vector2Int.left]);
+            // List<World.Tile> adjacentTiles = new List<World.Tile>();
+            // adjacentTiles.Add(World.Get().Tiles[Coordinates + Vector2Int.left]);
             foreach (World.Tile t in adjacentTiles)
                 t.ChangedIsInSnow();
         }
@@ -216,7 +216,7 @@ public class World : MonoBehaviour
             int neighborSameMask = 0;
             TileBase newVisual = World.Get().TileTypes[(int)Type.Grass].GetRandomTile(IsInSnow);
 
-            List<World.Tile> adjacentTiles = World.Get().GetTilesInSquare(Coordinates, 1);
+            List<World.Tile> adjacentTiles = GetAdjacentTiles(World.Get().Tiles, this);
             //List<World.Tile> adjacentTiles = GetAdjacentTiles(World.Get().Tiles, this);
             // List<World.Tile> adjacentTiles = new List<World.Tile>();
             // adjacentTiles.Add(World.Get().Tiles[Coordinates + Vector2Int.up]);
@@ -400,6 +400,7 @@ public class World : MonoBehaviour
 
     public void SpawnWorker(Fire fire)
     {
+        return;
         // This order by with weighed random will shuffle the list but segregate the shuffle grass tiled as more important than the others
         Vector2Int pos = fire.GetInfluence().OrderBy(t => Random.value * (t.TileType == Tile.Type.Grass ? 1f : 10f)).ToList().Find(t => t.TileType == Tile.Type.Grass || t.TileType == Tile.Type.Tree).Coordinates;
         GameObject worker = Instantiate<GameObject>(workerPrefab[Random.Range(0, workerPrefab.Length)], GetWorldLocation(pos), Quaternion.identity);

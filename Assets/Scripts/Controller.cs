@@ -32,28 +32,30 @@ public class Controller : MonoBehaviour
 
             World w = World.Get();
             Vector2Int gridLocation = w.GetGridLocation(mousePosInWorld);
-            if (w.Tiles[gridLocation].TileType == World.Tile.Type.Grass)
-            {
-                GameObject fire = w.GetClosestFire(mousePosInWorld);
-                Vector2Int closestFireGridLocation = w.GetGridLocation(fire.transform.position);
-                int distance = World.GetManhattanDistance(gridLocation, closestFireGridLocation);
-                int cost = w.GenerationParameters.resources.expeditionWoodCostPerTile * distance;
+            w.Tiles[gridLocation].SetIsInSnow(false);
+
+            //if (w.Tiles[gridLocation].TileType == World.Tile.Type.Grass)
+            //{
+            //    GameObject fire = w.GetClosestFire(mousePosInWorld);
+            //    Vector2Int closestFireGridLocation = w.GetGridLocation(fire.transform.position);
+            //    int distance = World.GetManhattanDistance(gridLocation, closestFireGridLocation);
+            //    int cost = w.GenerationParameters.resources.expeditionWoodCostPerTile * distance;
                 
-                if (w.GlobalInventory.CurrentWood > cost) {
-                    w.SetTileType(gridLocation, World.Tile.Type.ExpeditionSite);
-                    JobDispatcher jobScript = fire.GetComponent<JobDispatcher>();
-                    jobScript.QueueJob(gridLocation, JobDispatcher.Job.Type.Expedition);
-                    w.GlobalInventory.RemoveWood(cost);
-                }
-            }
-            else if (w.Tiles[w.GetGridLocation(mousePosInWorld)].TileType == World.Tile.Type.Hearth)
-            {
-                if (w.GlobalInventory.CurrentWood >= w.GenerationParameters.resources.hearthFeedingAmount)
-                {
-                    w.GlobalInventory.RemoveWood(w.GenerationParameters.resources.hearthFeedingAmount);
-                    w.Hearth.GetComponent<Fire>().Feed();
-                }
-            }
+            //    if (w.GlobalInventory.CurrentWood > cost) {
+            //        w.SetTileType(gridLocation, World.Tile.Type.ExpeditionSite);
+            //        JobDispatcher jobScript = fire.GetComponent<JobDispatcher>();
+            //        jobScript.QueueJob(gridLocation, JobDispatcher.Job.Type.Expedition);
+            //        w.GlobalInventory.RemoveWood(cost);
+            //    }
+            //}
+            //else if (w.Tiles[w.GetGridLocation(mousePosInWorld)].TileType == World.Tile.Type.Hearth)
+            //{
+            //    if (w.GlobalInventory.CurrentWood >= w.GenerationParameters.resources.hearthFeedingAmount)
+            //    {
+            //        w.GlobalInventory.RemoveWood(w.GenerationParameters.resources.hearthFeedingAmount);
+            //        w.Hearth.GetComponent<Fire>().Feed();
+            //    }
+            //}
         }
 
         if(Input.GetButtonDown("DragCamera"))
