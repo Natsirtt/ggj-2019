@@ -143,6 +143,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SecondsToDeath: 3
   Despawn: 2
+  isDead: 0
   Audio_ChopWood:
   - {fileID: 8300000, guid: 7a0a5524c87b8014f8757a81e67e05f4, type: 3}
   - {fileID: 8300000, guid: 047018ef23a225c408b6aa22f5c3e8f7, type: 3}
@@ -184,7 +185,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 0.1
+  m_Volume: 1
   m_Pitch: 1
   Loop: 0
   Mute: 0
