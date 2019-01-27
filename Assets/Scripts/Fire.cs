@@ -29,6 +29,7 @@ public class Fire : MonoBehaviour
     private float currentBurnRatePerSecond;
     private float currentWorkerSpawnRate;
     public int CurrentRadiusOfInfluence { get; set; }
+    public float CurrentBurnRate { get {return currentBurnRatePerSecond; } }
 
     public int DefaultRadius { get { return radiusOfInfluence; } }
 
