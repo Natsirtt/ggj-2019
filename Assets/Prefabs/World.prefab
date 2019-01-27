@@ -302,9 +302,11 @@ MonoBehaviour:
       Snowed: {fileID: 11400000, guid: 88eee65752574e24482461ec55461b69, type: 2}
   - Variations:
     - Normal: {fileID: 11400000, guid: 63e84f6a38bf59849a437e461813054d, type: 2}
-      Snowed: {fileID: 0}
+      Snowed: {fileID: 11400000, guid: ec71aceadab4c3f469cc84bb3d0d408d, type: 2}
     - Normal: {fileID: 11400000, guid: 4daca53fd7e0c2345bf6b80a8eb02a30, type: 2}
-      Snowed: {fileID: 0}
+      Snowed: {fileID: 11400000, guid: def7620618c089a4eb3eda657de3824f, type: 2}
+    - Normal: {fileID: 11400000, guid: 7356c56e778731c4980a65a1a2e2a300, type: 2}
+      Snowed: {fileID: 11400000, guid: 9a20d546a153222438eea7071540dee2, type: 2}
   - Variations:
     - Normal: {fileID: 11400000, guid: a19d71509c4ee8d4d87f38b44b2a3084, type: 2}
       Snowed: {fileID: 11400000, guid: a19d71509c4ee8d4d87f38b44b2a3084, type: 2}

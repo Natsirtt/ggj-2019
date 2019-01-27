@@ -419,10 +419,22 @@ public class World : MonoBehaviour
     public List<GameObject> Workers { get; private set; }
     public List<GameObject> Fires { get; private set; }
 
-    public GameObject SpawnWorker(Fire fire)
+    public GameObject SpawnWorker(Fire fire, bool randomize = true)
     {
+        if (Workers.Count > generationParameters.resources.workerCapPerFire * Fires.Count)
+        {
+            return null;
+        }
         // This order by with weighed random will shuffle the list but segregate the shuffle grass tiled as more important than the others
-        Vector2Int pos = fire.GetInfluence().OrderBy(t => Random.value * (t.TileType == Tile.Type.Grass ? 1f : 10f)).ToList().Find(t => t.TileType == Tile.Type.Grass || t.TileType == Tile.Type.Tree).Coordinates;
+        Vector2Int pos = Vector2Int.zero;
+        try
+        {
+            pos = fire.GetInfluence().OrderBy(t => Random.value * (t.TileType == Tile.Type.Grass ? 1f : 10f)).ToList().Find(t => t.TileType == Tile.Type.Grass || t.TileType == Tile.Type.Tree).Coordinates;
+        }
+        catch
+        {
+            pos = fire.TilePosition();
+        }
         GameObject worker = Instantiate<GameObject>(workerPrefabs[Random.Range(0, workerPrefabs.Length)], GetWorldLocation(pos), Quaternion.identity);
         Workers.Add(worker);
         AgentJobHandler jobsScript = worker.GetComponent<AgentJobHandler>();
@@ -519,6 +531,7 @@ public class World : MonoBehaviour
         Camera.main.transform.position = new Vector3(worldLocation.x, worldLocation.y, Camera.main.transform.position.z);
         Debug.Log("Created Hearth at grid position " + gridPos);
         Hearth = hearth;
+        
     }
 
     public int GetNewFireRadius()
@@ -797,7 +810,7 @@ public class World : MonoBehaviour
         {
             theoreticalAvailableWood = GenerateForestPath(hearthGridPos, theoreticalAvailableWood, GetRandomDirectionsList(10, 50), parameters);
         }
-        DisplayText("Protect your Hearth");
+        DisplayText("Protect your Hearth and collect wood. Grow the Hearth.");
     }
 
     int GenerateForestPath(Vector2Int hearthPosition, int theoreticalWoodAmount, List<Direction> directions, WorldGenerationParameters parameters)
