@@ -522,6 +522,17 @@ public class World : MonoBehaviour
         Tilemaps[(int)Tile.Type.Hearth].SetTile(new Vector3Int(hearthTile.Coordinates.x, hearthTile.Coordinates.y, 0), tileToRender);
     }
 
+    public void SetFireRenderTile (Tile tile, bool extinguish=true)
+    {
+        int index = 0;
+        if (extinguish)
+        {
+            index = 1;
+        }
+        TileBase tileToRender = TileTypes[(int)Tile.Type.Campfire].Variations[index].Normal;
+        Tilemaps[(int)Tile.Type.Campfire].SetTile(new Vector3Int(tile.Coordinates.x, tile.Coordinates.y, 0), tileToRender);
+    }
+
     public void SetTileType(Vector2Int pos, Tile.Type type)
     {
         if (!Tiles.ContainsKey(pos))
