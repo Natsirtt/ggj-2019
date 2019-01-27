@@ -402,16 +402,14 @@ MonoBehaviour:
   generationParameters: {fileID: 11400000, guid: 617268a62919790429246e76e827943d,
     type: 2}
   seed: 0
-  workerPrefab: {fileID: 7224492686635031575, guid: 71fb2bbb724b5b24f9b139af5f5f25b4,
-    type: 3}
+  workerPrefab:
+  - {fileID: 7224492686635031575, guid: 71fb2bbb724b5b24f9b139af5f5f25b4, type: 3}
+  - {fileID: 6340333150095042056, guid: 4141b7adce95f154a86e7b8dca5f10aa, type: 3}
   firePrefab: {fileID: 7681504405642858328, guid: 25bf8b3278134704085dc188660db9d5,
     type: 3}
   hearthPrefab: {fileID: 2068627889015018793, guid: 759c19fee639ec249980e4c93c59ef53,
     type: 3}
-  fireParticleSystemPrefab: {fileID: 4322275919001543451, guid: 0a611ac8fe8bed54f8af6f26397f3ad4,
-    type: 3}
-  hearthParticleSystemPrefab: {fileID: 130791980114054718, guid: 22466fabc964f9244a3024bd6c88c9e4,
-    type: 3}
+  UI: {fileID: 7482544041443406396, guid: d2351cf3ba424b0419a2b421cd920500, type: 3}
 --- !u!156049354 &999806160564032471
 Grid:
   m_ObjectHideFlags: 0
