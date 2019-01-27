@@ -24,6 +24,8 @@ public class AgentJobHandler : MonoBehaviour
     private float deathTimer;
     private bool isDead = false;
 
+    public List<AudioClip> Audio_ChopWood = new List<AudioClip>();
+
     public void TakeJob(JobDispatcher.Job job)
     {
         // trigger animation
@@ -67,6 +69,17 @@ public class AgentJobHandler : MonoBehaviour
     {
         return World.Get().GetGridLocation(WorldPosition());
     }
+
+    public void PlayChopWood()
+    {
+        var audioSource = GetComponent<AudioSource>();
+        if(audioSource && Audio_ChopWood.Count > 0)
+        {
+            audioSource.clip = Audio_ChopWood[UnityEngine.Random.Range(0, Audio_ChopWood.Count)];
+            audioSource.Play();
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {

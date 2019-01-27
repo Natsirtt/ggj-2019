@@ -6,6 +6,12 @@ using UnityEngine.Tilemaps;
 public class Fire : MonoBehaviour
 {
     [SerializeField]
+    private AudioClip Audio_FireStart;
+
+    [SerializeField]
+    public AudioSource AudioSourcePlayer;
+
+    [SerializeField]
     private float burnRatePerSecond = 0f;
 
     [SerializeField]
@@ -48,6 +54,10 @@ public class Fire : MonoBehaviour
     void Awake()
     {
         Jobs = gameObject.AddComponent<JobDispatcher>();
+        if(AudioSourcePlayer == null)
+        {
+            AudioSourcePlayer = GetComponent<AudioSource>();
+        }
     }
 
     public World.Tile GridTile { get; private set; }
@@ -114,6 +124,11 @@ public class Fire : MonoBehaviour
 
     public void Deactivate()
     {
+        if (AudioSourcePlayer)
+        {
+            AudioSourcePlayer.Stop();
+        }
+
         // TODO change the display as well!
         burnProgress = 0f;
         radiusOfInfluence = 0;
@@ -146,6 +161,13 @@ public class Fire : MonoBehaviour
 
     public void Activate()
     {
+        if(AudioSourcePlayer && Audio_FireStart)
+        {
+            AudioSourcePlayer.clip = Audio_FireStart;
+            AudioSourcePlayer.loop = false;
+            AudioSourcePlayer.Play();
+        }
+
         burnProgress = 0f;
         CurrentRadiusOfInfluence = radiusOfInfluence;
         currentBurnRatePerSecond = burnRatePerSecond;

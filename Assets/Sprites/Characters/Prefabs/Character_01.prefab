@@ -14,6 +14,8 @@ GameObject:
   - component: {fileID: 1470327077782779683}
   - component: {fileID: 5120504364116743529}
   - component: {fileID: 709965286801085020}
+  - component: {fileID: 6824916653824650872}
+  - component: {fileID: 2152011260368471591}
   m_Layer: 0
   m_Name: Character_01
   m_TagString: Untagged
@@ -116,6 +118,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SecondsToDeath: 10
   Despawn: 3
+  Audio_ChopWood:
+  - {fileID: 8300000, guid: 7a0a5524c87b8014f8757a81e67e05f4, type: 3}
+  - {fileID: 8300000, guid: 047018ef23a225c408b6aa22f5c3e8f7, type: 3}
+  - {fileID: 8300000, guid: 53bf13780f9b33b4284bfa59f031cd60, type: 3}
+  - {fileID: 8300000, guid: 7981b52e014386d41b9e629047830889, type: 3}
+  - {fileID: 8300000, guid: 098c05480c4467f489f7d94ff5a4cc7d, type: 3}
+  - {fileID: 8300000, guid: f24f557bec33ffb4cbdb75b88000ac8a, type: 3}
+  - {fileID: 8300000, guid: 7edf7c234fb231d469161fbec49f1b2f, type: 3}
+  - {fileID: 8300000, guid: 444e74ce0cef05a48a3f56c23dcc07b9, type: 3}
+  - {fileID: 8300000, guid: d89516d6c5d6b904cb1864ae71c93c42, type: 3}
+  - {fileID: 8300000, guid: fccd9fa1c31d0fb4b99c58afab361b65, type: 3}
+  - {fileID: 8300000, guid: 5cfd22ad936fe634cb16fd31cd21c499, type: 3}
 --- !u!114 &5120504364116743529
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -141,3 +155,116 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 223f359a46e9de941bd8c4229c7849b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!82 &6824916653824650872
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7224492686635031575}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 0.18
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &2152011260368471591
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7224492686635031575}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dbbb5b4fc53cd994ea565b3fd839436d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObjectAudioSource: {fileID: 0}
+  FadeSpeed: 1
+  CameraXYMaxDist: 350
+  CameraMaxHeight: 300
+  CameraMinHeight: 80
