@@ -57,7 +57,7 @@ public class Fire : MonoBehaviour
     {
         world = World.Get();
         globalInventory = world.GlobalInventory;
-        nextHouseSpawnTick = Random.Range(world.GenerationParameters.infrastructures.houseSpawnPerSecondInterval.x, world.GenerationParameters.infrastructures.houseSpawnPerSecondInterval.y);
+        nextHouseSpawnTick = Time.time + Random.Range(world.GenerationParameters.infrastructures.houseSpawnPerSecondInterval.x, world.GenerationParameters.infrastructures.houseSpawnPerSecondInterval.y);
         needsToActivate = true;
     }
 
