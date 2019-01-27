@@ -723,6 +723,10 @@ public class World : MonoBehaviour
 
     void GenerateWorld(int seed, WorldGenerationParameters parameters)
     {
+        // Multiplying all the expeditions cost by 2 because the world gen was nicer when expedition costs were higher ; but the game less fun.
+        // In theory they should not have been this coupled together, because now tweaking the game for being more fun / playable make the world gen
+        // harsher, so we never win, the game is too evil.
+
         Tiles = new Dictionary<Vector2Int, Tile>();
         Random.InitState(seed);
         GridSize = parameters.grid.Size;
@@ -762,7 +766,7 @@ public class World : MonoBehaviour
     int GenerateForestPath(Vector2Int hearthPosition, int theoreticalWoodAmount, List<Direction> directions, WorldGenerationParameters parameters)
     {
         theoreticalWoodAmount -= parameters.forests.patchesDifficultyDistanceModifier;
-        if (theoreticalWoodAmount <= parameters.resources.expeditionWoodCostPerTile)
+        if (theoreticalWoodAmount <= parameters.resources.expeditionWoodCostPerTile * 2)
         {
             Debug.LogError("Generating new forest path with an amount of wood less than or equal to the amount it costs to do a 1-tile expedition is not possible. Wood amount was " + theoreticalWoodAmount + ", minimum is " + (parameters.resources.expeditionWoodCostPerTile + 1));
             return 0;
@@ -781,7 +785,7 @@ public class World : MonoBehaviour
             }
             // Snaking away using the resources
             int travelledTilesNb = 0;
-            while (theoreticalWoodAmount > 0 && theoreticalWoodAmount > parameters.resources.expeditionWoodCostPerTile)
+            while (theoreticalWoodAmount > 0 && theoreticalWoodAmount > parameters.resources.expeditionWoodCostPerTile * 2)
             {
                 Direction direction = directions[Random.Range(0, directions.Count - 1)];
                 // Remove the direction's "opposite" so that a forest path always goes towards a similar direction-ish
@@ -802,7 +806,7 @@ public class World : MonoBehaviour
                 }
                 seedPosition += GetDirectionVector(direction);
                 travelledTilesNb++;
-                theoreticalWoodAmount -= parameters.resources.expeditionWoodCostPerTile;
+                theoreticalWoodAmount -= parameters.resources.expeditionWoodCostPerTile * 2;
             }
             Debug.Log("Travelled " + travelledTilesNb + " tiles to seed new patch");
 

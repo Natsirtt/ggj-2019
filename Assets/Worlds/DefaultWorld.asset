@@ -16,19 +16,19 @@ MonoBehaviour:
     Size: {x: 400, y: 400}
   resources:
     startingWoodAmount: 100
-    woodPerTree: 3
-    expeditionWoodCostPerTile: 4
-    hearthFeedingAmount: 100
+    woodPerTree: 10
+    expeditionWoodCostPerTile: 2
+    hearthFeedingAmount: 50
   infrastructures:
     hearthMinDistanceFromMapEdge: {x: 100, y: 100}
     houseSpawnPerSecondInterval: {x: 30, y: 60}
     minimumManhattanDistanceBetweenHouses: 5
   forests:
-    numberOfPathsRange: {x: 2, y: 10}
-    patchesPerPathRange: {x: 5, y: 20}
-    woodAmountRangePerPatch: {x: 200, y: 1000}
+    numberOfPathsRange: {x: 20, y: 45}
+    patchesPerPathRange: {x: 6, y: 20}
+    woodAmountRangePerPatch: {x: 500, y: 2000}
     patchesDifficultyDistanceModifier: 20
-    minPatchEuclidianRadius: 2
-    maxPatchEuclidianRadius: 15
-    patchDensityRange: {x: 0.1, y: 0.4}
-    numberOfPatchesWithConsistentDirection: 4
+    minPatchEuclidianRadius: 6
+    maxPatchEuclidianRadius: 30
+    patchDensityRange: {x: 0.1, y: 0.5}
+    numberOfPatchesWithConsistentDirection: 6
