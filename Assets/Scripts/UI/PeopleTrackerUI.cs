@@ -3,21 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using UI = UnityEngine.UI;
 
-public class WorldUI : MonoBehaviour
+public class PeopleTrackerUI : MonoBehaviour
 {
-    private Inventory globalInventory;
+    private World world;
     private UI.Text displayText;
     // Start is called before the first frame update
     void Start()
     {
-        World world = World.Get();
-        globalInventory = world.GlobalInventory;
+        world = World.Get();
         displayText = gameObject.GetComponent<UI.Text>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        displayText.text = globalInventory.CurrentWood.ToString();
+        displayText.text = world.Workers.Count.ToString();
     }
 }
