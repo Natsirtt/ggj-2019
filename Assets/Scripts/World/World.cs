@@ -459,6 +459,10 @@ public class World : MonoBehaviour
     public void SpawnCampFire(Vector2 worldLocation)
     {
         var gridPos = GetGridLocation(worldLocation);
+        if (Tiles[gridPos].TileType == Tile.Type.Campfire)
+        {
+            return;
+        }
         SetTileType(gridPos, Tile.Type.Campfire);
         GameObject fire = Instantiate<GameObject>(firePrefab, worldLocation, Quaternion.identity);
         float depth = fireParticleSystemPrefab.transform.position.z;
