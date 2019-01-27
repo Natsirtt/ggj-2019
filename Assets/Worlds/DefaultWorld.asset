@@ -15,11 +15,13 @@ MonoBehaviour:
   grid:
     Size: {x: 400, y: 400}
   resources:
-    startingWoodAmount: 300
+    startingWoodAmount: 200
     woodPerTree: 3
     expeditionWoodCostPerTile: 4
   infrastructures:
     hearthMinDistanceFromMapEdge: {x: 100, y: 100}
+    houseSpawnPerSecondInterval: {x: 30, y: 60}
+    minimumManhattanDistanceBetweenHouses: 5
   forests:
     numberOfPathsRange: {x: 2, y: 10}
     patchesPerPathRange: {x: 5, y: 20}

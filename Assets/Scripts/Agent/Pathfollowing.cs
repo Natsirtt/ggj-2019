@@ -41,7 +41,9 @@ public class Path
     {
         outPoint = Vector2.zero;
         if (!HasPath())
+        {
             return false;
+        }
 
         outPoint = PathPoints.Last();
         if ((queryPosition - outPoint).magnitude < 1.0f)
@@ -98,7 +100,7 @@ public class AStar
 
         open.Add(current);
         
-        while(open.Count != 0 && !closed.Exists( x => x.Coordinates == end.Coordinates) && closed.Count < 100)
+        while(open.Count != 0 && !closed.Exists( x => x.Coordinates == end.Coordinates) && closed.Count < 1000)
         {
             current = open[0];
             open.Remove(current);
@@ -139,7 +141,7 @@ public class AStar
 
 public class Pathfollowing : MonoBehaviour
 {
-    Path CurrentPath = new Path();
+    public Path CurrentPath = new Path();
 
     private void Start()
     {
@@ -158,12 +160,14 @@ public class Pathfollowing : MonoBehaviour
         CurrentPath = path;
     }
     
-    public void MoveToLocation(Vector2 location)
+    public bool MoveToLocation(Vector2 location)
     {
         if (!AStar.BuildPath(World.Get().Tiles, transform.position, location, ref CurrentPath))
         {
             Debug.LogWarning("No path could be built for agent: " + gameObject.name + " from location " + transform.position.ToString() + " to " + location.ToString());
+            return false;
         }
+        return true;
     }
 
     void Update()

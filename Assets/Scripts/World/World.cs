@@ -176,15 +176,16 @@ public class World : MonoBehaviour
             Campfire,
             Hearth,
             Tree,
+            House,
             MAX
         }
 
         public enum NeighborsThatAreDifferent
         {
-            North   = 0x01,
-            East    = 0x02,
-            South   = 0x04,
-            West    = 0x08
+            North       = 0x01,
+            East        = North << 1,
+            South       = East << 1,
+            West        = South << 1,
         }
 
         public Vector2Int Coordinates { get; private set; }
@@ -196,7 +197,8 @@ public class World : MonoBehaviour
             IsInSnow = flag;
             
             ChangedIsInSnow();
-            List<World.Tile> adjacentTiles = GetAdjacentTiles(World.Get().Tiles, this);
+            List<World.Tile> adjacentTiles = World.Get().GetTilesInSquare(Coordinates, 1);
+            //List<World.Tile> adjacentTiles = GetAdjacentTiles(World.Get().Tiles, this);
            // List<World.Tile> adjacentTiles = new List<World.Tile>();
            // adjacentTiles.Add(World.Get().Tiles[Coordinates + Vector2Int.left]);
             foreach (World.Tile t in adjacentTiles)
@@ -208,8 +210,8 @@ public class World : MonoBehaviour
             int neighborSameMask = 0;
             TileBase newVisual = World.Get().TileTypes[(int)Type.Grass].GetRandomTile(IsInSnow);
 
-            //List<World.Tile> adjacentTiles = World.Get().GetTilesInSquare(Coordinates, 1);
-            List<World.Tile> adjacentTiles = GetAdjacentTiles(World.Get().Tiles, this);
+            List<World.Tile> adjacentTiles = World.Get().GetTilesInSquare(Coordinates, 1);
+            //List<World.Tile> adjacentTiles = GetAdjacentTiles(World.Get().Tiles, this);
             // List<World.Tile> adjacentTiles = new List<World.Tile>();
             // adjacentTiles.Add(World.Get().Tiles[Coordinates + Vector2Int.up]);
             //adjacentTiles.Add(World.Get().Tiles[Coordinates + Vector2Int.down]);
@@ -222,19 +224,21 @@ public class World : MonoBehaviour
                 }
 
                 Vector2Int offset = t.Coordinates - Coordinates;
-                if (offset.x < 0)
+                if (offset.x < 0 && offset.y == 0)
                     neighborSameMask |= (int)NeighborsThatAreDifferent.West;
-                else if (offset.x > 0)
+                else if (offset.x > 0 && offset.y == 0)
                     neighborSameMask |= (int)NeighborsThatAreDifferent.East;
-
-                if (offset.y < 0)
+                else if (offset.y < 0 && offset.x == 0)
                     neighborSameMask |= (int)NeighborsThatAreDifferent.South;
-                else if (offset.y > 0)
+                else if (offset.y > 0 && offset.x == 0)
                     neighborSameMask |= (int)NeighborsThatAreDifferent.North;
             }
 
             TileNeighborTransition variation = Array.Find(World.Get().NeighborTransitions, x => (int)x.Mask == neighborSameMask);
-            newVisual = IsInSnow ? variation.TileVariation.Snowed : variation.TileVariation.Normal;
+            if(variation != null)
+            {
+                newVisual = IsInSnow ? variation.TileVariation.Snowed : variation.TileVariation.Normal;
+            }
             World.Get().Tilemaps[(int)Type.Grass].SetTile(new Vector3Int(Coordinates.x, Coordinates.y, 0), newVisual);
         }
         
@@ -278,11 +282,8 @@ public class World : MonoBehaviour
 
         public bool IsTraversable()
         {
-            return 
-                TileType != Type.Mountain
-                && TileType != Type.Campfire
-                && TileType != Type.Hearth
-                && TileType != Type.Tree;
+            return
+                TileType != Type.Mountain && TileType != Type.Hearth && TileType != Type.Campfire && TileType != Type.House;
         }
 
         public Tile(Vector2Int coordinates, Type type)
@@ -372,6 +373,7 @@ public class World : MonoBehaviour
 
     [SerializeField]
     private WorldGenerationParameters generationParameters = null;
+    public WorldGenerationParameters GenerationParameters { get { return generationParameters; } }
 
     [SerializeField]
     [Tooltip("Leave the seed to 0 for using the current time, or provide your seed of choice.")]
@@ -385,9 +387,11 @@ public class World : MonoBehaviour
     public List<GameObject> Workers { get; private set; }
     public List<GameObject> Fires { get; private set; }
 
-    public void SpawnWorker(Vector2 worldLocation, Fire fire)
+    public void SpawnWorker(Fire fire)
     {
-        GameObject worker = Instantiate<GameObject>(workerPrefab, worldLocation, Quaternion.identity);
+        // This order by with weighed random will shuffle the list but segregate the shuffle grass tiled as more important than the others
+        Vector2Int pos = fire.GetInfluence().OrderBy(t => Random.value * (t.TileType == Tile.Type.Grass ? 1f : 10f)).ToList().Find(t => t.TileType == Tile.Type.Grass || t.TileType == Tile.Type.Tree).Coordinates;
+        GameObject worker = Instantiate<GameObject>(workerPrefab, GetWorldLocation(pos), Quaternion.identity);
         AgentJobHandler jobsScript = worker.GetComponent<AgentJobHandler>();
         if (jobsScript != null) {
             Workers.Add(worker);
@@ -395,7 +399,7 @@ public class World : MonoBehaviour
         }
     }
 
-    private GameObject GetClosestFire(Vector2 worldLocation) {
+    public GameObject GetClosestFire(Vector2 worldLocation) {
         int nearestDistance = 99999;
         GameObject closest = null;
         Vector2Int location = GetGridLocation(worldLocation);
@@ -409,6 +413,12 @@ public class World : MonoBehaviour
             }
         }
         return closest;
+    }
+
+    public void ChoppedTree(Vector2Int tilePosition)
+    {
+        SetTileType(tilePosition, Tile.Type.Grass);
+        GlobalInventory.AddWood(GenerationParameters.resources.woodPerTree);
     }
 
     public GameObject GetClosestIdleWorker (Vector2 location)
@@ -436,11 +446,14 @@ public class World : MonoBehaviour
 
     public void SpawnHearth(Vector2 worldLocation)
     {
+        Vector2Int gridPos = GetGridLocation(worldLocation);
+        SetTileType(gridPos, Tile.Type.Hearth);
         GameObject hearth = Instantiate<GameObject>(hearthPrefab, worldLocation, Quaternion.identity);
+        Fire fireScript = hearth.GetComponent<Fire>();
+        fireScript.SetWorldTile(Tiles[gridPos]);
         Fires.Add(hearth);
-
         Camera.main.transform.position = new Vector3(worldLocation.x, worldLocation.y, Camera.main.transform.position.z);
-        // TODO clear the tiles and queue the trees
+        Debug.Log("Created Hearth at grid position " + gridPos);
     }
 
     public void SpawnCampFire(Vector2 worldLocation)
@@ -462,7 +475,6 @@ public class World : MonoBehaviour
         {
             Debug.LogError("Failed to spawn a campfire. The coming days are going to be cold...");
         }
-        // TODO clear the tiles and queue the trees
     }
 
     public Vector2Int GetGridLocation(Vector2 worldLocation)
@@ -504,6 +516,12 @@ public class World : MonoBehaviour
             && -halfGridSize.y <= gridLocation.y && gridLocation.y <= halfGridSize.y;
     }
 
+    public void GameOver(Tile hearthTile)
+    {
+        TileBase tileToRender = TileTypes[(int)Tile.Type.Hearth].Variations[1].Normal;
+        Tilemaps[(int)Tile.Type.Hearth].SetTile(new Vector3Int(hearthTile.Coordinates.x, hearthTile.Coordinates.y, 0), tileToRender);
+    }
+
     public void SetTileType(Vector2Int pos, Tile.Type type)
     {
         if (!Tiles.ContainsKey(pos))
@@ -512,7 +530,8 @@ public class World : MonoBehaviour
         }
 
         Tiles[pos].TileType = type;
-        TileBase tileToRender = TileTypes[(int)type].GetRandomTile(Tiles[pos].IsInSnow);
+
+        TileBase tileToRender = type == Tile.Type.Hearth ? TileTypes[(int)Tile.Type.Hearth].Variations[0].Normal : TileTypes[(int)type].GetRandomTile(Tiles[pos].IsInSnow);
         if (tileToRender == null)
         {
             Debug.LogError("Could not find a valid tile to render for type " + type);
@@ -520,6 +539,17 @@ public class World : MonoBehaviour
         }
 
         Tilemaps[(int)type].SetTile(new Vector3Int(pos.x, pos.y, 0), tileToRender);
+        if (type == Tile.Type.Grass)
+        {
+            // Clear props rendering
+            for (int i = 0; i < (int)Tile.Type.MAX; i++)
+            {
+                if ((Tile.Type) i != Tile.Type.Grass && Tilemaps[i] != null)
+                {
+                    Tilemaps[i].SetTile(new Vector3Int(pos.x, pos.y, 0), null);
+                }
+            }
+        }
     }
 
     public Direction GetRandomDirection()
@@ -536,6 +566,11 @@ public class World : MonoBehaviour
                 return Direction.West;
         }
         throw new Exception("No");
+    }
+
+    public static List<Tile> SortByDistance(List<Tile> tiles, Vector2Int gridLocation)
+    {
+        return tiles.OrderBy(o => GetManhattanDistance(gridLocation, o.Coordinates)).ToList();
     }
 
     public List<Tile> GetTilesInRadius(Vector2Int gridLocation, int radius)
@@ -607,8 +642,7 @@ public class World : MonoBehaviour
     }
 
     void Update()
-    {
-    }
+    {}
 
     void Awake()
     {
@@ -648,9 +682,7 @@ public class World : MonoBehaviour
         // Creating hearth
         Vector2Int maxHearthGridPosition = GetHalfGridSize() - parameters.infrastructures.hearthMinDistanceFromMapEdge;
         var hearthGridPos = new Vector2Int(Random.Range(-maxHearthGridPosition.x, maxHearthGridPosition.x), Random.Range(-maxHearthGridPosition.y, maxHearthGridPosition.y));
-        Tiles[hearthGridPos].TileType = Tile.Type.Hearth;
         SpawnHearth(GetWorldLocation(hearthGridPos));
-        Debug.Log("Created Hearth at grid position " + hearthGridPos);
 
         GlobalInventory.CurrentWood = parameters.resources.startingWoodAmount;
 

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -30,10 +31,14 @@ public class Fire : MonoBehaviour
     private float spawnProgress;
     private Inventory globalInventory;
     private World world;
+    private float nextHouseSpawnTick;
 
     public JobDispatcher Jobs {get; private set;}
 
     private List<World.Tile> influence;
+
+    public List<World.Tile> GetInfluence() { return influence; }
+
     void Awake()
     {
         Jobs = gameObject.AddComponent<JobDispatcher>();
@@ -46,12 +51,23 @@ public class Fire : MonoBehaviour
     {
         world = World.Get();
         globalInventory = world.GlobalInventory;
+        nextHouseSpawnTick = Random.Range(world.GenerationParameters.infrastructures.houseSpawnPerSecondInterval.x, world.GenerationParameters.infrastructures.houseSpawnPerSecondInterval.y);
         Activate();
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (nextHouseSpawnTick <= Time.time)
+        {
+            World.Tile tile = influence.OrderBy(t => Random.value).ToList().Find(t => t.TileType == World.Tile.Type.Grass && !world.GetTilesInRadius(t.Coordinates, world.GenerationParameters.infrastructures.minimumManhattanDistanceBetweenHouses).Any(neighbour => neighbour.TileType == World.Tile.Type.House));
+            if (tile != null)
+            {
+                world.SetTileType(tile.Coordinates, World.Tile.Type.House);
+            }
+            nextHouseSpawnTick = Time.time + Random.Range(world.GenerationParameters.infrastructures.houseSpawnPerSecondInterval.x, world.GenerationParameters.infrastructures.houseSpawnPerSecondInterval.y);
+        }
+
         burnProgress += Time.deltaTime * currentBurnRatePerSecond;
         if (burnProgress >= 1f)
         {
@@ -73,7 +89,7 @@ public class Fire : MonoBehaviour
             while (spawning > 0)
             {
                 // TODO randomize this position
-                world.SpawnWorker(WorldPosition(), this);
+                world.SpawnWorker(this);
                 spawning -= 1;
 
             }
@@ -97,6 +113,10 @@ public class Fire : MonoBehaviour
         burnProgress = 0f;
         radiusOfInfluence = 0;
         burnRatePerSecond = 0;
+        if (GridTile.TileType == World.Tile.Type.Hearth)
+        {
+            world.GameOver(GridTile);
+        }
     }
 
     public void Activate()
@@ -105,8 +125,7 @@ public class Fire : MonoBehaviour
         currentRadiusOfInfluence = radiusOfInfluence;
         currentBurnRatePerSecond = burnRatePerSecond;
         currentWorkerSpawnRate = workerSpawnRatePerSecond;
-        influence = World.Get().GetTilesInRadius(TilePosition(), CurrentRadiusOfInfluence);
-        Debug.Log("Tiles in influence radius: " + influence.Count.ToString());
+        influence = World.SortByDistance(World.Get().GetTilesInRadius(TilePosition(), CurrentRadiusOfInfluence), TilePosition());
         foreach(World.Tile tile in influence)
         {
             tile.SetIsInSnow(false);
@@ -115,7 +134,6 @@ public class Fire : MonoBehaviour
                 Jobs.QueueJob(tile.Coordinates, JobDispatcher.Job.Type.Chop);
             }
         }
-        Debug.Log("Found jobs: " + Jobs.Count.ToString());
     }
 
     public void Feed()
