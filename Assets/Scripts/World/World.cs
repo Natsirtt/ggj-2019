@@ -457,7 +457,7 @@ public class World : MonoBehaviour
         return closest;
     }
 
-    public GameObject GetNearestFireWithJobs(Vector2 worldLocation)
+    public Fire GetNearestFireWithJobs(Vector2 worldLocation)
     {
         float nearestDistance = 99999;
         GameObject closest = null;
@@ -470,7 +470,7 @@ public class World : MonoBehaviour
                 closest = fire;
             }
         }
-        return closest;
+        return closest.GetComponent<Fire>();
     }
 
     public void ChoppedTree(Vector2Int tilePosition)
