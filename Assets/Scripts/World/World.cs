@@ -219,7 +219,7 @@ public class World : MonoBehaviour
 
             foreach (World.Tile t in adjacentTiles)
             {
-                if (t.IsInSnow == IsInSnow)
+                if (t.IsInSnow != IsInSnow)
                 {
                     continue;
                 }
