@@ -129,12 +129,13 @@ public class AgentJobHandler : MonoBehaviour
                 }
             }
         }
-        if (Fire.CurrentRadiusOfInfluence == 0)
+        if (Fire.CurrentBurnRate == 0)
         {
             deathTimer += Time.deltaTime;
             if (deathTimer > SecondsToDeath)
             {
                 gameObject.GetComponent<Animator>().SetBool("isDead", true);
+                World.Get().RemoveWorker(gameObject);
                 isDead = true;
             }
         }
