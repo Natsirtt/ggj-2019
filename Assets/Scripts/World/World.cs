@@ -429,7 +429,7 @@ public class World : MonoBehaviour
         if (jobsScript == null)
         {
             Debug.LogError("Worker had no job handler?!");
-            return;
+            return null;
         }
         jobsScript.Fire = fire;
         return worker;
@@ -470,7 +470,11 @@ public class World : MonoBehaviour
                 closest = fire;
             }
         }
-        return closest.GetComponent<Fire>();
+        if (closest != null)
+        {
+            return closest.GetComponent<Fire>();
+        }
+        return null;
     }
 
     public void ChoppedTree(Vector2Int tilePosition)

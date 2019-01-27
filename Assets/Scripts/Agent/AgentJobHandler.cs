@@ -93,6 +93,17 @@ public class AgentJobHandler : MonoBehaviour
             {
                 // TODO look for next fire
                 pathFollowing.MoveToRandomLocationInSquare();
+                Fire fire = World.Get().GetNearestFireWithJobs(new Vector2(gameObject.transform.position.x , gameObject.transform.position.y));
+                if (fire != null)
+                {
+                    if (Fire.NumAssociatedWorkers() > 5)
+                    {
+                        Fire.WorkerLeaving(gameObject);
+
+                        Fire = fire;
+                        Fire.WorkerComing(gameObject);
+                    }
+                }
             }
         }
         else

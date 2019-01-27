@@ -121,7 +121,10 @@ public class Fire : MonoBehaviour
     {
         listOfAssociatedWorkers.Remove(worker);
     }
-
+    public void WorkerComing(GameObject worker)
+    {
+        listOfAssociatedWorkers.Add(worker);
+    }
     public int NumAssociatedWorkers()
     {
         return listOfAssociatedWorkers.Count();
@@ -148,10 +151,14 @@ public class Fire : MonoBehaviour
 
     void ComputeInfluence()
     {
-        foreach (World.Tile tile in influence)
+        if (influence != null)
         {
-            tile.SetIsInSnow(true);
+            foreach (World.Tile tile in influence)
+            {
+                tile.SetIsInSnow(true);
+            }
         }
+        
         influence = World.SortByDistance(World.Get().GetTilesInRadius(TilePosition(), CurrentRadiusOfInfluence), TilePosition());
         foreach (World.Tile tile in influence)
         {
