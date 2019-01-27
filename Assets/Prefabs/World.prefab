@@ -303,6 +303,8 @@ MonoBehaviour:
   - Variations:
     - Normal: {fileID: 11400000, guid: b170744847babac4b86d6675d7637e12, type: 2}
       Snowed: {fileID: 0}
+    - Normal: {fileID: 11400000, guid: 2d96292b876541f42a7bc1e425ee83d7, type: 2}
+      Snowed: {fileID: 0}
   - Variations:
     - Normal: {fileID: 11400000, guid: a19d71509c4ee8d4d87f38b44b2a3084, type: 2}
       Snowed: {fileID: 11400000, guid: a19d71509c4ee8d4d87f38b44b2a3084, type: 2}
