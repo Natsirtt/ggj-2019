@@ -121,7 +121,8 @@ public class Fire : MonoBehaviour
         {
             world.SetFireRenderTile(GridTile);
         }
-        gameObject.GetComponent<ParticleSystem>().enableEmission = false;
+        var emission = gameObject.GetComponent<ParticleSystem>().emission;
+        emission.enabled = false;
     }
 
     public void Activate()
@@ -140,7 +141,8 @@ public class Fire : MonoBehaviour
                 Jobs.QueueJob(tile.Coordinates, JobDispatcher.Job.Type.Chop);
             }
         }
-        gameObject.GetComponent<ParticleSystem>().enableEmission = true;
+        var emission = gameObject.GetComponent<ParticleSystem>().emission;
+        emission.enabled = true;
     }
 
     public void Feed()
