@@ -22,7 +22,7 @@ public class AgentJobHandler : MonoBehaviour
     public float Despawn;
     private float despawnTimer;
     private float deathTimer;
-    private bool isDead = false;
+    public bool isDead = false;
 
     public List<AudioClip> Audio_ChopWood = new List<AudioClip>();
 

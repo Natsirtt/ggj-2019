@@ -21,6 +21,11 @@ public class AgentMovement : MonoBehaviour
 
     void Update()
     {
+        AgentJobHandler jobHandler = GetComponent<AgentJobHandler>();
+        if(jobHandler && jobHandler.isDead)
+        {
+            return;
+        }
         if (AccumulatedInput.SqrMagnitude() > 0)
         {
             animator.SetBool("isWalking", true);
