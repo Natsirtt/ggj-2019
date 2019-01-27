@@ -133,8 +133,13 @@ public struct TileContainer
             return null;
 
         TileVariation result = Variations[Random.Range(0, Variations.Count)];
+        if (snowed && result.Snowed == null)
+        {
+            Debug.LogWarning("Tile container needed to produce a snowed tile but none was provided.");
+            return result.Normal;
+        }
 
-        return result.Snowed == null ? result.Normal : (snowed ? result.Snowed : result.Normal);
+        return snowed ? result.Snowed : result.Normal;
     }
 }
 
@@ -473,7 +478,7 @@ public class World : MonoBehaviour
             return;
         }
         SetTileType(gridPos, Tile.Type.Campfire);
-        GameObject fire = Instantiate<GameObject>(firePrefab, worldLocation, Quaternion.identity);
+        GameObject fire = Instantiate<GameObject>(firePrefab, worldLocation, firePrefab.transform.rotation);
         //float depth = fireParticleSystemPrefab.transform.position.z;
         //GameObject fireParticleSystem = Instantiate<GameObject>(fireParticleSystemPrefab, (Vector3)GetWorldLocation(gridPos) + new Vector3(0, 0, depth), fireParticleSystemPrefab.transform.rotation);
         Fire fireScript = fire.GetComponent<Fire>();
