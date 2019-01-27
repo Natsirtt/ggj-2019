@@ -177,7 +177,7 @@ public class World : MonoBehaviour
             Hearth,
             Tree,
             House,
-            Exp,
+            ExpeditionSite,
             MAX
         }
 
