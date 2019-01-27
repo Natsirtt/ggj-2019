@@ -518,6 +518,10 @@ public class World : MonoBehaviour
         Fires.Add(hearth);
         Camera.main.transform.position = new Vector3(worldLocation.x, worldLocation.y, Camera.main.transform.position.z);
         Debug.Log("Created Hearth at grid position " + gridPos);
+        for (int i = 0; i < generationParameters.resources.startingWorkers; i++)
+        {
+            SpawnWorker(fireScript);
+        }
         Hearth = hearth;
     }
 
