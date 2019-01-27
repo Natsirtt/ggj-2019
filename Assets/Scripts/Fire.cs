@@ -121,7 +121,11 @@ public class Fire : MonoBehaviour
         {
             world.SetFireRenderTile(GridTile);
         }
-        gameObject.GetComponent<ParticleSystem>().enableEmission = false;
+        if (gameObject.GetComponent<ParticleSystem>() != null)
+        {
+            gameObject.GetComponent<ParticleSystem>().enableEmission = false;
+
+        }
     }
 
     public void Activate()
@@ -131,7 +135,10 @@ public class Fire : MonoBehaviour
         currentBurnRatePerSecond = burnRatePerSecond;
         currentWorkerSpawnRate = workerSpawnRatePerSecond;
         influence = World.SortByDistance(World.Get().GetTilesInRadius(TilePosition(), CurrentRadiusOfInfluence), TilePosition());
-        world.SetFireRenderTile(GridTile, false);
+        if (GridTile.TileType == World.Tile.Type.Campfire)
+        {
+            world.SetFireRenderTile(GridTile, false);
+        }
         foreach (World.Tile tile in influence)
         {
             tile.SetIsInSnow(false);
@@ -140,7 +147,11 @@ public class Fire : MonoBehaviour
                 Jobs.QueueJob(tile.Coordinates, JobDispatcher.Job.Type.Chop);
             }
         }
-        gameObject.GetComponent<ParticleSystem>().enableEmission = true;
+        if (gameObject.GetComponent<ParticleSystem>() != null)
+        {
+            gameObject.GetComponent<ParticleSystem>().emission.enabled = true;
+
+        }
     }
 
     public void Feed()
