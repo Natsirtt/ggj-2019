@@ -13,6 +13,11 @@ public class Path
         return PathPoints.Count > 0;
     }
 
+    public void Cancel()
+    {
+        PathPoints.Clear();
+    }
+
     public float PathLength()
     {
         if (!HasPath()) return -1f;

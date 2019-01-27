@@ -67,8 +67,6 @@ public class JobDispatcher : MonoBehaviour
         }
     }
 
-
-
     public Job GetNearestJob(Vector2Int gridPosition)
     {
         if (expeditionQueue.Count > 0)

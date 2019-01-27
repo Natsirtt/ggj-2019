@@ -97,8 +97,9 @@ public class AgentJobHandler : MonoBehaviour
         }
         else
         {
-            if (!pathFollowing.CurrentPath.HasPath())
+            if (Job.Coordinates == TilePosition())
             {
+                pathFollowing.CurrentPath.Cancel();
                 if (Job.IsReady())
                 {
                     JobProgress += Time.deltaTime;
