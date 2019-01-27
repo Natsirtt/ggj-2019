@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: DefaultWorld
   m_EditorClassIdentifier: 
   grid:
-    Size: {x: 400, y: 400}
+    Size: {x: 100, y: 100}
   resources:
     startingWoodAmount: 100
     woodPerTree: 10
@@ -21,7 +21,7 @@ MonoBehaviour:
     hearthFeedingAmount: 50
   infrastructures:
     hearthMinDistanceFromMapEdge: {x: 100, y: 100}
-    houseSpawnPerSecondInterval: {x: 30, y: 60}
+    houseSpawnPerSecondInterval: {x: 1, y: 4}
     minimumManhattanDistanceBetweenHouses: 5
   forests:
     numberOfPathsRange: {x: 20, y: 45}

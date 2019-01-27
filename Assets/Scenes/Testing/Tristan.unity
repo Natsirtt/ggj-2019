@@ -454,5 +454,17 @@ PrefabInstance:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5333433579537846607, guid: 4d790d3c70b94f747a83e6e95f5c8cd2,
+        type: 3}
+      propertyPath: TileTypes.Array.data[5].Variations.Array.data[0].Normal
+      value: 
+      objectReference: {fileID: 11400000, guid: 63e84f6a38bf59849a437e461813054d,
+        type: 2}
+    - target: {fileID: 5333433579537846607, guid: 4d790d3c70b94f747a83e6e95f5c8cd2,
+        type: 3}
+      propertyPath: TileTypes.Array.data[5].Variations.Array.data[1].Normal
+      value: 
+      objectReference: {fileID: 11400000, guid: 4daca53fd7e0c2345bf6b80a8eb02a30,
+        type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4d790d3c70b94f747a83e6e95f5c8cd2, type: 3}
