@@ -141,6 +141,17 @@ public struct TileContainer
 
         return snowed ? result.Snowed : result.Normal;
     }
+
+    public TileBase GetVariationMode(TileBase original, bool snowed)
+    {
+        TileVariation variation = Variations.Find(x => x.Normal == original || x.Snowed == original);
+        if (snowed && variation.Snowed == null)
+        {
+            Debug.LogWarning("Tile container needed to produce a snowed tile but none was provided.");
+            return variation.Normal;
+        }
+        return snowed ? variation.Snowed : variation.Normal;
+    }
 }
 
 [Serializable]
@@ -203,10 +214,8 @@ public class World : MonoBehaviour
             IsInSnow = flag;
 
             ChangedIsInSnow();
-            List<World.Tile> adjacentTiles = World.Get().GetTilesInSquare(Coordinates, 1);
-            //List<World.Tile> adjacentTiles = GetAdjacentTiles(World.Get().Tiles, this);
-            // List<World.Tile> adjacentTiles = new List<World.Tile>();
-            // adjacentTiles.Add(World.Get().Tiles[Coordinates + Vector2Int.left]);
+            List<World.Tile> adjacentTiles = GetAdjacentTiles(World.Get().Tiles, this);
+
             foreach (World.Tile t in adjacentTiles)
                 t.ChangedIsInSnow();
         }
@@ -215,22 +224,23 @@ public class World : MonoBehaviour
         {
             if (TileType != Type.Grass)
             {
-                TileBase newTile = World.Get().TileTypes[(int)TileType].GetRandomTile(IsInSnow);
-                World.Get().Tilemaps[(int)TileType].SetTile(new Vector3Int(Coordinates.x, Coordinates.y, 0), newTile);
+                Tilemap tMap = World.Get().Tilemaps[(int)TileType];
+                TileBase oldTile = tMap.GetTile(new Vector3Int(Coordinates.x, Coordinates.y, 0));
+                TileBase newTile = World.Get().TileTypes[(int)TileType].GetVariationMode(oldTile, IsInSnow);
+                if(newTile != null)
+                {
+                    World.Get().Tilemaps[(int)TileType].SetTile(new Vector3Int(Coordinates.x, Coordinates.y, 0), newTile);
+                }
             }
 
             int neighborSameMask = 0;
             TileBase newVisual = World.Get().TileTypes[(int)Type.Grass].GetRandomTile(IsInSnow);
 
-            List<World.Tile> adjacentTiles = World.Get().GetTilesInSquare(Coordinates, 1);
-            //List<World.Tile> adjacentTiles = GetAdjacentTiles(World.Get().Tiles, this);
-            // List<World.Tile> adjacentTiles = new List<World.Tile>();
-            // adjacentTiles.Add(World.Get().Tiles[Coordinates + Vector2Int.up]);
-            //adjacentTiles.Add(World.Get().Tiles[Coordinates + Vector2Int.down]);
+            List<World.Tile> adjacentTiles = GetAdjacentTiles(World.Get().Tiles, this);
 
             foreach (World.Tile t in adjacentTiles)
             {
-                if (t.IsInSnow == IsInSnow)
+                if (t.IsInSnow != IsInSnow)
                 {
                     continue;
                 }
@@ -309,6 +319,7 @@ public class World : MonoBehaviour
     public void GameOverButYouWin()
     {
         FindObjectOfType<Controller>().BlockGameplayInputs = true;
+        DisplayText("You have won!");
     }
 
     public enum Direction
@@ -397,7 +408,7 @@ public class World : MonoBehaviour
     [Tooltip("Leave the seed to 0 for using the current time, or provide your seed of choice.")]
     private int seed = 0;
 
-    public GameObject workerPrefab;
+    public GameObject[] workerPrefabs;
     public GameObject firePrefab;
     public GameObject hearthPrefab;
     public GameObject UI;
@@ -412,7 +423,7 @@ public class World : MonoBehaviour
     {
         // This order by with weighed random will shuffle the list but segregate the shuffle grass tiled as more important than the others
         Vector2Int pos = fire.GetInfluence().OrderBy(t => Random.value * (t.TileType == Tile.Type.Grass ? 1f : 10f)).ToList().Find(t => t.TileType == Tile.Type.Grass || t.TileType == Tile.Type.Tree).Coordinates;
-        GameObject worker = Instantiate<GameObject>(workerPrefab, GetWorldLocation(pos), Quaternion.identity);
+        GameObject worker = Instantiate<GameObject>(workerPrefabs[Random.Range(0, workerPrefabs.Length)], GetWorldLocation(pos), Quaternion.identity);
         AgentJobHandler jobsScript = worker.GetComponent<AgentJobHandler>();
         if (jobsScript != null) {
             Workers.Add(worker);
@@ -478,6 +489,12 @@ public class World : MonoBehaviour
         Camera.main.transform.position = new Vector3(worldLocation.x, worldLocation.y, Camera.main.transform.position.z);
         Debug.Log("Created Hearth at grid position " + gridPos);
         Hearth = hearth;
+    }
+
+    public int GetNewFireRadius()
+    {
+        Fire fire = firePrefab.GetComponent<Fire>();
+        return fire.DefaultRadius;
     }
 
     public void SpawnCampFire(Vector2 worldLocation)
@@ -547,6 +564,7 @@ public class World : MonoBehaviour
     public void GameOver(Tile hearthTile)
     {
         TileBase tileToRender = TileTypes[(int)Tile.Type.Hearth].Variations[1].Normal;
+        DisplayText("The World froze.");
         Tilemaps[(int)Tile.Type.Hearth].SetTile(new Vector3Int(hearthTile.Coordinates.x, hearthTile.Coordinates.y, 0), tileToRender);
     }
 
@@ -573,6 +591,7 @@ public class World : MonoBehaviour
         }
 
         Tilemaps[(int)type].SetTile(new Vector3Int(pos.x, pos.y, 0), tileToRender);
+        Tiles[pos].SetIsInSnow(Tiles[pos].IsInSnow);
         if (type == Tile.Type.Grass)
         {
             // Clear props rendering
@@ -687,9 +706,9 @@ public class World : MonoBehaviour
         MainUIPrompts = MainUI.GetComponent<UIPrompts>();
     }
 
-    public void DisplayText(string text)
+    public void DisplayText(string text, float seconds = -1f)
     {
-        MainUIPrompts.SetText(text);
+        MainUIPrompts.SetText(text, seconds);
     }
 
     private List<Direction> GetRandomDirectionsList(int minListSize, int maxListSize)
@@ -737,7 +756,7 @@ public class World : MonoBehaviour
         {
             theoreticalAvailableWood = GenerateForestPath(hearthGridPos, theoreticalAvailableWood, GetRandomDirectionsList(10, 50), parameters);
         }
-        DisplayText("Protect your Hearth.<br>Winter is coming!");
+        DisplayText("Protect your Hearth");
     }
 
     int GenerateForestPath(Vector2Int hearthPosition, int theoreticalWoodAmount, List<Direction> directions, WorldGenerationParameters parameters)
