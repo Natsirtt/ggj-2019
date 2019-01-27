@@ -35,8 +35,14 @@ public class Controller : MonoBehaviour
             if (w.Tiles[gridLocation].TileType == World.Tile.Type.Grass)
             {
                 GameObject fire = w.GetClosestFire(mousePosInWorld);
+                Fire fireScript = fire.GetComponent<Fire>();
                 Vector2Int closestFireGridLocation = w.GetGridLocation(fire.transform.position);
                 int distance = World.GetManhattanDistance(gridLocation, closestFireGridLocation);
+                if (distance > fireScript.CurrentRadiusOfInfluence + w.GetNewFireRadius()*1.5)
+                {
+                    w.DisplayText("We cannot reach that far.");
+                    return;
+                }
                 int cost = w.GenerationParameters.resources.expeditionWoodCostPerTile * distance;
                 
                 if (w.GlobalInventory.CurrentWood > cost) {
@@ -44,6 +50,10 @@ public class Controller : MonoBehaviour
                     JobDispatcher jobScript = fire.GetComponent<JobDispatcher>();
                     jobScript.QueueJob(gridLocation, JobDispatcher.Job.Type.Expedition);
                     w.GlobalInventory.RemoveWood(cost);
+                }
+                else
+                {
+                    w.DisplayText("Not enough wood.");
                 }
             }
             else if (w.Tiles[w.GetGridLocation(mousePosInWorld)].TileType == World.Tile.Type.Hearth)
