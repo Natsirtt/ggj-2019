@@ -16,14 +16,14 @@ MonoBehaviour:
     Size: {x: 300, y: 300}
   resources:
     startingWoodAmount: 100
-    woodPerTree: 10
-    expeditionWoodCostPerTile: 2
-    hearthFeedingAmount: 50
+    woodPerTree: 8
+    expeditionWoodCostPerTile: 4
+    hearthFeedingAmount: 100
     startingWorkers: 5
     workerCapPerFire: 15
   infrastructures:
     hearthMinDistanceFromMapEdge: {x: 100, y: 100}
-    houseSpawnPerSecondInterval: {x: 30, y: 60}
+    houseSpawnPerSecondInterval: {x: 15, y: 40}
     minimumManhattanDistanceBetweenHouses: 1
   forests:
     numberOfPathsRange: {x: 20, y: 45}
