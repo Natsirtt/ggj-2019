@@ -177,6 +177,7 @@ public class World : MonoBehaviour
             Hearth,
             Tree,
             House,
+            ExpeditionSite,
             MAX
         }
 
@@ -467,6 +468,10 @@ public class World : MonoBehaviour
     public void SpawnCampFire(Vector2 worldLocation)
     {
         var gridPos = GetGridLocation(worldLocation);
+        if (Tiles[gridPos].TileType == Tile.Type.Campfire)
+        {
+            return;
+        }
         SetTileType(gridPos, Tile.Type.Campfire);
         GameObject fire = Instantiate<GameObject>(firePrefab, worldLocation, Quaternion.identity);
         //float depth = fireParticleSystemPrefab.transform.position.z;
@@ -530,13 +535,8 @@ public class World : MonoBehaviour
         Tilemaps[(int)Tile.Type.Hearth].SetTile(new Vector3Int(hearthTile.Coordinates.x, hearthTile.Coordinates.y, 0), tileToRender);
     }
 
-    public void SetFireRenderTile (Tile tile, bool extinguish=true)
+    public void SetFireRenderTile (Tile tile, int index)
     {
-        int index = 0;
-        if (extinguish)
-        {
-            index = 1;
-        }
         TileBase tileToRender = TileTypes[(int)Tile.Type.Campfire].Variations[index].Normal;
         Tilemaps[(int)Tile.Type.Campfire].SetTile(new Vector3Int(tile.Coordinates.x, tile.Coordinates.y, 0), tileToRender);
     }

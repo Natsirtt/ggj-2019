@@ -148,7 +148,7 @@ public class Pathfollowing : MonoBehaviour
         //InvokeRepeating("MoveToRandomLocationInSquare", 2.0f, 2.0f);
     }
 
-    void MoveToRandomLocationInSquare()
+    public void MoveToRandomLocationInSquare()
     {
         if(!CurrentPath.HasPath())
             MoveToLocation(new Vector2(Random.Range(-100.0f, 100.0f), Random.Range(-100.0f, 100.0f)) + new Vector2(transform.position.x, transform.position.y));

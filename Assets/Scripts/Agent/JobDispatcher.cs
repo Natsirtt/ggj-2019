@@ -17,6 +17,7 @@ public class JobDispatcher : MonoBehaviour
         public Type JobType { get; set; }
 
         public int NumWorkers { get; set; }
+        public int NumWorkersAssigned { get; set; }
         public int RequiredWorkers { get; set; }
 
         public Job(Vector2Int coordinates, Type type, int requiredWorkers = 1)
@@ -24,12 +25,18 @@ public class JobDispatcher : MonoBehaviour
             Coordinates = coordinates;
             RequiredWorkers = requiredWorkers;
             NumWorkers = 0;
+            NumWorkersAssigned = 0;
             JobType = type;
+        }
+
+        public void Arrived()
+        {
+            NumWorkers += 1;
         }
 
         public bool IsReady()
         {
-            return RequiredWorkers < NumWorkers;
+            return NumWorkers == RequiredWorkers;
         }
 
         public float Duration()

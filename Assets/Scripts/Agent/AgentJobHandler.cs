@@ -13,6 +13,7 @@ public class AgentJobHandler : MonoBehaviour
         get; set;
     }
 
+    private bool AtJobSite = false;
     public Fire Fire { set; get; }
     Pathfollowing pathFollowing;
     public float JobProgress { set; get; }
@@ -29,8 +30,8 @@ public class AgentJobHandler : MonoBehaviour
             return;
         }
         Job = job;
-        job.NumWorkers += 1;
-        if (job.IsReady() && job.JobType == JobDispatcher.Job.Type.Expedition)
+        job.NumWorkersAssigned += 1;
+        if (job.NumWorkersAssigned == job.RequiredWorkers && job.JobType == JobDispatcher.Job.Type.Expedition)
         {
             Fire.Jobs.dequeueExpedition();
         }
@@ -46,6 +47,7 @@ public class AgentJobHandler : MonoBehaviour
     {
         Job = null;
         JobProgress = 0f;
+        AtJobSite = false;
         IsIdle = true;
         pathFollowing = gameObject.GetComponent<Pathfollowing>();
     }
@@ -70,22 +72,31 @@ public class AgentJobHandler : MonoBehaviour
             {
                 JobDispatcher.Job job = availableJobs.GetNearestJob(TilePosition());
                 TakeJob(job);
+                AtJobSite = false;
                 IsIdle = false;
             }
             else
             {
                 // TODO look for next fire
+                IsIdle = true;
+                pathFollowing.MoveToRandomLocationInSquare();
             }
         }
         else
         {
+            IsIdle = false;
             if (!pathFollowing.CurrentPath.HasPath())
             {
                 if (Job.IsReady())
                 {
                     JobProgress += Time.deltaTime;
+                    gameObject.GetComponent<Animator>().SetBool("isChopping", true);
                 }
-                gameObject.GetComponent<Animator>().SetBool("isChopping", true);
+                else if (!AtJobSite)
+                {
+                    AtJobSite = true;
+                    Job.Arrived();
+                }
                 if (JobProgress >= Job.Duration())
                 {
                     gameObject.GetComponent<Animator>().SetBool("isChopping", false);

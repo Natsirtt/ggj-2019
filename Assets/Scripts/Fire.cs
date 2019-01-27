@@ -122,7 +122,7 @@ public class Fire : MonoBehaviour
         }
         if (GridTile.TileType == World.Tile.Type.Campfire)
         {
-            world.SetFireRenderTile(GridTile);
+            world.SetFireRenderTile(GridTile, 1);
         }
         var emission = gameObject.GetComponent<ParticleSystem>().emission;
         emission.enabled = false;
@@ -148,7 +148,6 @@ public class Fire : MonoBehaviour
         CurrentRadiusOfInfluence = radiusOfInfluence;
         currentBurnRatePerSecond = burnRatePerSecond;
         currentWorkerSpawnRate = workerSpawnRatePerSecond;
-        world.SetFireRenderTile(GridTile, false);
         ComputeInfluence();
         var ps = GetComponent<ParticleSystem>();
         var emission = ps.emission;
@@ -163,6 +162,10 @@ public class Fire : MonoBehaviour
             main.startSize = 5f * winProgress;
             emission.rateOverTime = 100 * winProgress;
             shape.radius = 1.5f * winProgress;
+        }
+        else if (GridTile.TileType == World.Tile.Type.Campfire)
+        {
+            world.SetFireRenderTile(GridTile, 0);
         }
     }
 
