@@ -18,7 +18,74 @@ public class NamedArrayAttribute : PropertyAttribute
     }
 }
 
+public class BitMaskAttribute : PropertyAttribute
+{
+    public System.Type propType;
+    public BitMaskAttribute(System.Type aType)
+    {
+        propType = aType;
+    }
+}
+
 #if UNITY_EDITOR
+[CustomPropertyDrawer(typeof(BitMaskAttribute))]
+public class EnumBitMaskPropertyDrawer : PropertyDrawer
+{
+    public override void OnGUI(Rect position, SerializedProperty prop, GUIContent label)
+    {
+        var typeAttr = attribute as BitMaskAttribute;
+        // Add the actual int value behind the field name
+        label.text = label.text + "(" + prop.intValue + ")";
+        prop.intValue = EditorExtension.DrawBitMaskField(position, prop.intValue, typeAttr.propType, label);
+    }
+}
+
+public static class EditorExtension
+{
+    public static int DrawBitMaskField(Rect aPosition, int aMask, System.Type aType, GUIContent aLabel)
+    {
+        var itemNames = System.Enum.GetNames(aType);
+        var itemValues = System.Enum.GetValues(aType) as int[];
+
+        int val = aMask;
+        int maskVal = 0;
+        for (int i = 0; i < itemValues.Length; i++)
+        {
+            if (itemValues[i] != 0)
+            {
+                if ((val & itemValues[i]) == itemValues[i])
+                    maskVal |= 1 << i;
+            }
+            else if (val == 0)
+                maskVal |= 1 << i;
+        }
+        int newMaskVal = EditorGUI.MaskField(aPosition, aLabel, maskVal, itemNames);
+        int changes = maskVal ^ newMaskVal;
+
+        for (int i = 0; i < itemValues.Length; i++)
+        {
+            if ((changes & (1 << i)) != 0)            // has this list item changed?
+            {
+                if ((newMaskVal & (1 << i)) != 0)     // has it been set?
+                {
+                    if (itemValues[i] == 0)           // special case: if "0" is set, just set the val to 0
+                    {
+                        val = 0;
+                        break;
+                    }
+                    else
+                        val |= itemValues[i];
+                }
+                else                                  // it has been reset
+                {
+                    val &= ~itemValues[i];
+                }
+            }
+        }
+        return val;
+    }
+}
+
 [CustomPropertyDrawer(typeof(NamedArrayAttribute))]
 public class NamedArrayDrawer : PropertyDrawer
 {
@@ -71,6 +138,15 @@ public struct TileContainer
     }
 }
 
+[Serializable]
+public class TileNeighborTransition
+{
+    [BitMaskAttribute(typeof(World.Tile.NeighborsThatAreDifferent))]
+    public World.Tile.NeighborsThatAreDifferent Mask;
+
+    public TileVariation TileVariation;
+}
+
 public class World : MonoBehaviour
 {
     // Utils
@@ -106,11 +182,10 @@ public class World : MonoBehaviour
 
         public enum NeighborsThatAreDifferent
         {
-            None    = 0x00,
-            North   = 0x01,
-            East    = 0x02,
-            South   = 0x04,
-            West    = 0x08
+            North       = 0x01,
+            East        = North << 1,
+            South       = East << 1,
+            West        = South << 1,
         }
 
         public Vector2Int Coordinates { get; private set; }
@@ -120,50 +195,50 @@ public class World : MonoBehaviour
         public void SetIsInSnow(bool flag)
         {
             IsInSnow = flag;
-
+            
+            ChangedIsInSnow();
             List<World.Tile> adjacentTiles = World.Get().GetTilesInSquare(Coordinates, 1);
-            foreach(var tile in adjacentTiles)
-            {
-                tile.NeighborChangedIsInSnow(this);
-            }
-
-            TileBase newVisual = World.Get().TileTypes[(int)Type.Grass].GetRandomTile(IsInSnow);
-            World.Get().Tilemaps[(int)Type.Grass].SetTile(new Vector3Int(Coordinates.x, Coordinates.y, 0), newVisual);
+            //List<World.Tile> adjacentTiles = GetAdjacentTiles(World.Get().Tiles, this);
+           // List<World.Tile> adjacentTiles = new List<World.Tile>();
+           // adjacentTiles.Add(World.Get().Tiles[Coordinates + Vector2Int.left]);
+            foreach (World.Tile t in adjacentTiles)
+                t.ChangedIsInSnow();
         }
 
-        public void NeighborChangedIsInSnow(Tile neighbor)
+        public void ChangedIsInSnow()
         {
-            TileBase newVisual = null;
-            if (neighbor.IsInSnow == IsInSnow)
-            {
-                newVisual = World.Get().TileTypes[(int)Type.Grass].GetRandomTile(IsInSnow);
-                World.Get().Tilemaps[(int)Type.Grass].SetTile(new Vector3Int(Coordinates.x, Coordinates.y, 0), newVisual);
-                return;
-            }
+            int neighborSameMask = 0;
+            TileBase newVisual = World.Get().TileTypes[(int)Type.Grass].GetRandomTile(IsInSnow);
 
             List<World.Tile> adjacentTiles = World.Get().GetTilesInSquare(Coordinates, 1);
+            //List<World.Tile> adjacentTiles = GetAdjacentTiles(World.Get().Tiles, this);
+            // List<World.Tile> adjacentTiles = new List<World.Tile>();
+            // adjacentTiles.Add(World.Get().Tiles[Coordinates + Vector2Int.up]);
+            //adjacentTiles.Add(World.Get().Tiles[Coordinates + Vector2Int.down]);
 
-            Vector2Int offset = neighbor.Coordinates - Coordinates;
-            World.Direction worldDirection = World.Direction.South;
-            if (offset.x == -1 && offset.y == -1)
-                worldDirection = World.Direction.SouthWest;
-            else if(offset.x == 0 && offset.y == -1)
-                worldDirection = World.Direction.South;
-            else if(offset.x == 1 && offset.y == -1)
-                worldDirection = World.Direction.SouthEast;
-            else if(offset.x == -1 && offset.y == 0)
-                worldDirection = World.Direction.West;
-            else if(offset.x == 1 && offset.y == 0)
-                worldDirection = World.Direction.East;
-            else if(offset.x == -1 && offset.y == 1)
-                worldDirection = World.Direction.NorthWest;
-            else if (offset.x == 0 && offset.y == 1)
-                worldDirection = World.Direction.North;
-            else if(offset.x == 1 && offset.y == 1)
-                worldDirection = World.Direction.NorthEast;
+            foreach (World.Tile t in adjacentTiles)
+            {
+                if (t.IsInSnow == IsInSnow)
+                {
+                    continue;
+                }
 
-            TileVariation variation = World.Get().GrassEdgeVariations[(int)worldDirection];
-            newVisual = IsInSnow ? variation.Snowed : variation.Normal;
+                Vector2Int offset = t.Coordinates - Coordinates;
+                if (offset.x < 0 && offset.y == 0)
+                    neighborSameMask |= (int)NeighborsThatAreDifferent.West;
+                else if (offset.x > 0 && offset.y == 0)
+                    neighborSameMask |= (int)NeighborsThatAreDifferent.East;
+                else if (offset.y < 0 && offset.x == 0)
+                    neighborSameMask |= (int)NeighborsThatAreDifferent.South;
+                else if (offset.y > 0 && offset.x == 0)
+                    neighborSameMask |= (int)NeighborsThatAreDifferent.North;
+            }
+
+            TileNeighborTransition variation = Array.Find(World.Get().NeighborTransitions, x => (int)x.Mask == neighborSameMask);
+            if(variation != null)
+            {
+                newVisual = IsInSnow ? variation.TileVariation.Snowed : variation.TileVariation.Normal;
+            }
             World.Get().Tilemaps[(int)Type.Grass].SetTile(new Vector3Int(Coordinates.x, Coordinates.y, 0), newVisual);
         }
         
@@ -289,11 +364,9 @@ public class World : MonoBehaviour
 
     [NamedArray(typeof(Tile.Type))]
     public TileContainer[] TileTypes = new TileContainer[(int)Tile.Type.MAX];
-
-    [NamedArray(typeof(Direction))]
-    public TileVariation[] GrassEdgeVariations = new TileVariation[(int)Direction.NorthWest + 1];
-
-
+    
+    [SerializeField]
+    public TileNeighborTransition[] NeighborTransitions;
 
     [NamedArray(typeof(Tile.Type))]
     public Tilemap[] Tilemaps = new Tilemap[(int)Tile.Type.MAX];
@@ -373,11 +446,14 @@ public class World : MonoBehaviour
 
     public void SpawnHearth(Vector2 worldLocation)
     {
-        SetTileType(GetGridLocation(worldLocation), Tile.Type.Hearth);
+        Vector2Int gridPos = GetGridLocation(worldLocation);
+        SetTileType(gridPos, Tile.Type.Hearth);
         GameObject hearth = Instantiate<GameObject>(hearthPrefab, worldLocation, Quaternion.identity);
+        Fire fireScript = hearth.GetComponent<Fire>();
+        fireScript.SetWorldTile(Tiles[gridPos]);
         Fires.Add(hearth);
-        
         Camera.main.transform.position = new Vector3(worldLocation.x, worldLocation.y, Camera.main.transform.position.z);
+        Debug.Log("Created Hearth at grid position " + gridPos);
     }
 
     public void SpawnCampFire(Vector2 worldLocation)
