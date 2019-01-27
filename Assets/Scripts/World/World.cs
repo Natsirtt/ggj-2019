@@ -497,12 +497,12 @@ public class World : MonoBehaviour
         return fire.DefaultRadius;
     }
 
-    public void SpawnCampFire(Vector2 worldLocation)
+    public Fire SpawnCampFire(Vector2 worldLocation)
     {
         var gridPos = GetGridLocation(worldLocation);
         if (Tiles[gridPos].TileType == Tile.Type.Campfire)
         {
-            return;
+            return null;
         }
         SetTileType(gridPos, Tile.Type.Campfire);
         GameObject fire = Instantiate<GameObject>(firePrefab, worldLocation, firePrefab.transform.rotation);
@@ -515,11 +515,13 @@ public class World : MonoBehaviour
             Tile tileToGiveToFireScript = Tiles[tileLocationInGridSpace];
             fireScript.SetWorldTile(tileToGiveToFireScript);
             Fires.Add(fire);
+            return fireScript;
         }
         else
         {
             Debug.LogError("Failed to spawn a campfire. The coming days are going to be cold...");
         }
+        return null;
     }
 
     public Vector2Int GetGridLocation(Vector2 worldLocation)
