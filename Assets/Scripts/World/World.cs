@@ -271,7 +271,7 @@ public class World : MonoBehaviour
             return temp;
         }
 
-        public World.Tile Parent { get; set; }
+        public Tile Parent { get; set; }
         public float DistanceToTarget { get; set; }
         public float Cost { get; set; }
         public float F { get { return DistanceToTarget >= 0.0f && Cost >= 0.0f ? DistanceToTarget + Cost : -1.0f; } }
@@ -292,6 +292,11 @@ public class World : MonoBehaviour
             TileType = type;
             IsInSnow = true;
         }
+    }
+
+    public void GameOverButYouWin()
+    {
+        FindObjectOfType<Controller>().BlockGameplayInputs = true;
     }
 
     public enum Direction
@@ -361,6 +366,7 @@ public class World : MonoBehaviour
     public Inventory GlobalInventory { get; private set; }
     public Vector2Int GridSize { get; private set; }
     public JobDispatcher JobDispatcher {get; private set;}
+    public GameObject Hearth { get; private set; }
 
     [NamedArray(typeof(Tile.Type))]
     public TileContainer[] TileTypes = new TileContainer[(int)Tile.Type.MAX];
@@ -382,7 +388,6 @@ public class World : MonoBehaviour
     public GameObject workerPrefab;
     public GameObject firePrefab;
     public GameObject hearthPrefab;
-    public GameObject fireParticleSystemPrefab;
 
     public List<GameObject> Workers { get; private set; }
     public List<GameObject> Fires { get; private set; }
@@ -449,11 +454,14 @@ public class World : MonoBehaviour
         Vector2Int gridPos = GetGridLocation(worldLocation);
         SetTileType(gridPos, Tile.Type.Hearth);
         GameObject hearth = Instantiate<GameObject>(hearthPrefab, worldLocation, Quaternion.identity);
+        //float depth = hearthParticleSystemPrefab.transform.position.z;
+        //GameObject hearthParticleSystem = Instantiate<GameObject>(hearthParticleSystemPrefab, (Vector3)GetWorldLocation(gridPos) + new Vector3(0, 0, depth), hearthParticleSystemPrefab.transform.rotation);
         Fire fireScript = hearth.GetComponent<Fire>();
         fireScript.SetWorldTile(Tiles[gridPos]);
         Fires.Add(hearth);
         Camera.main.transform.position = new Vector3(worldLocation.x, worldLocation.y, Camera.main.transform.position.z);
         Debug.Log("Created Hearth at grid position " + gridPos);
+        Hearth = hearth;
     }
 
     public void SpawnCampFire(Vector2 worldLocation)
@@ -461,8 +469,8 @@ public class World : MonoBehaviour
         var gridPos = GetGridLocation(worldLocation);
         SetTileType(gridPos, Tile.Type.Campfire);
         GameObject fire = Instantiate<GameObject>(firePrefab, worldLocation, Quaternion.identity);
-        float depth = fireParticleSystemPrefab.transform.position.z;
-        GameObject fireParticleSystem = Instantiate<GameObject>(fireParticleSystemPrefab, (Vector3)GetWorldLocation(gridPos) + new Vector3(0, 0, depth), fireParticleSystemPrefab.transform.rotation);
+        //float depth = fireParticleSystemPrefab.transform.position.z;
+        //GameObject fireParticleSystem = Instantiate<GameObject>(fireParticleSystemPrefab, (Vector3)GetWorldLocation(gridPos) + new Vector3(0, 0, depth), fireParticleSystemPrefab.transform.rotation);
         Fire fireScript = fire.GetComponent<Fire>();
         if (fireScript != null)
         {

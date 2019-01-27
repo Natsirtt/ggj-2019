@@ -15,9 +15,10 @@ MonoBehaviour:
   grid:
     Size: {x: 400, y: 400}
   resources:
-    startingWoodAmount: 200
+    startingWoodAmount: 100
     woodPerTree: 3
     expeditionWoodCostPerTile: 4
+    hearthFeedingAmount: 100
   infrastructures:
     hearthMinDistanceFromMapEdge: {x: 100, y: 100}
     houseSpawnPerSecondInterval: {x: 30, y: 60}

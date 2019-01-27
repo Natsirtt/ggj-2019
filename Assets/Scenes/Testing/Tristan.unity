@@ -438,5 +438,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: TilemapProps
       objectReference: {fileID: 0}
+    - target: {fileID: 999806160564032489, guid: 4d790d3c70b94f747a83e6e95f5c8cd2,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4d790d3c70b94f747a83e6e95f5c8cd2, type: 3}

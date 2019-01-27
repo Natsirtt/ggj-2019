@@ -12,6 +12,9 @@ public class Fire : MonoBehaviour
     private float burnRatePerSecondIncrease = 1f;
 
     [SerializeField]
+    private float burnRatePerSecondToWin = 1f;
+
+    [SerializeField]
     private int radiusOfInfluence = 0;
 
     [SerializeField]
@@ -24,14 +27,15 @@ public class Fire : MonoBehaviour
     private float workerSpawnRateIncrease = 0f;
 
     private float currentBurnRatePerSecond;
-    private int currentRadiusOfInfluence;
     private float currentWorkerSpawnRate;
+    public int CurrentRadiusOfInfluence { get; set; }
 
     private float burnProgress;
     private float spawnProgress;
     private Inventory globalInventory;
     private World world;
     private float nextHouseSpawnTick;
+    private bool needsToActivate = false;
 
     public JobDispatcher Jobs {get; private set;}
 
@@ -52,12 +56,17 @@ public class Fire : MonoBehaviour
         world = World.Get();
         globalInventory = world.GlobalInventory;
         nextHouseSpawnTick = Random.Range(world.GenerationParameters.infrastructures.houseSpawnPerSecondInterval.x, world.GenerationParameters.infrastructures.houseSpawnPerSecondInterval.y);
-        Activate();
+        needsToActivate = true;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (needsToActivate)
+        {
+            Activate();
+            needsToActivate = false;
+        }
         if (nextHouseSpawnTick <= Time.time)
         {
             World.Tile tile = influence.OrderBy(t => Random.value).ToList().Find(t => t.TileType == World.Tile.Type.Grass && !world.GetTilesInRadius(t.Coordinates, world.GenerationParameters.infrastructures.minimumManhattanDistanceBetweenHouses).Any(neighbour => neighbour.TileType == World.Tile.Type.House));
@@ -76,6 +85,7 @@ public class Fire : MonoBehaviour
             {
                 // Warn the player, dim down the fire?
                 Shrink();
+                burnProgress = 0f;
                 return;
             }
             globalInventory.RemoveWood(woodBurnt);
@@ -100,13 +110,6 @@ public class Fire : MonoBehaviour
         }
     }
 
-    public int CurrentRadiusOfInfluence
-    {
-        get { return currentRadiusOfInfluence; }
-        set { currentRadiusOfInfluence = value;  }
-
-    }
-
     public void Deactivate()
     {
         // TODO change the display as well!
@@ -123,16 +126,12 @@ public class Fire : MonoBehaviour
         }
         var emission = gameObject.GetComponent<ParticleSystem>().emission;
         emission.enabled = false;
+        ComputeInfluence();
     }
 
-    public void Activate()
+    void ComputeInfluence()
     {
-        burnProgress = 0f;
-        currentRadiusOfInfluence = radiusOfInfluence;
-        currentBurnRatePerSecond = burnRatePerSecond;
-        currentWorkerSpawnRate = workerSpawnRatePerSecond;
         influence = World.SortByDistance(World.Get().GetTilesInRadius(TilePosition(), CurrentRadiusOfInfluence), TilePosition());
-        world.SetFireRenderTile(GridTile, false);
         foreach (World.Tile tile in influence)
         {
             tile.SetIsInSnow(false);
@@ -141,16 +140,53 @@ public class Fire : MonoBehaviour
                 Jobs.QueueJob(tile.Coordinates, JobDispatcher.Job.Type.Chop);
             }
         }
-        var emission = gameObject.GetComponent<ParticleSystem>().emission;
+    }
+
+    public void Activate()
+    {
+        burnProgress = 0f;
+        CurrentRadiusOfInfluence = radiusOfInfluence;
+        currentBurnRatePerSecond = burnRatePerSecond;
+        currentWorkerSpawnRate = workerSpawnRatePerSecond;
+        world.SetFireRenderTile(GridTile, false);
+        ComputeInfluence();
+        var ps = GetComponent<ParticleSystem>();
+        var emission = ps.emission;
         emission.enabled = true;
+        if (GridTile.TileType == World.Tile.Type.Hearth)
+        {
+            // Win progress between 0 and 1
+            float winProgress = currentBurnRatePerSecond / burnRatePerSecondToWin;
+            Debug.Log("Current burn rate: " + currentBurnRatePerSecond + " - Win progress: " + winProgress);
+            var main = ps.main;
+            var shape = ps.shape;
+            main.startSize = 5f * winProgress;
+            emission.rateOverTime = 100 * winProgress;
+            shape.radius = 1.5f * winProgress;
+        }
     }
 
     public void Feed()
     {
-        currentRadiusOfInfluence += radiusOfInfluenceIncrease;
+        CurrentRadiusOfInfluence += radiusOfInfluenceIncrease;
         currentBurnRatePerSecond += burnRatePerSecondIncrease;
         currentWorkerSpawnRate += workerSpawnRateIncrease;
-        // TODO particle system
+        ComputeInfluence();
+        // This is only called for the Hearth.
+        ParticleSystem ps = GetComponent<ParticleSystem>();
+        // Win progress between 0 and 1
+        float winProgress = currentBurnRatePerSecond / burnRatePerSecondToWin;
+        Debug.Log("Current burn rate: " + currentBurnRatePerSecond + " - Win progress: " + winProgress);
+        var emission = ps.emission;
+        var main = ps.main;
+        var shape = ps.shape;
+        main.startSize = 5f * winProgress;
+        emission.rateOverTime = 100 * winProgress;
+        shape.radius = 1.5f * winProgress;
+        if (winProgress >= 1.0f)
+        {
+            world.GameOverButYouWin();
+        }
     }
 
     public Vector2 WorldPosition()
@@ -165,11 +201,15 @@ public class Fire : MonoBehaviour
 
     public void Shrink()
     {
-        currentRadiusOfInfluence -= radiusOfInfluenceIncrease;
+        CurrentRadiusOfInfluence -= radiusOfInfluenceIncrease;
         currentBurnRatePerSecond -= burnRatePerSecondIncrease;
         if (currentBurnRatePerSecond <= 0)
         {
             Deactivate();
+        }
+        else
+        {
+            ComputeInfluence();
         }
     }
 

@@ -406,6 +406,8 @@ MonoBehaviour:
     type: 3}
   fireParticleSystemPrefab: {fileID: 4322275919001543451, guid: 0a611ac8fe8bed54f8af6f26397f3ad4,
     type: 3}
+  hearthParticleSystemPrefab: {fileID: 130791980114054718, guid: 22466fabc964f9244a3024bd6c88c9e4,
+    type: 3}
 --- !u!156049354 &999806160564032471
 Grid:
   m_ObjectHideFlags: 0
