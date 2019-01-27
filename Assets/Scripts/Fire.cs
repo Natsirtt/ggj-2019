@@ -35,6 +35,7 @@ public class Fire : MonoBehaviour
     private float currentBurnRatePerSecond;
     private float currentWorkerSpawnRate;
     public int CurrentRadiusOfInfluence { get; set; }
+    public float CurrentBurnRate { get {return currentBurnRatePerSecond; } }
 
     public int DefaultRadius { get { return radiusOfInfluence; } }
 
@@ -44,6 +45,8 @@ public class Fire : MonoBehaviour
     private World world;
     private float nextHouseSpawnTick;
     private bool needsToActivate = false;
+
+    private List<GameObject> listOfAssociatedWorkers;
 
     public JobDispatcher Jobs {get; private set;}
 
@@ -58,6 +61,7 @@ public class Fire : MonoBehaviour
         {
             AudioSourcePlayer = GetComponent<AudioSource>();
         }
+        listOfAssociatedWorkers = new List<GameObject>();
     }
 
     public World.Tile GridTile { get; private set; }
@@ -67,7 +71,7 @@ public class Fire : MonoBehaviour
     {
         world = World.Get();
         globalInventory = world.GlobalInventory;
-        nextHouseSpawnTick = Random.Range(world.GenerationParameters.infrastructures.houseSpawnPerSecondInterval.x, world.GenerationParameters.infrastructures.houseSpawnPerSecondInterval.y);
+        nextHouseSpawnTick = Time.time + Random.Range(world.GenerationParameters.infrastructures.houseSpawnPerSecondInterval.x, world.GenerationParameters.infrastructures.houseSpawnPerSecondInterval.y);
         needsToActivate = true;
     }
 
@@ -111,7 +115,8 @@ public class Fire : MonoBehaviour
             while (spawning > 0)
             {
                 // TODO randomize this position
-                world.SpawnWorker(this);
+                GameObject worker = world.SpawnWorker(this);
+                listOfAssociatedWorkers.Add(worker);
                 spawning -= 1;
 
             }
@@ -120,6 +125,19 @@ public class Fire : MonoBehaviour
         {
             Debug.DrawLine(transform.position, world.GetWorldLocation(job.Coordinates));
         }
+    }
+
+    public void WorkerLeaving(GameObject worker)
+    {
+        listOfAssociatedWorkers.Remove(worker);
+    }
+    public void WorkerComing(GameObject worker)
+    {
+        listOfAssociatedWorkers.Add(worker);
+    }
+    public int NumAssociatedWorkers()
+    {
+        return listOfAssociatedWorkers.Count();
     }
 
     public void Deactivate()
@@ -148,6 +166,14 @@ public class Fire : MonoBehaviour
 
     void ComputeInfluence()
     {
+        if (influence != null)
+        {
+            foreach (World.Tile tile in influence)
+            {
+                tile.SetIsInSnow(true);
+            }
+        }
+        
         influence = World.SortByDistance(World.Get().GetTilesInRadius(TilePosition(), CurrentRadiusOfInfluence), TilePosition());
         foreach (World.Tile tile in influence)
         {

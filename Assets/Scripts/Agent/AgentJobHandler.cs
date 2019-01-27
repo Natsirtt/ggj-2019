@@ -93,7 +93,7 @@ public class AgentJobHandler : MonoBehaviour
             return;
         }
         // somehow check if you are at the jobsite and once done remove the job
-        if (Job == null)
+        if (IsIdle)
         {
             JobDispatcher availableJobs = Fire.Jobs;
             if (availableJobs.HasJobs())
@@ -101,19 +101,29 @@ public class AgentJobHandler : MonoBehaviour
                 JobDispatcher.Job job = availableJobs.GetNearestJob(TilePosition());
                 TakeJob(job);
                 AtJobSite = false;
-                IsIdle = false;
             }
             else
             {
                 // TODO look for next fire
                 pathFollowing.MoveToRandomLocationInSquare();
+                Fire fire = World.Get().GetNearestFireWithJobs(new Vector2(gameObject.transform.position.x , gameObject.transform.position.y));
+                if (fire != null)
+                {
+                    if (Fire.NumAssociatedWorkers() > 5)
+                    {
+                        Fire.WorkerLeaving(gameObject);
+
+                        Fire = fire;
+                        Fire.WorkerComing(gameObject);
+                    }
+                }
             }
         }
         else
         {
-            IsIdle = false;
-            if (!pathFollowing.CurrentPath.HasPath())
+            if (Job.Coordinates == TilePosition())
             {
+                pathFollowing.CurrentPath.Cancel();
                 if (Job.IsReady())
                 {
                     JobProgress += Time.deltaTime;
@@ -134,7 +144,9 @@ public class AgentJobHandler : MonoBehaviour
                     }
                     else
                     {
-                        World.Get().SpawnCampFire(World.Get().GetWorldLocation(Job.Coordinates));
+                        Fire fire = World.Get().SpawnCampFire(World.Get().GetWorldLocation(Job.Coordinates));
+                        if (fire != null)
+                            Fire = fire;
                     }
                     JobProgress = 0f;
                     Job = null;
@@ -142,12 +154,13 @@ public class AgentJobHandler : MonoBehaviour
                 }
             }
         }
-        if (Fire.CurrentRadiusOfInfluence == 0)
+        if (Fire.CurrentBurnRate == 0)
         {
             deathTimer += Time.deltaTime;
             if (deathTimer > SecondsToDeath)
             {
                 gameObject.GetComponent<Animator>().SetBool("isDead", true);
+                World.Get().RemoveWorker(gameObject);
                 isDead = true;
             }
         }

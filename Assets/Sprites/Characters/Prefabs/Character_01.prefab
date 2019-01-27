@@ -116,7 +116,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6cdc8b774e0eef846af14dc0f22c8c80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SecondsToDeath: 10
+  SecondsToDeath: 5
   Despawn: 3
   Audio_ChopWood:
   - {fileID: 8300000, guid: 7a0a5524c87b8014f8757a81e67e05f4, type: 3}
