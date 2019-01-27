@@ -37,13 +37,15 @@ public class Controller : MonoBehaviour
                 GameObject fire = w.GetClosestFire(mousePosInWorld);
                 Fire fireScript = fire.GetComponent<Fire>();
                 Vector2Int closestFireGridLocation = w.GetGridLocation(fire.transform.position);
-                int distance = World.GetManhattanDistance(gridLocation, closestFireGridLocation);
-                if (distance > fireScript.CurrentRadiusOfInfluence + w.GetNewFireRadius()*1.5)
+                float distance = World.GetManhattanDistance(gridLocation, closestFireGridLocation);
+                float maxDistance = fireScript.CurrentRadiusOfInfluence + w.GetNewFireRadius() * 1.5f;
+                if (distance > maxDistance)
                 {
-                    w.DisplayText("We cannot reach that far.");
+                    Debug.Log(distance.ToString() + " max reach " + maxDistance.ToString() + "(" + fireScript.CurrentRadiusOfInfluence.ToString() + " + " + w.GetNewFireRadius().ToString() + ")");
+                    w.DisplayText("We cannot reach that far.", 2);
                     return;
                 }
-                int cost = w.GenerationParameters.resources.expeditionWoodCostPerTile * distance;
+                int cost = Mathf.FloorToInt(w.GenerationParameters.resources.expeditionWoodCostPerTile * distance);
                 
                 if (w.GlobalInventory.CurrentWood > cost) {
                     w.SetTileType(gridLocation, World.Tile.Type.ExpeditionSite);
@@ -53,7 +55,7 @@ public class Controller : MonoBehaviour
                 }
                 else
                 {
-                    w.DisplayText("Not enough wood.");
+                    w.DisplayText("Not enough wood.", 2);
                 }
             }
             else if (w.Tiles[w.GetGridLocation(mousePosInWorld)].TileType == World.Tile.Type.Hearth)

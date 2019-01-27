@@ -484,7 +484,7 @@ public class World : MonoBehaviour
     public int GetNewFireRadius()
     {
         Fire fire = firePrefab.GetComponent<Fire>();
-        return fire.CurrentRadiusOfInfluence;
+        return fire.DefaultRadius;
     }
 
     public void SpawnCampFire(Vector2 worldLocation)
@@ -695,9 +695,9 @@ public class World : MonoBehaviour
         MainUIPrompts = MainUI.GetComponent<UIPrompts>();
     }
 
-    public void DisplayText(string text)
+    public void DisplayText(string text, float seconds = -1f)
     {
-        MainUIPrompts.SetText(text);
+        MainUIPrompts.SetText(text, seconds);
     }
 
     private List<Direction> GetRandomDirectionsList(int minListSize, int maxListSize)
