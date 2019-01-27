@@ -429,7 +429,7 @@ public class World : MonoBehaviour
         if (jobsScript == null)
         {
             Debug.LogError("Worker had no job handler?!");
-            return;
+            return null;
         }
         jobsScript.Fire = fire;
         return worker;
