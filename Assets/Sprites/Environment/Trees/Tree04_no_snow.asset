@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 13312, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: Tree01_NoSnow
+  m_Name: Tree04_no_snow
   m_EditorClassIdentifier: 
-  m_Sprite: {fileID: 21300000, guid: 120fa45a7f66eb5449e620d33e872b54, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 27f0c04d6471dc4449a41d26a27769a2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Transform:
     e00: 1

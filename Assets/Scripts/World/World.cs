@@ -188,10 +188,10 @@ public class World : MonoBehaviour
 
         public enum NeighborsThatAreDifferent
         {
-            North       = 0x01,
-            East        = North << 1,
-            South       = East << 1,
-            West        = South << 1,
+            North = 0x01,
+            East = North << 1,
+            South = East << 1,
+            West = South << 1,
         }
 
         public Vector2Int Coordinates { get; private set; }
@@ -201,7 +201,7 @@ public class World : MonoBehaviour
         public void SetIsInSnow(bool flag)
         {
             IsInSnow = flag;
-            
+
             ChangedIsInSnow();
             List<World.Tile> adjacentTiles = GetAdjacentTiles(World.Get().Tiles, this);
             //List<World.Tile> adjacentTiles = GetAdjacentTiles(World.Get().Tiles, this);
@@ -213,6 +213,12 @@ public class World : MonoBehaviour
 
         public void ChangedIsInSnow()
         {
+            if (TileType != Type.Grass)
+            {
+                TileBase newTile = World.Get().TileTypes[(int)TileType].GetRandomTile(IsInSnow);
+                World.Get().Tilemaps[(int)TileType].SetTile(new Vector3Int(Coordinates.x, Coordinates.y, 0), newTile);
+            }
+
             int neighborSameMask = 0;
             TileBase newVisual = World.Get().TileTypes[(int)Type.Grass].GetRandomTile(IsInSnow);
 
@@ -241,13 +247,13 @@ public class World : MonoBehaviour
             }
 
             TileNeighborTransition variation = Array.Find(World.Get().NeighborTransitions, x => (int)x.Mask == neighborSameMask);
-            if(variation != null)
+            if (variation != null)
             {
                 newVisual = IsInSnow ? variation.TileVariation.Snowed : variation.TileVariation.Normal;
             }
             World.Get().Tilemaps[(int)Type.Grass].SetTile(new Vector3Int(Coordinates.x, Coordinates.y, 0), newVisual);
         }
-        
+
         public static List<World.Tile> GetAdjacentTiles(Dictionary<Vector2Int, World.Tile> inGrid, World.Tile tile)
         {
             List<World.Tile> temp = new List<World.Tile>();
@@ -346,21 +352,21 @@ public class World : MonoBehaviour
         switch (d)
         {
             case Direction.North:
-                return new List<Direction>{ Direction.South, Direction.SouthEast, Direction.SouthWest };
+                return new List<Direction> { Direction.South, Direction.SouthEast, Direction.SouthWest };
             case Direction.NorthEast:
-                return new List<Direction>{ Direction.West, Direction.SouthWest, Direction.South };
+                return new List<Direction> { Direction.West, Direction.SouthWest, Direction.South };
             case Direction.East:
-                return new List<Direction>{ Direction.NorthWest, Direction.West, Direction.SouthWest };
+                return new List<Direction> { Direction.NorthWest, Direction.West, Direction.SouthWest };
             case Direction.SouthEast:
-                return new List<Direction>{ Direction.West, Direction.NorthWest, Direction.North };
+                return new List<Direction> { Direction.West, Direction.NorthWest, Direction.North };
             case Direction.South:
-                return new List<Direction>{ Direction.North, Direction.NorthWest, Direction.NorthEast };
+                return new List<Direction> { Direction.North, Direction.NorthWest, Direction.NorthEast };
             case Direction.SouthWest:
-                return new List<Direction>{ Direction.North, Direction.NorthEast, Direction.East };
+                return new List<Direction> { Direction.North, Direction.NorthEast, Direction.East };
             case Direction.West:
-                return new List<Direction>{ Direction.NorthEast, Direction.East, Direction.SouthEast };
+                return new List<Direction> { Direction.NorthEast, Direction.East, Direction.SouthEast };
             case Direction.NorthWest:
-                return new List<Direction>{ Direction.South, Direction.SouthEast, Direction.East };
+                return new List<Direction> { Direction.South, Direction.SouthEast, Direction.East };
         }
         throw new Exception("No");
     }
@@ -371,12 +377,12 @@ public class World : MonoBehaviour
     public Dictionary<Vector2Int, Tile> Tiles { get; private set; }
     public Inventory GlobalInventory { get; private set; }
     public Vector2Int GridSize { get; private set; }
-    public JobDispatcher JobDispatcher {get; private set;}
+    public JobDispatcher JobDispatcher { get; private set; }
     public GameObject Hearth { get; private set; }
 
     [NamedArray(typeof(Tile.Type))]
     public TileContainer[] TileTypes = new TileContainer[(int)Tile.Type.MAX];
-    
+
     [SerializeField]
     public TileNeighborTransition[] NeighborTransitions;
 
@@ -391,9 +397,13 @@ public class World : MonoBehaviour
     [Tooltip("Leave the seed to 0 for using the current time, or provide your seed of choice.")]
     private int seed = 0;
 
-    public GameObject[] workerPrefab;
+    public GameObject workerPrefab;
     public GameObject firePrefab;
     public GameObject hearthPrefab;
+    public GameObject UI;
+
+    public UIPrompts MainUIPrompts {get; set; }
+    public GameObject MainUI {get; set; }
 
     public List<GameObject> Workers { get; private set; }
     public List<GameObject> Fires { get; private set; }
@@ -403,7 +413,7 @@ public class World : MonoBehaviour
         return;
         // This order by with weighed random will shuffle the list but segregate the shuffle grass tiled as more important than the others
         Vector2Int pos = fire.GetInfluence().OrderBy(t => Random.value * (t.TileType == Tile.Type.Grass ? 1f : 10f)).ToList().Find(t => t.TileType == Tile.Type.Grass || t.TileType == Tile.Type.Tree).Coordinates;
-        GameObject worker = Instantiate<GameObject>(workerPrefab[Random.Range(0, workerPrefab.Length)], GetWorldLocation(pos), Quaternion.identity);
+        GameObject worker = Instantiate<GameObject>(workerPrefab, GetWorldLocation(pos), Quaternion.identity);
         AgentJobHandler jobsScript = worker.GetComponent<AgentJobHandler>();
         if (jobsScript != null) {
             Workers.Add(worker);
@@ -674,6 +684,13 @@ public class World : MonoBehaviour
         GlobalInventory = gameObject.AddComponent<Inventory>();
         Fires = new List<GameObject>();
         Workers = new List<GameObject>();
+        MainUI = Instantiate(UI);
+        MainUIPrompts = MainUI.GetComponent<UIPrompts>();
+    }
+
+    public void DisplayText(string text)
+    {
+        MainUIPrompts.SetText(text);
     }
 
     private List<Direction> GetRandomDirectionsList(int minListSize, int maxListSize)
@@ -721,6 +738,7 @@ public class World : MonoBehaviour
         {
             theoreticalAvailableWood = GenerateForestPath(hearthGridPos, theoreticalAvailableWood, GetRandomDirectionsList(10, 50), parameters);
         }
+        DisplayText("Protect your Hearth.<br>Winter is coming!");
     }
 
     int GenerateForestPath(Vector2Int hearthPosition, int theoreticalWoodAmount, List<Direction> directions, WorldGenerationParameters parameters)
