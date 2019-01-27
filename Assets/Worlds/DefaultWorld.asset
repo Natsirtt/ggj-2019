@@ -20,6 +20,7 @@ MonoBehaviour:
     expeditionWoodCostPerTile: 2
     hearthFeedingAmount: 50
     startingWorkers: 5
+    workerCapPerFire: 15
   infrastructures:
     hearthMinDistanceFromMapEdge: {x: 100, y: 100}
     houseSpawnPerSecondInterval: {x: 1, y: 4}
