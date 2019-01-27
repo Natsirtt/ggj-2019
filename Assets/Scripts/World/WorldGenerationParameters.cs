@@ -14,6 +14,7 @@ public class WorldGenerationParameters : ScriptableObject
         public int startingWoodAmount;
         public int woodPerTree;
         public int expeditionWoodCostPerTile;
+        public int hearthFeedingAmount;
     }
 
     [Serializable] public struct Infrastructures

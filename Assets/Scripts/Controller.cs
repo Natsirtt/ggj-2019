@@ -1,17 +1,35 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Controller : MonoBehaviour
 {
-    System.Nullable<Vector3> DragCameraInputLocation;
-    System.Nullable<Vector3> DragCameraStartLocation;
+    Vector3? DragCameraInputLocation;
+    Vector3? DragCameraStartLocation;
+
+    public bool BlockGameplayInputs { get; set; }
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
+            return;
+        }
+
+        if (BlockGameplayInputs && Input.GetKeyDown(KeyCode.Space))
+        {
+            SceneManager.LoadScene("Game");
+            return;
+        }
+
         Vector2 mousePosInWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         if (Input.GetButtonDown("PlaceCampFire"))
         {
+            if (BlockGameplayInputs)
+            {
+                return;
+            }
+
             World w = World.Get();
             Vector2Int gridLocation = w.GetGridLocation(mousePosInWorld);
             if (w.Tiles[gridLocation].TileType == World.Tile.Type.Grass)
@@ -26,6 +44,14 @@ public class Controller : MonoBehaviour
                     JobDispatcher jobScript = fire.GetComponent<JobDispatcher>();
                     jobScript.QueueJob(gridLocation, JobDispatcher.Job.Type.Expedition);
                     w.GlobalInventory.RemoveWood(cost);
+                }
+            }
+            else if (w.Tiles[w.GetGridLocation(mousePosInWorld)].TileType == World.Tile.Type.Hearth)
+            {
+                if (w.GlobalInventory.CurrentWood >= w.GenerationParameters.resources.hearthFeedingAmount)
+                {
+                    w.GlobalInventory.RemoveWood(w.GenerationParameters.resources.hearthFeedingAmount);
+                    w.Hearth.GetComponent<Fire>().Feed();
                 }
             }
         }
