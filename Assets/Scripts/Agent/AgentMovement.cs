@@ -21,18 +21,16 @@ public class AgentMovement : MonoBehaviour
 
     void Update()
     {
-        HandleInput();
-        HandleTranslation();
-        if (Velocity.SqrMagnitude() > 0)
+        if (AccumulatedInput.SqrMagnitude() > 0)
         {
             animator.SetBool("isWalking", true);
-
         }
         else
         {
             animator.SetBool("isWalking", false);
-
         }
+        HandleInput();
+        HandleTranslation();
     }
 
     void HandleInput()

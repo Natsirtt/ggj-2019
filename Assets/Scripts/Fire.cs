@@ -45,8 +45,11 @@ public class Fire : MonoBehaviour
     private World world;
     private float nextHouseSpawnTick;
     private bool needsToActivate = false;
+    bool spawnedInitialWorkers = false;
 
     private List<GameObject> listOfAssociatedWorkers;
+
+    public List<GameObject> ListOfWorkers { get { return listOfAssociatedWorkers; } }
 
     public JobDispatcher Jobs {get; private set;}
 
@@ -78,6 +81,15 @@ public class Fire : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!spawnedInitialWorkers && GridTile.TileType == World.Tile.Type.Hearth)
+        {
+            spawnedInitialWorkers = true;
+            for (int i = 0; i < World.Get().GenerationParameters.resources.startingWorkers; i++)
+            {
+                GameObject worker = World.Get().SpawnWorker(this, false);
+                ListOfWorkers.Add(worker);
+            }
+        }
         if (needsToActivate)
         {
             Activate();
@@ -159,12 +171,18 @@ public class Fire : MonoBehaviour
         {
             world.SetFireRenderTile(GridTile, 1);
         }
-        var emission = gameObject.GetComponent<ParticleSystem>().emission;
-        emission.enabled = false;
+
+        List<ParticleSystem> systems = gameObject.GetComponentsInChildren<ParticleSystem>().ToList();
+        for(int i = 0; i < systems.Count; ++i)
+        {
+            var emission = systems[i].emission;
+            emission.enabled = false;
+        }
+
         ComputeInfluence();
     }
 
-    void ComputeInfluence()
+    public void ComputeInfluence()
     {
         if (influence != null)
         {
@@ -249,7 +267,7 @@ public class Fire : MonoBehaviour
 
     public Vector2Int TilePosition()
     {
-        return world.GetGridLocation(WorldPosition());
+        return World.Get().GetGridLocation(WorldPosition());
     }
 
     public void Shrink()

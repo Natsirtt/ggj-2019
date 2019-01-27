@@ -85,11 +85,11 @@ public class AgentJobHandler : MonoBehaviour
     {
         if (isDead)
         {
-            despawnTimer += Time.deltaTime;
-            if (despawnTimer > Despawn)
-            {
-                Destroy(gameObject);
-            }
+            //despawnTimer += Time.deltaTime;
+            //if (despawnTimer > Despawn)
+            //{
+            //    Destroy(gameObject);
+            //}
             return;
         }
         // somehow check if you are at the jobsite and once done remove the job
