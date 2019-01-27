@@ -810,7 +810,7 @@ public class World : MonoBehaviour
         {
             theoreticalAvailableWood = GenerateForestPath(hearthGridPos, theoreticalAvailableWood, GetRandomDirectionsList(10, 50), parameters);
         }
-        DisplayText("Protect your Hearth");
+        DisplayText("Protect your Hearth and collect wood. Grow the Hearth.");
     }
 
     int GenerateForestPath(Vector2Int hearthPosition, int theoreticalWoodAmount, List<Direction> directions, WorldGenerationParameters parameters)
