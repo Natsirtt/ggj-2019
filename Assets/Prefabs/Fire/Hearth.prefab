@@ -55,7 +55,7 @@ MonoBehaviour:
   burnRatePerSecondToWin: 1
   radiusOfInfluence: 5
   radiusOfInfluenceIncrease: 1
-  workerSpawnRatePerSecond: 1
+  workerSpawnRatePerSecond: 0.1
   workerSpawnRateIncrease: 0
 --- !u!199 &144162136197994777
 ParticleSystemRenderer:

@@ -171,8 +171,14 @@ public class Fire : MonoBehaviour
         {
             world.SetFireRenderTile(GridTile, 1);
         }
-        var emission = gameObject.GetComponent<ParticleSystem>().emission;
-        emission.enabled = false;
+
+        List<ParticleSystem> systems = gameObject.GetComponentsInChildren<ParticleSystem>().ToList();
+        for(int i = 0; i < systems.Count; ++i)
+        {
+            var emission = systems[i].emission;
+            emission.enabled = false;
+        }
+
         ComputeInfluence();
     }
 
