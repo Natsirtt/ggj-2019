@@ -283,12 +283,12 @@ MonoBehaviour:
   - Variations: []
   - Variations:
     - Normal: {fileID: 11400000, guid: ed54393cc48e83c4e896ec73ac52101f, type: 2}
-      Snowed: {fileID: 0}
+      Snowed: {fileID: 11400000, guid: ed54393cc48e83c4e896ec73ac52101f, type: 2}
     - Normal: {fileID: 11400000, guid: 9f266f712789d704e89c544d49a5dc43, type: 2}
       Snowed: {fileID: 0}
   - Variations:
     - Normal: {fileID: 11400000, guid: 3d9c20220c6960844a234dcd3364046e, type: 2}
-      Snowed: {fileID: 0}
+      Snowed: {fileID: 11400000, guid: 3d9c20220c6960844a234dcd3364046e, type: 2}
     - Normal: {fileID: 11400000, guid: fec6e889daabd1e429efd7a70bc58309, type: 2}
       Snowed: {fileID: 0}
   - Variations:
@@ -305,7 +305,7 @@ MonoBehaviour:
       Snowed: {fileID: 0}
   - Variations:
     - Normal: {fileID: 11400000, guid: a19d71509c4ee8d4d87f38b44b2a3084, type: 2}
-      Snowed: {fileID: 0}
+      Snowed: {fileID: 11400000, guid: a19d71509c4ee8d4d87f38b44b2a3084, type: 2}
   NeighborTransitions:
   - Mask: 0
     TileVariation:
