@@ -445,27 +445,9 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 999806160564032470, guid: 4d790d3c70b94f747a83e6e95f5c8cd2,
         type: 3}
-      propertyPath: TileTypes.Array.data[4].Variations.Array.data[0].Normal
+      propertyPath: workerPrefab
       value: 
-      objectReference: {fileID: 11400000, guid: c709678fdf07f7b4497b5fd64402cbba,
-        type: 2}
-    - target: {fileID: 999806160564032470, guid: 4d790d3c70b94f747a83e6e95f5c8cd2,
+      objectReference: {fileID: 7224492686635031575, guid: 71fb2bbb724b5b24f9b139af5f5f25b4,
         type: 3}
-      propertyPath: TileTypes.Array.data[4].Variations.Array.data[0].Snowed
-      value: 
-      objectReference: {fileID: 11400000, guid: e59039ff816fbab46813904d493b8939,
-        type: 2}
-    - target: {fileID: 999806160564032470, guid: 4d790d3c70b94f747a83e6e95f5c8cd2,
-        type: 3}
-      propertyPath: TileTypes.Array.data[4].Variations.Array.data[1].Snowed
-      value: 
-      objectReference: {fileID: 11400000, guid: 106d3d1368441fc4b85be69c12918138,
-        type: 2}
-    - target: {fileID: 999806160564032470, guid: 4d790d3c70b94f747a83e6e95f5c8cd2,
-        type: 3}
-      propertyPath: TileTypes.Array.data[4].Variations.Array.data[1].Normal
-      value: 
-      objectReference: {fileID: 11400000, guid: bac533ea3a3dfe140b535b50b8a1619e,
-        type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4d790d3c70b94f747a83e6e95f5c8cd2, type: 3}

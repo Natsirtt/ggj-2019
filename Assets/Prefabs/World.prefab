@@ -292,14 +292,14 @@ MonoBehaviour:
     - Normal: {fileID: 11400000, guid: fec6e889daabd1e429efd7a70bc58309, type: 2}
       Snowed: {fileID: 0}
   - Variations:
-    - Normal: {fileID: 11400000, guid: e59039ff816fbab46813904d493b8939, type: 2}
-      Snowed: {fileID: 0}
-    - Normal: {fileID: 11400000, guid: 106d3d1368441fc4b85be69c12918138, type: 2}
-      Snowed: {fileID: 0}
-    - Normal: {fileID: 11400000, guid: d9feefee11d91f14e9ff0b7afcbaf93a, type: 2}
-      Snowed: {fileID: 0}
-    - Normal: {fileID: 11400000, guid: 88eee65752574e24482461ec55461b69, type: 2}
-      Snowed: {fileID: 0}
+    - Normal: {fileID: 11400000, guid: c709678fdf07f7b4497b5fd64402cbba, type: 2}
+      Snowed: {fileID: 11400000, guid: e59039ff816fbab46813904d493b8939, type: 2}
+    - Normal: {fileID: 11400000, guid: bac533ea3a3dfe140b535b50b8a1619e, type: 2}
+      Snowed: {fileID: 11400000, guid: 106d3d1368441fc4b85be69c12918138, type: 2}
+    - Normal: {fileID: 11400000, guid: dd085022b1585bd4eac03e4181e7cead, type: 2}
+      Snowed: {fileID: 11400000, guid: d9feefee11d91f14e9ff0b7afcbaf93a, type: 2}
+    - Normal: {fileID: 11400000, guid: a163a34f0f91e2642aa923270408dbe9, type: 2}
+      Snowed: {fileID: 11400000, guid: 88eee65752574e24482461ec55461b69, type: 2}
   - Variations:
     - Normal: {fileID: 11400000, guid: b170744847babac4b86d6675d7637e12, type: 2}
       Snowed: {fileID: 0}
@@ -402,7 +402,7 @@ MonoBehaviour:
   generationParameters: {fileID: 11400000, guid: 617268a62919790429246e76e827943d,
     type: 2}
   seed: 0
-  workerPrefab:
+  workerPrefabs:
   - {fileID: 7224492686635031575, guid: 71fb2bbb724b5b24f9b139af5f5f25b4, type: 3}
   - {fileID: 6340333150095042056, guid: 4141b7adce95f154a86e7b8dca5f10aa, type: 3}
   firePrefab: {fileID: 7681504405642858328, guid: 25bf8b3278134704085dc188660db9d5,
