@@ -93,7 +93,6 @@ public class AgentJobHandler : MonoBehaviour
             else
             {
                 // TODO look for next fire
-                IsIdle = true;
                 pathFollowing.MoveToRandomLocationInSquare();
             }
         }
