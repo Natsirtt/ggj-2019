@@ -424,26 +424,35 @@ public class World : MonoBehaviour
         // This order by with weighed random will shuffle the list but segregate the shuffle grass tiled as more important than the others
         Vector2Int pos = fire.GetInfluence().OrderBy(t => Random.value * (t.TileType == Tile.Type.Grass ? 1f : 10f)).ToList().Find(t => t.TileType == Tile.Type.Grass || t.TileType == Tile.Type.Tree).Coordinates;
         GameObject worker = Instantiate<GameObject>(workerPrefabs[Random.Range(0, workerPrefabs.Length)], GetWorldLocation(pos), Quaternion.identity);
+        Workers.Add(worker);
         AgentJobHandler jobsScript = worker.GetComponent<AgentJobHandler>();
-        if (jobsScript != null) {
-            Workers.Add(worker);
-            jobsScript.Fire = fire;
+        if (jobsScript == null)
+        {
+            Debug.LogError("Worker had no job handler?!");
+            return;
         }
+        jobsScript.Fire = fire;
         return worker;
     }
 
     public GameObject GetClosestFire(Vector2 worldLocation) {
-        int nearestDistance = 99999;
+        float nearestDistance = 99999f;
         GameObject closest = null;
-        Vector2Int location = GetGridLocation(worldLocation);
+        //Vector2Int location = GetGridLocation(worldLocation);
         foreach(GameObject fire in Fires)
         {
-            int distance = GetManhattanDistance(location, fire.GetComponent<Fire>().TilePosition());
-            if (distance < nearestDistance)
+            float dist = Vector2.Distance(fire.GetComponent<Fire>().WorldPosition(), worldLocation);
+            if (dist < nearestDistance)
             {
-                distance = nearestDistance;
+                nearestDistance = dist;
                 closest = fire;
             }
+            //int distance = GetManhattanDistance(location, fire.GetComponent<Fire>().TilePosition());
+            //if (distance < nearestDistance)
+            //{
+            //    distance = nearestDistance;
+            //    closest = fire;
+            //}
         }
         return closest;
     }
@@ -454,10 +463,10 @@ public class World : MonoBehaviour
         GameObject closest = null;
         foreach (GameObject fire in Fires)
         {
-            int distance = (worldLocation - fire.GetComponent<Fire>().TilePosition());
-            if (distance < nearestDistance)
+            float dist = Vector2.Distance(fire.GetComponent<Fire>().WorldPosition(), worldLocation);
+            if (dist < nearestDistance && fire.GetComponent<Fire>().Jobs.HasJobs())
             {
-                distance = nearestDistance;
+                nearestDistance = dist;
                 closest = fire;
             }
         }

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -152,10 +153,21 @@ public class Pathfollowing : MonoBehaviour
     {
         if (!CurrentPath.HasPath())
         {
-            Vector2Int? randomGrassCoord = GetComponent<AgentJobHandler>().Fire.GetInfluence().OrderBy(x => Random.value).ToList().Find(t => t.TileType == World.Tile.Type.Grass)?.Coordinates;
-            if (randomGrassCoord.HasValue)
+            if (GetComponent<AgentJobHandler>().Fire == null)
             {
-                MoveToLocation( World.Get().GetWorldLocation(randomGrassCoord.Value) );
+                return;
+            }
+            try
+            {
+                Vector2Int? randomGrassCoord = GetComponent<AgentJobHandler>().Fire.GetInfluence().OrderBy(x => UnityEngine.Random.value).ToList().Find(t => t.TileType == World.Tile.Type.Grass)?.Coordinates;
+                if (randomGrassCoord.HasValue)
+                {
+                    MoveToLocation(World.Get().GetWorldLocation(randomGrassCoord.Value));
+                }
+            }
+            catch (ArgumentNullException)
+            {
+                return;
             }
         }
     }
