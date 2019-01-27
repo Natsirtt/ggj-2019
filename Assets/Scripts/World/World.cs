@@ -304,8 +304,8 @@ public class World : MonoBehaviour
 
         public bool IsTraversable()
         {
-            return
-                TileType != Type.Mountain && TileType != Type.Hearth && TileType != Type.Campfire;
+            return true; // totally not a hack
+                //TileType != Type.Mountain && TileType != Type.Hearth && TileType != Type.Campfire;
         }
 
         public Tile(Vector2Int coordinates, Type type)
