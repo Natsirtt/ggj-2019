@@ -497,6 +497,11 @@ public class World : MonoBehaviour
         return fire.DefaultRadius;
     }
 
+    public void RemoveWorker(GameObject gObject)
+    {
+        Workers.Remove(gObject);
+    }
+
     public Fire SpawnCampFire(Vector2 worldLocation)
     {
         var gridPos = GetGridLocation(worldLocation);
