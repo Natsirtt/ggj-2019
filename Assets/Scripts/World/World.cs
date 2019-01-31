@@ -611,8 +611,11 @@ public class World : MonoBehaviour
             && -halfGridSize.y <= gridLocation.y && gridLocation.y <= halfGridSize.y;
     }
 
+    public Action OnGameOver;
+
     public void GameOver(Tile hearthTile)
     {
+        OnGameOver.Invoke();
         TileBase tileToRender = TileTypes[(int)Tile.Type.Hearth].Variations[1].Normal;
         DisplayText("The World froze.");
         Tilemaps[(int)Tile.Type.Hearth].SetTile(new Vector3Int(hearthTile.Coordinates.x, hearthTile.Coordinates.y, 0), tileToRender);

@@ -69,6 +69,8 @@ public class Fire : MonoBehaviour
 
     public World.Tile GridTile { get; private set; }
 
+    private bool shouldUpdate = true;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -76,11 +78,16 @@ public class Fire : MonoBehaviour
         globalInventory = world.GlobalInventory;
         nextHouseSpawnTick = Time.time + Random.Range(world.GenerationParameters.infrastructures.houseSpawnPerSecondInterval.x, world.GenerationParameters.infrastructures.houseSpawnPerSecondInterval.y);
         needsToActivate = true;
+
+        world.OnGameOver += () => { shouldUpdate = false; };
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (!shouldUpdate)
+            return;
+
         if (!spawnedInitialWorkers && GridTile.TileType == World.Tile.Type.Hearth)
         {
             spawnedInitialWorkers = true;
@@ -162,6 +169,7 @@ public class Fire : MonoBehaviour
         // TODO change the display as well!
         burnProgress = 0f;
         radiusOfInfluence = 0;
+        CurrentRadiusOfInfluence = 0;
         burnRatePerSecond = 0;
         if (GridTile.TileType == World.Tile.Type.Hearth)
         {
@@ -182,23 +190,69 @@ public class Fire : MonoBehaviour
         ComputeInfluence();
     }
 
+    Coroutine FillInfluenceCoroutine;
     public void ComputeInfluence()
     {
-        if (influence != null)
-        {
-            foreach (World.Tile tile in influence)
-            {
-                tile.SetIsInSnow(true);
-            }
-        }
-        
+        var oldInfluence = influence;        
         influence = World.SortByDistance(World.Get().GetTilesInRadius(TilePosition(), CurrentRadiusOfInfluence), TilePosition());
+
+        if(FillInfluenceCoroutine != null)
+            StopCoroutine(FillInfluenceCoroutine);
+
+        FillInfluenceCoroutine = StartCoroutine(ColorTiles(oldInfluence, influence, 10.0f));
+
         foreach (World.Tile tile in influence)
         {
-            tile.SetIsInSnow(false);
             if (tile.TileType == World.Tile.Type.Tree)
             {
                 Jobs.QueueJob(tile.Coordinates, JobDispatcher.Job.Type.Chop);
+            }
+        }
+    }
+
+    System.Collections.IEnumerator ColorTiles(List<World.Tile> prev, List<World.Tile> newTiles, float duration)
+    {
+        bool grew = prev == null || newTiles.Count > prev.Count;
+        var shuffledTiles = grew ? newTiles : prev;
+        var shuffledPrev = prev;
+        var shuffledNew = newTiles;
+
+        if(shuffledPrev != null)
+            shuffledPrev = shuffledPrev.OrderBy(x => Random.Range(0, int.MaxValue)).ToList();
+
+        if (shuffledNew != null)
+            shuffledNew = shuffledNew.OrderBy(x => Random.Range(0, int.MaxValue)).ToList();
+
+        if(grew && shuffledNew != null)
+        {
+            float yieldWaitTime = 1.0f;
+            int tilesToTestPerIteration = Mathf.CeilToInt((float)shuffledNew.Count / (duration / yieldWaitTime));
+
+            for (int i = 0; i < shuffledNew.Count; ++i)
+            {
+                if (shuffledNew[i].IsInSnow)
+                {
+                    shuffledNew[i].SetIsInSnow(false);
+                }
+
+                if (i % tilesToTestPerIteration == 0)
+                    yield return new WaitForSeconds(yieldWaitTime);
+            }
+        }
+        else if(!grew && shuffledPrev != null)
+        {
+            float yieldWaitTime = 1.0f;
+            int tilesToTestPerIteration = Mathf.CeilToInt((float)shuffledPrev.Count / (duration / yieldWaitTime));
+
+            for (int i = 0; i < shuffledPrev.Count; ++i)
+            {
+                if (!newTiles.Contains(shuffledPrev[i]))
+                {
+                    shuffledPrev[i].SetIsInSnow(true);
+                }
+
+                if (i % tilesToTestPerIteration == 0)
+                    yield return new WaitForSeconds(yieldWaitTime);
             }
         }
     }
@@ -272,9 +326,9 @@ public class Fire : MonoBehaviour
 
     public void Shrink()
     {
-        CurrentRadiusOfInfluence -= radiusOfInfluenceIncrease;
+        CurrentRadiusOfInfluence -= 1;
         currentBurnRatePerSecond -= burnRatePerSecondIncrease;
-        if (currentBurnRatePerSecond <= 0)
+        if (CurrentRadiusOfInfluence <= 0 || currentBurnRatePerSecond <= 0.01f)
         {
             Deactivate();
         }
